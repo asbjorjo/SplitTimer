@@ -5,9 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.codecrafters.tableview.TableDataAdapter;
 
@@ -16,6 +15,8 @@ import de.codecrafters.tableview.TableDataAdapter;
  */
 
 public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
+    private final static String timeFormat = "%02d:%02d";
+
     public AthleteTableDataAdapter(Context context, List<Athlete> data) {
         super(context, data);
     }
@@ -32,6 +33,12 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
             case 1:
                 renderView = renderNumber(athlete);
                 break;
+            case 2:
+                renderView = renderStart(athlete);
+                break;
+            default:
+                renderView = renderIntermediate(athlete, columnIndex-3);
+                break;
         }
 
         return renderView;
@@ -47,5 +54,31 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
         TextView view = new TextView(getContext());
         view.setText(Long.toString(athlete.number));
         return view;
+    }
+
+    private View renderStart(Athlete athlete) {
+        TextView view = new TextView(getContext());
+        view.setText(formatTime(athlete.startTime));
+        return view;
+    }
+    private View renderIntermediate(Athlete athlete, int intermediate) {
+        TextView view = new TextView(getContext());
+        if (athlete.intermediates[intermediate] > 0) {
+            MainActivity main = (MainActivity) getContext();
+            view.setText(formatTime(athlete.calculateRelativeTime(intermediate, main.reference)));
+        } else {
+            view.setText("INT " + (intermediate+1));
+        }
+        return view;
+    }
+
+    private static String formatTime(long milliseconds) {
+        if (milliseconds >= 0) {
+            return String.format(timeFormat, TimeUnit.MILLISECONDS.toMinutes(milliseconds),
+                    TimeUnit.MILLISECONDS.toSeconds(milliseconds) % TimeUnit.MINUTES.toSeconds(1));
+        } else {
+            return String.format(timeFormat, TimeUnit.MILLISECONDS.toMinutes(milliseconds),
+                    TimeUnit.MILLISECONDS.toSeconds(-milliseconds) % TimeUnit.MINUTES.toSeconds(1));
+        }
     }
 }

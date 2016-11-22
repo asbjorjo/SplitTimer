@@ -3,16 +3,37 @@ package org.asbjorjo.splittimer;
 import java.util.Comparator;
 
 /**
- * Created by AJohansen2 on 11/20/2016.
+ * Class for holding information about an Athlete and intermediate timings.
+ *
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
  */
 
-class Athlete {
+public class Athlete {
+    /**
+     * Athlete name
+     */
     String name;
+    /**
+     * Start number
+     */
     int number;
+    /**
+     * Starting time in milliseconds, relative or absolute.
+     */
     long startTime;
-
+    /**
+     * Array of intermediate times in milliseconds, absolute.
+     */
     long[] intermediates;
 
+    /**
+     * Recommended constructor for creating a sane Athlete instance.
+     *
+     * @param name Name
+     * @param number Start number
+     * @param startTime Start time in milliseconds from some offset
+     * @param intermediates Number of intermediate timing points
+     */
     Athlete(String name, int number, long startTime, int intermediates) {
         this.name = name;
         this.number = number;
@@ -20,27 +41,37 @@ class Athlete {
         this.intermediates = new long[intermediates];
     }
 
+    /**
+     * Calculate distance in milliseconds to reference Athlete at give intermediate timing point,
+     * relative to distance at start.
+     *
+     * A negative value suggests current Athlete is ahead of reference.
+     *
+     * @param intermediate Timing point
+     * @param reference Reference Athlete
+     * @return Difference at intermediate timing point in milliseconds
+     */
     public long calculateRelativeTime(int intermediate, Athlete reference) {
         long diffAtStart = this.startTime - reference.startTime;
         long diffAtInt = this.intermediates[intermediate] - reference.intermediates[intermediate];
         return diffAtInt - diffAtStart;
     }
 
-    static class NameComparator implements Comparator<Athlete> {
+    public static class NameComparator implements Comparator<Athlete> {
         @Override
         public int compare(Athlete athlete1, Athlete athlete2) {
             return athlete1.name.compareTo(athlete2.name);
         }
     }
 
-    static class NumberComparator implements Comparator<Athlete> {
+    public static class NumberComparator implements Comparator<Athlete> {
         @Override
         public int compare(Athlete athlete1, Athlete athlete2) {
             return Long.compare(athlete1.number, athlete2.number);
         }
     }
 
-    static class StartComparator implements Comparator<Athlete> {
+    public static class StartComparator implements Comparator<Athlete> {
         @Override
         public int compare(Athlete athlete1, Athlete athlete2) {
             return Long.compare(athlete1.startTime, athlete2.startTime);

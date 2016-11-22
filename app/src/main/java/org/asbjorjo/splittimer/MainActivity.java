@@ -4,9 +4,9 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Setup table of Athletes.
+     */
     private void initializeTable() {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
@@ -104,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
         table.addDataClickListener(new AthleteClickListener());
     }
 
+    /**
+     * Initialize the Spinner and associated Buttons for intermediate times.
+     */
     private void initializeDropdown() {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Athlete[] athletesList = new Athlete[athletes.size()];
@@ -141,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Update view as user clicks one rows in table of Athletes.
+     */
     private class AthleteClickListener implements TableDataClickListener<Athlete> {
         @Override
         public void onDataClicked(int rowIndex, Athlete athlete) {
@@ -153,6 +162,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Generate a list of Athletes at 5 minute start invervals for testing.
+      */
     private void createAthletes() {
         String[] names = {"Arne", "Per", "Kari", "Kjersti", "Kjell", "Peder", "Rolf"};
 

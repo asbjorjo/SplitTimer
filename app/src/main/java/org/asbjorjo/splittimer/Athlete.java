@@ -27,7 +27,21 @@ public class Athlete {
     long[] intermediates;
 
     /**
-     * Recommended constructor for creating a sane Athlete instance.
+     * Constructor for creating a sane Athlete instance.
+     *
+     * @param name Name
+     * @param number Start number
+     * @param startTime Start time in milliseconds from some offset
+     */
+    Athlete(String name, int number, long startTime) {
+        this.name = name;
+        this.number = number;
+        this.startTime = startTime;
+    }
+
+    /**
+     * Constructor for creating a sane Athlete instance ready for a certain number of
+     * intermediate time checks.
      *
      * @param name Name
      * @param number Start number
@@ -35,9 +49,7 @@ public class Athlete {
      * @param intermediates Number of intermediate content_timing points
      */
     Athlete(String name, int number, long startTime, int intermediates) {
-        this.name = name;
-        this.number = number;
-        this.startTime = startTime;
+        this(name, number, startTime);
         this.intermediates = new long[intermediates];
     }
 

@@ -78,6 +78,14 @@ public class TimingActivity extends AppCompatActivity {
     private void initializeTable() {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
+
+        if (athletes.get(0).intermediates == null) {
+            for (Athlete athlete:athletes
+                 ) {
+                athlete.intermediates = new long[1];
+            }
+        }
+
         table.setColumnCount(3 + athletes.get(0).intermediates.length);
         table.setColumnComparator(0, new Athlete.NameComparator());
         table.setColumnComparator(1, new Athlete.NumberComparator());

@@ -22,6 +22,9 @@
         <activity
             android:name=".TimingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".StartlistActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

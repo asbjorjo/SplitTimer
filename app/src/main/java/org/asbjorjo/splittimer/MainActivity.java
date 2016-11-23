@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,18 +22,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         SplitTimerApplication application = (SplitTimerApplication) getApplication();
-        if (application.getAthleteList() == null) {
-            application.setAthleteList(createAthletes());
-        } else {
-            for (Athlete athlete:application.getAthleteList()
-                 ) {
-                for (int i = 0; i < athlete.intermediates.length; i++) {
-                    athlete.intermediates[i] = 0;
-                }
-            }
+        if (application.getAthleteList() != null && application.getAthleteList().size() > 0) {
+            findViewById(R.id.main_button_timing).setEnabled(true);
         }
-
-        application.setReference(null);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -78,10 +70,38 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 123:
+                if (resultCode == RESULT_OK) {
+                    Button button = (Button) findViewById(R.id.main_button_timing);
+                    button.setEnabled(true);
+                }
+        }
+    }
+
+    public void onClick(View view) {
+        Intent intent = null;
+        int request_code = -1;
+
+        switch (view.getId()) {
+            case R.id.main_button_startlist:
+                intent = new Intent(this, StartlistActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                request_code = 123;
+                break;
+            case R.id.main_button_timing:
+                intent = new Intent(this, TimingActivity.class);
+                break;
+        }
+        startActivityForResult(intent, request_code);
+    }
+
     /**
      * Generate a list of Athletes at 5 minute start invervals for testing.
       */
-    private List<Athlete> createAthletes() {
+    private static List<Athlete> createAthletes() {
         String[] names = {"Arne", "Per", "Kari", "Kjersti", "Kjell", "Peder", "Rolf"};
 
         int number = 1;

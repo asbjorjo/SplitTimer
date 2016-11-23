@@ -68,9 +68,8 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
 
         if (reference != null && athlete.intermediates[intermediate] > 0) {
             view.setText(formatTime(athlete.calculateRelativeTime(intermediate, reference)));
-        } else {
-            view.setText("INT " + (intermediate+1));
         }
+
         return view;
     }
 

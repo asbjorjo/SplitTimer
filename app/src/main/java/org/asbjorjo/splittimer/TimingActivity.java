@@ -28,8 +28,7 @@ import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
  */
 
 public class TimingActivity extends AppCompatActivity {
-    List<Athlete> athletes;
-    Athlete reference;
+    SplitTimerApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +37,13 @@ public class TimingActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SplitTimerApplication application = (SplitTimerApplication) getApplication();
+        application = (SplitTimerApplication) getApplication();
 
         if (application.getAthleteList() == null) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         } else {
-            athletes = application.getAthleteList();
-            reference = application.getReference();
-
             initializeTable();
             initializeDropdown();
         }
@@ -68,8 +64,6 @@ public class TimingActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         SplitTimerApplication application = (SplitTimerApplication) getApplication();
-        application.setAthleteList(athletes);
-        application.setReference(reference);
     }
 
     /**
@@ -77,7 +71,7 @@ public class TimingActivity extends AppCompatActivity {
      */
     private void initializeTable() {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
-        table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
+        List<Athlete> athletes = application.getAthleteList();
 
         if (athletes.get(0).intermediates == null) {
             for (Athlete athlete:athletes
@@ -86,6 +80,7 @@ public class TimingActivity extends AppCompatActivity {
             }
         }
 
+        table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
         table.setColumnCount(3 + athletes.get(0).intermediates.length);
         table.setColumnComparator(0, new Athlete.NameComparator());
         table.setColumnComparator(1, new Athlete.NumberComparator());
@@ -105,6 +100,7 @@ public class TimingActivity extends AppCompatActivity {
      * Initialize the Spinner and associated Buttons for intermediate times.
      */
     private void initializeDropdown() {
+        List<Athlete> athletes = application.getAthleteList();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Athlete[] athletesList = new Athlete[athletes.size()];
         athletes.toArray(athletesList);
@@ -131,7 +127,7 @@ public class TimingActivity extends AppCompatActivity {
                     Athlete selected = (Athlete) spinner.getSelectedItem();
                     long time = Calendar.getInstance().getTimeInMillis();
                     selected.intermediates[v.getId() - 1337] = time;
-                    reference = selected;
+                    application.setReference(selected);
                     SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
                     table.sort(v.getId() - 1337 + 3, true);
                 }
@@ -141,16 +137,9 @@ public class TimingActivity extends AppCompatActivity {
         }
     }
 
-    public Athlete getReference() {
-        return reference;
-    }
-
-    public void setReference(Athlete reference) {
-        this.reference = reference;
-    }
-
     private void sortByReference() {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
+        Athlete reference = application.getReference();
 
         int i = 0;
         while (i < reference.intermediates.length && reference.intermediates[i] > 0) {
@@ -175,7 +164,7 @@ public class TimingActivity extends AppCompatActivity {
     private class AthleteLongClickListener implements TableDataLongClickListener<Athlete> {
         @Override
         public boolean onDataLongClicked(int rowIndex, Athlete athlete) {
-            reference = athlete;
+            application.setReference(athlete);
             sortByReference();
             return true;
         }
@@ -186,7 +175,7 @@ public class TimingActivity extends AppCompatActivity {
         public Drawable getRowBackground(final int rowIndex, final Athlete athlete) {
             int rowColor = getResources().getColor(R.color.white);
 
-            if (athlete == reference) {
+            if (athlete == application.getReference()) {
                 rowColor = getResources().getColor(R.color.gray);
             }
 

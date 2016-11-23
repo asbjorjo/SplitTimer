@@ -25,10 +25,13 @@ public class StartlistActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         application = (SplitTimerApplication) getApplication();
-        application.setAthleteList(new ArrayList<Athlete>());
+        if (application.getAthleteList() == null) {
+            application.setAthleteList(new ArrayList<Athlete>());
+        }
 
         TableView table = (TableView) findViewById(R.id.startlist_table);
         table.setDataAdapter(new AthleteTableDataAdapter(this, application.getAthleteList()));
+        table.setColumnCount(3);
 
     }
 
@@ -50,5 +53,7 @@ public class StartlistActivity extends AppCompatActivity {
         nameView.setText(null);
         numberView.setText(null);
         startView.setText(null);
+
+        setResult(RESULT_OK);
     }
 }

@@ -63,9 +63,9 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
     }
     private View renderIntermediate(Athlete athlete, int intermediate) {
         TextView view = new TextView(getContext());
-        if (athlete.intermediates[intermediate] > 0) {
-            MainActivity main = (MainActivity) getContext();
-            view.setText(formatTime(athlete.calculateRelativeTime(intermediate, main.reference)));
+        TimingActivity main = (TimingActivity) getContext();
+        if (athlete.intermediates[intermediate] > 0 && main.getReference() != null) {
+            view.setText(formatTime(athlete.calculateRelativeTime(intermediate, main.getReference())));
         } else {
             view.setText("INT " + (intermediate+1));
         }
@@ -73,12 +73,9 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
     }
 
     private static String formatTime(long milliseconds) {
-        if (milliseconds >= 0) {
-            return String.format(timeFormat, TimeUnit.MILLISECONDS.toMinutes(milliseconds),
-                    TimeUnit.MILLISECONDS.toSeconds(milliseconds) % TimeUnit.MINUTES.toSeconds(1));
-        } else {
-            return String.format(timeFormat, TimeUnit.MILLISECONDS.toMinutes(milliseconds),
-                    TimeUnit.MILLISECONDS.toSeconds(-milliseconds) % TimeUnit.MINUTES.toSeconds(1));
-        }
+        String ret = String.format(timeFormat, TimeUnit.MILLISECONDS.toMinutes(Math.abs(milliseconds)),
+                    TimeUnit.MILLISECONDS.toSeconds(Math.abs(milliseconds)) % TimeUnit.MINUTES.toSeconds(1));
+        if (milliseconds < 0) ret = '-' + ret;
+        return ret;
     }
 }

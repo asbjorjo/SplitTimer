@@ -32,7 +32,7 @@ public class Athlete {
      * @param name Name
      * @param number Start number
      * @param startTime Start time in milliseconds from some offset
-     * @param intermediates Number of intermediate timing points
+     * @param intermediates Number of intermediate content_timing points
      */
     Athlete(String name, int number, long startTime, int intermediates) {
         this.name = name;
@@ -42,14 +42,14 @@ public class Athlete {
     }
 
     /**
-     * Calculate distance in milliseconds to reference Athlete at give intermediate timing point,
+     * Calculate distance in milliseconds to reference Athlete at give intermediate content_timing point,
      * relative to distance at start.
      *
      * A negative value suggests current Athlete is ahead of reference.
      *
      * @param intermediate Timing point
      * @param reference Reference Athlete
-     * @return Difference at intermediate timing point in milliseconds
+     * @return Difference at intermediate content_timing point in milliseconds
      */
     public long calculateRelativeTime(int intermediate, Athlete reference) {
         long diffAtStart = this.startTime - reference.startTime;

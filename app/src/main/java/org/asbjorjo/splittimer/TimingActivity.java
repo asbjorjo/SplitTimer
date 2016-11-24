@@ -61,20 +61,13 @@ public class TimingActivity extends AppCompatActivity {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         List<Athlete> athletes = application.getAthleteList();
 
-        if (athletes.get(0).intermediates == null) {
-            for (Athlete athlete:athletes
-                 ) {
-                athlete.intermediates = new long[1];
-            }
-        }
-
         table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
-        table.setColumnCount(3 + athletes.get(0).intermediates.length);
+        table.setColumnCount(3 + application.getIntermediates().size());
         table.setColumnComparator(0, new Athlete.NameComparator());
         table.setColumnComparator(1, new Athlete.NumberComparator());
         table.setColumnComparator(2, new Athlete.StartComparator());
 
-        for (int i = 0; i < athletes.get(0).intermediates.length; i++) {
+        for (int i = 0; i < application.getIntermediates().size(); i++) {
             int column = 3+i;
             table.setColumnComparator(column, new AthleteIntermediateComparator(i));
         }
@@ -91,6 +84,7 @@ public class TimingActivity extends AppCompatActivity {
         List<Athlete> athletes = application.getAthleteList();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Athlete[] athletesList = new Athlete[athletes.size()];
+
         athletes.toArray(athletesList);
         Arrays.sort(athletesList, new Athlete.NumberComparator());
         ArrayAdapter<Athlete> athleteAdapter = new ArrayAdapter<Athlete>(this, R.layout.support_simple_spinner_dropdown_item, athletesList);
@@ -98,11 +92,11 @@ public class TimingActivity extends AppCompatActivity {
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_timing);
 
-        for (int i = 0; i < athletes.get(0).intermediates.length; i++) {
+        for (int i = 0; i < application.getIntermediates().size(); i++) {
             Button button = new Button(this);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             button.setId(i+1337);
-            button.setText("INT " + (i+1));
+            button.setText(application.getIntermediates().get(i));
             if (i != 0) {
                 params.addRule(RelativeLayout.RIGHT_OF, button.getId()-1);
             } else {
@@ -114,13 +108,18 @@ public class TimingActivity extends AppCompatActivity {
                     Spinner spinner = (Spinner) findViewById(R.id.spinner);
                     Athlete selected = (Athlete) spinner.getSelectedItem();
                     long time = Calendar.getInstance().getTimeInMillis();
-                    selected.intermediates[v.getId() - 1337] = time;
+                    selected.intermediates.add(time);
                     application.setReference(selected);
                     SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
                     table.sort(v.getId() - 1337 + 3, true);
                 }
             });
 
+            if (((Athlete)spinner.getSelectedItem()).intermediates.size() <= i) {
+                button.setEnabled(true);
+            } else {
+                button.setEnabled(false);
+            }
             layout.addView(button, params);
         }
     }
@@ -129,12 +128,7 @@ public class TimingActivity extends AppCompatActivity {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         Athlete reference = application.getReference();
 
-        int i = 0;
-        while (i < reference.intermediates.length && reference.intermediates[i] > 0) {
-            i++;
-        }
-
-        table.sort(2 + i, true);
+        table.sort(1 + reference.intermediates.size(), true);
     }
 
     /**

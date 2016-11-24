@@ -66,7 +66,7 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
         SplitTimerApplication application = (SplitTimerApplication) getContext().getApplicationContext();
         Athlete reference = application.getReference();
 
-        if (reference != null && athlete.intermediates[intermediate] > 0) {
+        if (reference != null && athlete.intermediates.size() > intermediate && athlete.intermediates.get(intermediate) > 0) {
             view.setText(formatTime(athlete.calculateRelativeTime(intermediate, reference)));
         }
 

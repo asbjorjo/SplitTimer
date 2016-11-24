@@ -62,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         SplitTimerApplication application = (SplitTimerApplication) getApplication();
         switch (requestCode) {
-            case R.integer.BUILD_STARTLIST:
+            case SplitTimerConstants.BUILD_INTERMEDIATES:
                 if (resultCode == RESULT_OK) {
                     Button button = (Button) findViewById(R.id.main_button_timing);
                     button.setEnabled(application.getIntermediates() != null && application.getIntermediates().size() > 0);
                 }
                 break;
-            case R.integer.BUILD_INTERMEDIATES:
+            case SplitTimerConstants.BUILD_STARTLIST:
                 if (resultCode == RESULT_OK) {
                     Button button = (Button) findViewById(R.id.main_button_timing);
                     button.setEnabled(application.getAthleteList() != null && application.getAthleteList().size() > 0);
@@ -85,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_button_intermediate:
                 intent = new Intent(this, IntermediateActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                request_code = R.integer.BUILD_INTERMEDIATES;
+                request_code = SplitTimerConstants.BUILD_INTERMEDIATES;
                 break;
             case R.id.main_button_startlist:
                 intent = new Intent(this, StartlistActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                request_code = R.integer.BUILD_STARTLIST;
+                request_code = SplitTimerConstants.BUILD_STARTLIST;
                 break;
             case R.id.main_button_timing:
                 intent = new Intent(this, TimingActivity.class);
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (String name : names
                 ) {
-            athletes.add(new Athlete(name, number, start, 2));
+            athletes.add(new Athlete(name, number, start));
 
             number++;
             start += 5*1000;

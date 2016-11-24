@@ -1,5 +1,6 @@
 package org.asbjorjo.splittimer;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
@@ -24,7 +25,7 @@ public class Athlete {
     /**
      * Array of intermediate times in milliseconds, absolute.
      */
-    long[] intermediates;
+    ArrayList<Long> intermediates;
 
     /**
      * Constructor for creating a sane Athlete instance.
@@ -37,20 +38,7 @@ public class Athlete {
         this.name = name;
         this.number = number;
         this.startTime = startTime;
-    }
-
-    /**
-     * Constructor for creating a sane Athlete instance ready for a certain number of
-     * intermediate time checks.
-     *
-     * @param name Name
-     * @param number Start number
-     * @param startTime Start time in milliseconds from some offset
-     * @param intermediates Number of intermediate content_timing points
-     */
-    Athlete(String name, int number, long startTime, int intermediates) {
-        this(name, number, startTime);
-        this.intermediates = new long[intermediates];
+        intermediates = new ArrayList<>();
     }
 
     /**
@@ -65,7 +53,7 @@ public class Athlete {
      */
     public long calculateRelativeTime(int intermediate, Athlete reference) {
         long diffAtStart = this.startTime - reference.startTime;
-        long diffAtInt = this.intermediates[intermediate] - reference.intermediates[intermediate];
+        long diffAtInt = this.intermediates.get(intermediate) - reference.intermediates.get(intermediate);
         return diffAtInt - diffAtStart;
     }
 

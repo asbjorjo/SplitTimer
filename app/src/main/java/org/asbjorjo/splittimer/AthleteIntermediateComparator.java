@@ -15,14 +15,20 @@ public class AthleteIntermediateComparator implements Comparator<Athlete> {
 
     @Override
     public int compare(Athlete o1, Athlete o2) {
-        if (o1.intermediates[intermediate] == 0) {
-            return (o2.intermediates[intermediate] == 0) ? 0 : 1;
+        int res = 0;
+
+        if (o1.intermediates.size() <= intermediate || o1.intermediates.get(intermediate) == 0) {
+            res = (o2.intermediates.size() <= intermediate || o2.intermediates.get(intermediate) == 0) ? 0 : 1;
         }
-        if (o2.intermediates[intermediate] == 0) {
-            return -1;
+        if (o2.intermediates.size() <= intermediate || o2.intermediates.get(intermediate) == 0) {
+            res = -1;
         }
 
-        long diff = o1.calculateRelativeTime(intermediate, o2);
-        return Long.signum(diff);
+        if (o1.intermediates.size() > intermediate && o2.intermediates.size() > intermediate) {
+            long diff = o1.calculateRelativeTime(intermediate, o2);
+            res = Long.signum(diff);
+        }
+
+        return res;
     }
 }

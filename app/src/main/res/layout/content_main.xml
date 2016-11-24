@@ -15,10 +15,17 @@
     tools:context="org.asbjorjo.splittimer.MainActivity">
 
     <Button
+        android:id="@+id/main_button_intermediate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="Create timing points"/>
+    <Button
         android:id="@+id/main_button_startlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick"
+        android:layout_below="@id/main_button_intermediate"
         android:text="Create startlist"/>
     <Button
         android:id="@+id/main_button_timing"

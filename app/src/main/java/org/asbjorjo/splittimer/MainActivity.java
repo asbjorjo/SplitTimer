@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         SplitTimerApplication application = (SplitTimerApplication) getApplication();
-        if (application.getAthleteList() != null && application.getAthleteList().size() > 0) {
+        if (application.getAthleteList() != null && application.getAthleteList().size() > 0 && application.getIntermediates() != null && application.getIntermediates().size() > 0) {
             findViewById(R.id.main_button_timing).setEnabled(true);
         }
     }
@@ -60,12 +60,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        SplitTimerApplication application = (SplitTimerApplication) getApplication();
         switch (requestCode) {
-            case 123:
+            case R.integer.BUILD_STARTLIST:
                 if (resultCode == RESULT_OK) {
                     Button button = (Button) findViewById(R.id.main_button_timing);
-                    button.setEnabled(true);
+                    button.setEnabled(application.getIntermediates() != null && application.getIntermediates().size() > 0);
                 }
+                break;
+            case R.integer.BUILD_INTERMEDIATES:
+                if (resultCode == RESULT_OK) {
+                    Button button = (Button) findViewById(R.id.main_button_timing);
+                    button.setEnabled(application.getAthleteList() != null && application.getAthleteList().size() > 0);
+                }
+                break;
         }
     }
 
@@ -74,10 +82,15 @@ public class MainActivity extends AppCompatActivity {
         int request_code = -1;
 
         switch (view.getId()) {
+            case R.id.main_button_intermediate:
+                intent = new Intent(this, IntermediateActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                request_code = R.integer.BUILD_INTERMEDIATES;
+                break;
             case R.id.main_button_startlist:
                 intent = new Intent(this, StartlistActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                request_code = 123;
+                request_code = R.integer.BUILD_STARTLIST;
                 break;
             case R.id.main_button_timing:
                 intent = new Intent(this, TimingActivity.class);

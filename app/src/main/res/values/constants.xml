@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="BUILD_STARTLIST">123</integer>
+    <integer name="BUILD_INTERMEDIATES">124</integer>
+</resources>

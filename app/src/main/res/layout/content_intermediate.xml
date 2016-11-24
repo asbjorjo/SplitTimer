@@ -17,7 +17,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/startlist_input"
+        android:id="@+id/intermediate_input"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -40,11 +40,9 @@
             android:text="Add"/>
     </LinearLayout>
 
-    <de.codecrafters.tableview.TableView
-        android:id="@+id/startlist_table"
+    <ListView
+        android:id="@+id/intermediate_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/startlist_input"
-        app:tableView_columnCount="2"/>
+        android:layout_below="@id/intermediate_input"/>
 </RelativeLayout>

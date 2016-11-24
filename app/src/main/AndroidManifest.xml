@@ -25,6 +25,9 @@
         <activity
             android:name=".StartlistActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".IntermediateActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -128,7 +128,7 @@ public class TimingActivity extends AppCompatActivity {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         Athlete reference = application.getReference();
 
-        table.sort(1 + reference.intermediates.size(), true);
+        table.sort(2 + reference.intermediates.size(), true);
     }
 
     /**

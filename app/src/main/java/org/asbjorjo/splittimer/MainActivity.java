@@ -2,7 +2,6 @@ package org.asbjorjo.splittimer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,15 +24,6 @@ public class MainActivity extends AppCompatActivity {
         if (application.getAthleteList() != null && application.getAthleteList().size() > 0) {
             findViewById(R.id.main_button_timing).setEnabled(true);
         }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), TimingActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -62,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(getApplicationContext(), StartlistActivity.class);
-            startActivity(intent);
             return true;
         }
 

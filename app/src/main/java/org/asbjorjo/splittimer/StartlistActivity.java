@@ -53,7 +53,7 @@ public class StartlistActivity extends AppCompatActivity {
         nameView.setText(null);
         numberView.setText(null);
         startView.setText(null);
-
+        
         setResult(RESULT_OK);
     }
 }

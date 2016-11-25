@@ -67,7 +67,11 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
         Athlete reference = application.getReference();
 
         if (reference != null && athlete.intermediates.size() > intermediate && athlete.intermediates.get(intermediate) > 0) {
-            view.setText(formatTime(athlete.calculateRelativeTime(intermediate, reference)));
+            if (reference.intermediates.size() > intermediate && reference.intermediates.get(intermediate) > 0) {
+                view.setText(formatTime(athlete.calculateRelativeTime(intermediate, reference)));
+            } else {
+                view.setText("n/a");
+            }
         }
 
         return view;

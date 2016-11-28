@@ -3,14 +3,38 @@ package org.asbjorjo.splittimer.data;
 import java.util.List;
 
 /**
- * Created by AJohansen2 on 11/28/2016.
+ * Class for Event data, so a user can add several events with corresponding timing points and
+ * list of athletes.
  */
 
 public class Event {
+    /**
+     * Name of event.
+     */
     private String name;
+    /**
+     * List of intermediate timing points.
+     */
     private List<String> intermediates;
 
+    public List<Athlete> getAthletes() {
+        return athletes;
+    }
 
+    public void setAthletes(List<Athlete> athletes) {
+        this.athletes = athletes;
+    }
+
+    /**
+     * List of Athletes participating in this Event.
+     */
+    private List<Athlete> athletes;
+
+    /**
+     * Constructor for simplicity.
+     *
+     * @param name Name of event.
+     */
     public Event(String name) {
         this.name = name;
     }

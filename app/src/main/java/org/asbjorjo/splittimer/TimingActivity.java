@@ -51,7 +51,6 @@ public class TimingActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        SplitTimerApplication application = (SplitTimerApplication) getApplication();
     }
 
     /**

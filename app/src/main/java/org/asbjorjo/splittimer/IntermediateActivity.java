@@ -24,12 +24,15 @@ public class IntermediateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         application = (SplitTimerApplication) getApplication();
-        if (application.getIntermediates() == null) {
-            application.setIntermediates(new ArrayList<String>());
+
+        if (application.getEvent() == null) {
+
+        } else if (application.getEvent().getIntermediates() == null) {
+            application.getEvent().setIntermediates(new ArrayList<String>());
         }
 
         ListView listView = (ListView) findViewById(R.id.intermediate_list);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item, application.getIntermediates());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item, application.getEvent().getIntermediates());
         adapter.setNotifyOnChange(true);
         listView.setAdapter(adapter);
     }
@@ -37,7 +40,7 @@ public class IntermediateActivity extends AppCompatActivity {
     public void addIntermediate(View view) {
         EditText text = (EditText) findViewById(R.id.intermediate_input_description);
 
-        application.getIntermediates().add(text.getText().toString());
+        application.getEvent().getIntermediates().add(text.getText().toString());
 
         ListView listView = (ListView) findViewById(R.id.intermediate_list);
         ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();

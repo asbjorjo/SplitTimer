@@ -63,12 +63,12 @@ public class TimingActivity extends AppCompatActivity {
         List<Athlete> athletes = application.getAthleteList();
 
         table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
-        table.setColumnCount(3 + application.getIntermediates().size());
+        table.setColumnCount(3 + application.getEvent().getIntermediates().size());
         table.setColumnComparator(0, new Athlete.NameComparator());
         table.setColumnComparator(1, new Athlete.NumberComparator());
         table.setColumnComparator(2, new Athlete.StartComparator());
 
-        for (int i = 0; i < application.getIntermediates().size(); i++) {
+        for (int i = 0; i < application.getEvent().getIntermediates().size(); i++) {
             int column = 3+i;
             table.setColumnComparator(column, new AthleteIntermediateComparator(i));
         }
@@ -93,11 +93,11 @@ public class TimingActivity extends AppCompatActivity {
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_timing);
 
-        for (int i = 0; i < application.getIntermediates().size(); i++) {
+        for (int i = 0; i < application.getEvent().getIntermediates().size(); i++) {
             Button button = new Button(this);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             button.setId(i+1337);
-            button.setText(application.getIntermediates().get(i));
+            button.setText(application.getEvent().getIntermediates().get(i));
             if (i != 0) {
                 params.addRule(RelativeLayout.RIGHT_OF, button.getId()-1);
             } else {

@@ -15,10 +15,12 @@
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>ti
+        </activity>
+        <activity
+            android:name=".EventActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".TimingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
@@ -29,5 +31,4 @@
             android:name=".IntermediateActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
-
 </manifest>

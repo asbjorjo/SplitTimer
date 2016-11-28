@@ -3,6 +3,7 @@ package org.asbjorjo.splittimer;
 import android.app.Application;
 
 import org.asbjorjo.splittimer.data.Athlete;
+import org.asbjorjo.splittimer.data.Event;
 
 import java.util.List;
 
@@ -11,14 +12,17 @@ import java.util.List;
  */
 
 public class SplitTimerApplication extends Application {
+    private List<Event> eventList;
     private List<Athlete> athleteList;
+    private Event event;
     private Athlete reference;
-    private List<String> intermediates;
 
     public List<Athlete> getAthleteList() {return athleteList;}
     public void setAthleteList(List<Athlete> athleteList) {this.athleteList = athleteList;}
     public Athlete getReference() {return reference;}
     public void setReference(Athlete reference) {this.reference = reference;}
-    public List<String> getIntermediates() {return intermediates;}
-    public void setIntermediates(List<String> intermediates) {this.intermediates = intermediates;}
+    public List<Event> getEventList() {return eventList;}
+    public void setEventList(List<Event> eventList) {this.eventList = eventList;}
+    public Event getEvent() {return event;}
+    public void setEvent(Event event) {this.event = event;}
 }

@@ -40,7 +40,7 @@ public class TimingActivity extends AppCompatActivity {
 
         application = (SplitTimerApplication) getApplication();
 
-        if (application.getAthleteList() == null) {
+        if (application.getEvent().getAthletes() == null) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
@@ -60,7 +60,7 @@ public class TimingActivity extends AppCompatActivity {
      */
     private void initializeTable() {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
-        List<Athlete> athletes = application.getAthleteList();
+        List<Athlete> athletes = application.getEvent().getAthletes();
 
         table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
         table.setColumnCount(3 + application.getEvent().getIntermediates().size());
@@ -82,7 +82,7 @@ public class TimingActivity extends AppCompatActivity {
      * Initialize the Spinner and associated Buttons for intermediate times.
      */
     private void initializeDropdown() {
-        List<Athlete> athletes = application.getAthleteList();
+        List<Athlete> athletes = application.getEvent().getAthletes();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Athlete[] athletesList = new Athlete[athletes.size()];
 

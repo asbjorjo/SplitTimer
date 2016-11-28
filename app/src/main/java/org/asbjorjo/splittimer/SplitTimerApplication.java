@@ -13,12 +13,9 @@ import java.util.List;
 
 public class SplitTimerApplication extends Application {
     private List<Event> eventList;
-    private List<Athlete> athleteList;
     private Event event;
     private Athlete reference;
 
-    public List<Athlete> getAthleteList() {return athleteList;}
-    public void setAthleteList(List<Athlete> athleteList) {this.athleteList = athleteList;}
     public Athlete getReference() {return reference;}
     public void setReference(Athlete reference) {this.reference = reference;}
     public List<Event> getEventList() {return eventList;}

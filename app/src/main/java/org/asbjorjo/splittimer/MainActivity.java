@@ -90,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.main_button_timing).setEnabled(
                 application.getEvent() != null
-                && application.getAthleteList() != null
+                && application.getEvent().getAthletes() != null
                 && application.getEvent().getIntermediates() != null
-                && application.getAthleteList().size() > 0
+                && application.getEvent().getAthletes().size() > 0
                 && application.getEvent().getIntermediates().size() > 0);
     }
 

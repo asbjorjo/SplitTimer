@@ -110,19 +110,16 @@ public class TimingActivity extends AppCompatActivity {
                     Athlete selected = (Athlete) spinner.getSelectedItem();
                     long time = Calendar.getInstance().getTimeInMillis();
                     selected.getIntermediates().add(time);
+                    updateButtonState();
                     application.setReference(selected);
                     SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
                     table.sort(v.getId() - 1337 + 3, true);
                 }
             });
 
-            if (((Athlete)spinner.getSelectedItem()).getIntermediates().size() <= i) {
-                button.setEnabled(true);
-            } else {
-                button.setEnabled(false);
-            }
             layout.addView(button, params);
         }
+        updateButtonState();
     }
 
     private void sortByReference() {
@@ -141,6 +138,7 @@ public class TimingActivity extends AppCompatActivity {
             Spinner spinner = (Spinner) findViewById(R.id.spinner);
             ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
             spinner.setSelection(adapter.getPosition(athlete));
+            updateButtonState();
         }
     }
 
@@ -163,6 +161,20 @@ public class TimingActivity extends AppCompatActivity {
             }
 
             return new ColorDrawable(rowColor);
+        }
+    }
+
+    private void updateButtonState() {
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        Athlete athlete = (Athlete) spinner.getSelectedItem();
+
+        for (int i = 0; i < application.getEvent().getIntermediates().size(); i++) {
+            Button button = (Button) findViewById(1337 + i);
+            if (athlete.getIntermediates().size() <= i) {
+                button.setEnabled(true);
+            } else {
+                button.setEnabled(false);
+            }
         }
     }
 }

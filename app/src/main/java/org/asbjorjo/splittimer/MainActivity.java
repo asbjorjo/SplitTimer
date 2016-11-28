@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import org.asbjorjo.splittimer.data.Athlete;
 
@@ -23,12 +22,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         SplitTimerApplication application = (SplitTimerApplication) getApplication();
-        if (application.getEvent() != null
-                && application.getAthleteList() != null
-                && application.getAthleteList().size() > 0
-                && application.getEvent().getIntermediates() != null
-                && application.getEvent().getIntermediates().size() > 0) {
-            findViewById(R.id.main_button_timing).setEnabled(true);
+        if (application.getEvent() != null) {
+            findViewById(R.id.main_button_startlist).setEnabled(true);
+            findViewById(R.id.main_button_intermediate).setEnabled(true);
+
+            updateTimingButtonState();
         }
     }
 
@@ -70,28 +68,32 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case SplitTimerConstants.ADD_EVENT:
                 if (resultCode == RESULT_OK) {
-                    Button button = (Button) findViewById(R.id.main_button_startlist);
-                    button.setEnabled(true);
-                    button = (Button) findViewById(R.id.main_button_intermediate);
-                    button.setEnabled(true);
+                    findViewById(R.id.main_button_startlist).setEnabled(true);
+                    findViewById(R.id.main_button_intermediate).setEnabled(true);
                 }
                 break;
             case SplitTimerConstants.BUILD_INTERMEDIATES:
                 if (resultCode == RESULT_OK) {
-                    Button button = (Button) findViewById(R.id.main_button_timing);
-                    button.setEnabled(application.getEvent() != null
-                            && application.getEvent().getIntermediates() != null
-                            && application.getEvent().getIntermediates().size() > 0);
+                    updateTimingButtonState();
                 }
                 break;
             case SplitTimerConstants.BUILD_STARTLIST:
                 if (resultCode == RESULT_OK) {
-                    Button button = (Button) findViewById(R.id.main_button_timing);
-                    button.setEnabled(application.getAthleteList() != null
-                            && application.getAthleteList().size() > 0);
+                    updateTimingButtonState();
                 }
                 break;
         }
+    }
+
+    private void updateTimingButtonState() {
+        SplitTimerApplication application = (SplitTimerApplication) getApplication();
+
+        findViewById(R.id.main_button_timing).setEnabled(
+                application.getEvent() != null
+                && application.getAthleteList() != null
+                && application.getEvent().getIntermediates() != null
+                && application.getAthleteList().size() > 0
+                && application.getEvent().getIntermediates().size() > 0);
     }
 
     public void onClick(View view) {

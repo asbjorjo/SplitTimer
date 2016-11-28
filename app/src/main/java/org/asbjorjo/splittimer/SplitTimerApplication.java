@@ -2,6 +2,8 @@ package org.asbjorjo.splittimer;
 
 import android.app.Application;
 
+import org.asbjorjo.splittimer.data.Athlete;
+
 import java.util.List;
 
 /**

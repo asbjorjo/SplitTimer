@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.asbjorjo.splittimer.data.Athlete;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.asbjorjo.splittimer.data.Athlete;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -46,19 +48,19 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
 
     private View renderName(Athlete athlete) {
         TextView view = new TextView(getContext());
-        view.setText(athlete.name);
+        view.setText(athlete.getName());
         return view;
     }
 
     private View renderNumber(Athlete athlete) {
         TextView view = new TextView(getContext());
-        view.setText(Long.toString(athlete.number));
+        view.setText(Long.toString(athlete.getNumber()));
         return view;
     }
 
     private View renderStart(Athlete athlete) {
         TextView view = new TextView(getContext());
-        view.setText(formatTime(athlete.startTime));
+        view.setText(formatTime(athlete.getStartTime()));
         return view;
     }
     private View renderIntermediate(Athlete athlete, int intermediate) {
@@ -66,8 +68,8 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
         SplitTimerApplication application = (SplitTimerApplication) getContext().getApplicationContext();
         Athlete reference = application.getReference();
 
-        if (reference != null && athlete.intermediates.size() > intermediate && athlete.intermediates.get(intermediate) > 0) {
-            if (reference.intermediates.size() > intermediate && reference.intermediates.get(intermediate) > 0) {
+        if (reference != null && athlete.getIntermediates().size() > intermediate && athlete.getIntermediates().get(intermediate) > 0) {
+            if (reference.getIntermediates().size() > intermediate && reference.getIntermediates().get(intermediate) > 0) {
                 view.setText(formatTime(athlete.calculateRelativeTime(intermediate, reference)));
             } else {
                 view.setText("n/a");

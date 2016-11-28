@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import org.asbjorjo.splittimer.data.Athlete;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -107,14 +109,14 @@ public class TimingActivity extends AppCompatActivity {
                     Spinner spinner = (Spinner) findViewById(R.id.spinner);
                     Athlete selected = (Athlete) spinner.getSelectedItem();
                     long time = Calendar.getInstance().getTimeInMillis();
-                    selected.intermediates.add(time);
+                    selected.getIntermediates().add(time);
                     application.setReference(selected);
                     SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
                     table.sort(v.getId() - 1337 + 3, true);
                 }
             });
 
-            if (((Athlete)spinner.getSelectedItem()).intermediates.size() <= i) {
+            if (((Athlete)spinner.getSelectedItem()).getIntermediates().size() <= i) {
                 button.setEnabled(true);
             } else {
                 button.setEnabled(false);
@@ -127,7 +129,7 @@ public class TimingActivity extends AppCompatActivity {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         Athlete reference = application.getReference();
 
-        table.sort(2 + reference.intermediates.size(), true);
+        table.sort(2 + reference.getIntermediates().size(), true);
     }
 
     /**

@@ -1,7 +1,8 @@
-package org.asbjorjo.splittimer;
+package org.asbjorjo.splittimer.data;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Class for holding information about an Athlete and intermediate timings.
@@ -25,7 +26,7 @@ public class Athlete {
     /**
      * Array of intermediate times in milliseconds, absolute.
      */
-    ArrayList<Long> intermediates;
+    List<Long> intermediates;
 
     /**
      * Constructor for creating a sane Athlete instance.
@@ -34,7 +35,7 @@ public class Athlete {
      * @param number Start number
      * @param startTime Start time in milliseconds from some offset
      */
-    Athlete(String name, int number, long startTime) {
+    public Athlete(String name, int number, long startTime) {
         this.name = name;
         this.number = number;
         this.startTime = startTime;
@@ -76,6 +77,31 @@ public class Athlete {
         public int compare(Athlete athlete1, Athlete athlete2) {
             return Long.compare(athlete1.startTime, athlete2.startTime);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getNumber() {
+        return number;
+    }
+    public void setNumber(int number) {
+        this.number = number;
+    }
+    public long getStartTime() {
+        return startTime;
+    }
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+    public List<Long> getIntermediates() {
+        return intermediates;
+    }
+    public void setIntermediates(List<Long> intermediates) {
+        this.intermediates = intermediates;
     }
 
     @Override

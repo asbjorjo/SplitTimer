@@ -6,6 +6,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
+import org.asbjorjo.splittimer.data.Athlete;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -53,7 +55,7 @@ public class StartlistActivity extends AppCompatActivity {
         nameView.setText(null);
         numberView.setText(null);
         startView.setText(null);
-        
+
         setResult(RESULT_OK);
     }
 }

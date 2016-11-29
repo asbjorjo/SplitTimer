@@ -4,6 +4,7 @@ import android.app.Application;
 
 import org.asbjorjo.splittimer.data.Athlete;
 import org.asbjorjo.splittimer.data.Event;
+import org.asbjorjo.splittimer.db.DbHelper;
 
 import java.util.List;
 
@@ -12,9 +13,15 @@ import java.util.List;
  */
 
 public class SplitTimerApplication extends Application {
+    private DbHelper db;
     private List<Event> eventList;
     private Event event;
     private Athlete reference;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
 
     public Athlete getReference() {return reference;}
     public void setReference(Athlete reference) {this.reference = reference;}

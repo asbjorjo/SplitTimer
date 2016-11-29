@@ -1,4 +1,4 @@
-package org.asbjorjo.splittimer;
+package org.asbjorjo.splittimer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.asbjorjo.splittimer.R;
+import org.asbjorjo.splittimer.SplitTimerApplication;
+import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.data.Athlete;
 
 import java.util.ArrayList;

@@ -12,7 +12,7 @@ import java.util.List;
 public class AthleteIntermediateComparator implements Comparator<Athlete> {
     private int intermediate;
 
-    AthleteIntermediateComparator(int intermediate) {
+    public AthleteIntermediateComparator(int intermediate) {
         this.intermediate = intermediate;
     }
 

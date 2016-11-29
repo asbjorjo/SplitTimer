@@ -1,4 +1,4 @@
-package org.asbjorjo.splittimer;
+package org.asbjorjo.splittimer.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import org.asbjorjo.splittimer.AthleteIntermediateComparator;
+import org.asbjorjo.splittimer.AthleteTableDataAdapter;
+import org.asbjorjo.splittimer.R;
+import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.data.Athlete;
 
 import java.util.Arrays;

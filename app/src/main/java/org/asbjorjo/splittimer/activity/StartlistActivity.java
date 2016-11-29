@@ -1,4 +1,4 @@
-package org.asbjorjo.splittimer;
+package org.asbjorjo.splittimer.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
+import org.asbjorjo.splittimer.AthleteTableDataAdapter;
+import org.asbjorjo.splittimer.R;
+import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.data.Athlete;
 
 import java.util.ArrayList;

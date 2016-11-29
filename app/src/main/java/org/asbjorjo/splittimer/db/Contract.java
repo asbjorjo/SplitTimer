@@ -15,6 +15,9 @@ public class Contract {
     public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "SplitTimer.db";
 
+    /**
+     * Array listing all SQL statements necessary to setup the database.
+     */
     public static final String[] SQL_CREATE_TABLES = {
             Event.CREATE_TABLE,
             Athlete.CREATE_TABLE,
@@ -22,6 +25,10 @@ public class Contract {
             EventAthlete.CREATE_TABLE,
             IntermediateAthlete.CREATE_TABLE
     };
+
+    /**
+     * Array listing all SQL statements necessary to clear the database.
+     */
     public static final String[] SQL_DELETE_TABLES = {
             IntermediateAthlete.DELETE_TABLE,
             EventAthlete.DELETE_TABLE,
@@ -30,9 +37,15 @@ public class Contract {
             Event.DELETE_TABLE
     };
 
+    /**
+     * Private default constructor to avoid instantiation.
+     */
     private Contract() {}
 
     public static class Event implements BaseColumns {
+        /**
+         * Private default constructor to avoid instantiation.
+         */
         private Event() {}
 
         public static final String TABLE_NAME = "event";
@@ -78,6 +91,9 @@ public class Contract {
         };
     }
     public static class Athlete implements BaseColumns {
+        /**
+         * Private default constructor to avoid instantiation.
+         */
         private Athlete() {}
 
         public static final String TABLE_NAME = "athlete";
@@ -123,6 +139,9 @@ public class Contract {
         };
     }
     public static class Intermediate implements BaseColumns {
+        /**
+         * Private default constructor to avoid instantiation.
+         */
         private Intermediate() {}
 
         public static final String TABLE_NAME = "intermediate";
@@ -168,6 +187,9 @@ public class Contract {
         };
     }
     public static class EventAthlete {
+        /**
+         * Private default constructor to avoid instantiation.
+         */
         private EventAthlete() {}
 
         public static final String TABLE_NAME = "event_athlete";
@@ -182,6 +204,9 @@ public class Contract {
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
     public static class IntermediateAthlete {
+        /**
+         * Private default constructor to avoid instantiation.
+         */
         private IntermediateAthlete() {}
 
         public static final String TABLE_NAME = "intermediate_athlete";
@@ -194,4 +219,4 @@ public class Contract {
                 + ");";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
-}
+}`

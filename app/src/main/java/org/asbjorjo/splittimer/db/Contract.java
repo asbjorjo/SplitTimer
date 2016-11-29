@@ -1,5 +1,7 @@
 package org.asbjorjo.splittimer.db;
 
+import android.content.ContentResolver;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -7,6 +9,9 @@ import android.provider.BaseColumns;
  */
 
 public class Contract {
+    public static final String AUTHORITY = "org.asbjorjo.splittimer.SplitProvider";
+    public static final String SCHEME = "content://";
+    public static final String SLASH = "/";
     public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "SplitTimer.db";
 
@@ -33,11 +38,41 @@ public class Contract {
         public static final String TABLE_NAME = "event";
         public static final String KEY_NAME = "eventName";
 
+        /**
+         * The content style URI.
+         */
+        public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME);
+        /**
+         * The content URI for a single row. An ID must be appended.
+         */
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME + SLASH);
+        /**
+         * The default sort order for this table.
+         */
+        public static final String DEFAULT_SORT_ORDER = KEY_NAME + " ASC";
+        /**
+         * The MIME type of {@link #CONTENT_URI} providing rows.
+         */
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+                + "/vnd.org.asbjorjo.splittimer.event";
+        /**
+         * The MIME type of a {@link #CONTENT_URI} single row.
+         */
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+                + "/vnd.org.asbjorjo.splittimer.event";
+
+        /**
+         * SQL statement to create the table.
+         */
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
                 + _ID + " INTEGER PRIMARY KEY,"
                 + KEY_NAME + " TEXT NOT NULL"
                 +");";
+        /**
+         * SQL statement to drop table.
+         */
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+
         public static final String[] KEYS = {
                 KEY_NAME
         };
@@ -50,6 +85,29 @@ public class Contract {
         public static final String KEY_NUMBER = "number";
         public static final String KEY_STARTTIME = "starttime";
 
+        /**
+         * The content style URI.
+         */
+        public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME);
+        /**
+         * The content URI for a single row. An ID must be appended.
+         */
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME + SLASH);
+        /**
+         * The default sort order for this table.
+         */
+        public static final String DEFAULT_SORT_ORDER = KEY_STARTTIME + " ASC";
+        /**
+         * The MIME type of {@link #CONTENT_URI} providing rows.
+         */
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+                + "/vnd.org.asbjorjo.splittimer.athlete";
+        /**
+         * The MIME type of a {@link #CONTENT_URI} single row.
+         */
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+                + "/vnd.org.asbjorjo.splittimer.athlete";
+
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
                 + _ID + " INTEGER PRIMARY KEY,"
                 + KEY_NAME + " TEXT NOT NULL,"
@@ -57,6 +115,7 @@ public class Contract {
                 + KEY_STARTTIME + " INTEGER NOT NULL"
                 + ");";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+
         public static final String[] KEYS = {
                 KEY_NAME,
                 KEY_NUMBER,
@@ -68,14 +127,41 @@ public class Contract {
 
         public static final String TABLE_NAME = "intermediate";
         public static final String KEY_DESCRIPTION = "description";
+        public static final String KEY_ORDER = "order";
         public static final String KEY_EVENT = "event";
+
+        /**
+         * The content style URI.
+         */
+        public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME);
+        /**
+         * The content URI for a single row. An ID must be appended.
+         */
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME + SLASH);
+        /**
+         * The default sort order for this table.
+         */
+        public static final String DEFAULT_SORT_ORDER = KEY_ORDER + " ASC";
+        /**
+         * The MIME type of {@link #CONTENT_URI} providing rows.
+         */
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+                + "/vnd.org.asbjorjo.splittimer.intermediate";
+        /**
+         * The MIME type of a {@link #CONTENT_URI} single row.
+         */
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+                + "/vnd.org.asbjorjo.splittimer.intermediate";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
                 + _ID + " INTEGER PRIMARY KEY,"
                 + KEY_DESCRIPTION + " TEXT NOT NULL,"
+                + KEY_ORDER + " INTEGER NOT NULL,"
                 + KEY_EVENT + " INTEGER REFERENCES " + Event.TABLE_NAME
                 + ");";
+
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+
         public static final String[] KEYS = {
                 KEY_DESCRIPTION,
                 KEY_EVENT
@@ -92,6 +178,7 @@ public class Contract {
                 + KEY_EVENT + " INTEGER REFERENCES " + Event.TABLE_NAME + ","
                 + KEY_ATHLETE + " INTEGER REFERENCES " + Athlete.TABLE_NAME
                 + ");";
+
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
     public static class IntermediateAthlete {

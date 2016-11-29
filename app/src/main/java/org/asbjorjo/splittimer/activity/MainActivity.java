@@ -11,10 +11,6 @@ import android.view.View;
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.SplitTimerConstants;
-import org.asbjorjo.splittimer.data.Athlete;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -124,27 +120,5 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         startActivityForResult(intent, request_code);
-    }
-
-    /**
-     * Generate a list of Athletes at 5 minute start invervals for testing.
-      */
-    private static List<Athlete> createAthletes() {
-        String[] names = {"Arne", "Per", "Kari", "Kjersti", "Kjell", "Peder", "Rolf"};
-
-        int number = 1;
-        long start = 0;
-
-        List<Athlete> athletes = new ArrayList<>();
-
-        for (String name : names
-                ) {
-            athletes.add(new Athlete(name, number, start));
-
-            number++;
-            start += 5*1000;
-        }
-
-        return athletes;
     }
 }

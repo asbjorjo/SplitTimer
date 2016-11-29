@@ -219,4 +219,4 @@ public class Contract {
                 + ");";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
-}`
+}

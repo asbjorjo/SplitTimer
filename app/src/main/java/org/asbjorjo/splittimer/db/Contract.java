@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
  */
 
 public class Contract {
-    public static final String AUTHORITY = "org.asbjorjo.splittimer.SplitProvider";
+    public static final String AUTHORITY = "org.asbjorjo.splittimer.provider";
     public static final String SCHEME = "content://";
     public static final String SLASH = "/";
     public static final int DATABASE_VERSION = 3;
@@ -183,6 +183,7 @@ public class Contract {
 
         public static final String[] KEYS = {
                 KEY_DESCRIPTION,
+                KEY_ORDER,
                 KEY_EVENT
         };
     }
@@ -217,6 +218,7 @@ public class Contract {
                 + KEY_INTERMEDIATE + " INTEGER REFERENCES " + Intermediate.TABLE_NAME + ","
                 + KEY_ATHLETE + " INTEGER REFERENCES " + Athlete.TABLE_NAME
                 + ");";
+
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
     }
 }

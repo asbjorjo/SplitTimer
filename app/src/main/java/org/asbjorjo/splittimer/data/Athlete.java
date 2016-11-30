@@ -11,22 +11,23 @@ import java.util.List;
  */
 
 public class Athlete {
+    private long id;
     /**
      * Athlete name
      */
-    String name;
+    private String name;
     /**
      * Start number
      */
-    int number;
+    private int number;
     /**
      * Starting time in milliseconds, relative or absolute.
      */
-    long startTime;
+    private long startTime;
     /**
      * Array of intermediate times in milliseconds, absolute.
      */
-    List<Long> intermediates;
+    private List<Long> intermediates;
 
     /**
      * Constructor for creating a sane Athlete instance.
@@ -110,6 +111,10 @@ public class Athlete {
     public void setIntermediates(List<Long> intermediates) {
         this.intermediates = intermediates;
     }
+
+    public long getId() {return id;}
+
+    public void setId(long id) {this.id = id;}
 
     @Override
     public String toString() {

@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
+import org.asbjorjo.splittimer.db.EventDataSource;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
  */
 public class IntermediateActivity extends AppCompatActivity {
     private SplitTimerApplication application;
+    private EventDataSource dataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class IntermediateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         application = (SplitTimerApplication) getApplication();
+        dataSource = new EventDataSource(getApplicationContext());
 
         if (application.getEvent() == null) {
 
@@ -35,7 +38,8 @@ public class IntermediateActivity extends AppCompatActivity {
         }
 
         ListView listView = (ListView) findViewById(R.id.intermediate_list);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item, application.getEvent().getIntermediates());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item,
+                application.getEvent().getIntermediates());
         adapter.setNotifyOnChange(true);
         listView.setAdapter(adapter);
     }
@@ -43,11 +47,15 @@ public class IntermediateActivity extends AppCompatActivity {
     public void addIntermediate(View view) {
         EditText text = (EditText) findViewById(R.id.intermediate_input_description);
 
-        application.getEvent().getIntermediates().add(text.getText().toString());
+        dataSource.open();
+        dataSource.addIntermediate(application.getEvent(), text.getText().toString());
+        dataSource.close();
 
         ListView listView = (ListView) findViewById(R.id.intermediate_list);
         ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
         adapter.notifyDataSetChanged();
+
+        text.setText(null);
         setResult(RESULT_OK);
     }
 }

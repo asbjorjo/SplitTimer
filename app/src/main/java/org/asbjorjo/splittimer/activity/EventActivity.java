@@ -9,14 +9,14 @@ import android.widget.EditText;
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.data.Event;
-
-import java.util.ArrayList;
+import org.asbjorjo.splittimer.db.EventDataSource;
 
 /**
  * Created by AJohansen2 on 11/24/2016.
  */
 public class EventActivity extends AppCompatActivity {
     private SplitTimerApplication application;
+    private EventDataSource dataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,18 +26,20 @@ public class EventActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         application = (SplitTimerApplication) getApplication();
-        if (application.getEventList() == null) {
-            application.setEventList(new ArrayList<Event>());
-        }
+        dataSource = new EventDataSource(this.getApplicationContext());
     }
 
     public void addEvent(View view) {
         EditText text = (EditText) findViewById(R.id.event_input_name);
         Event event = new Event(text.getText().toString());
 
-        application.getEventList().add(event);
+        dataSource.open();
+        event = dataSource.saveEvent(event);
+        dataSource.close();
+
         application.setEvent(event);
 
+        text.setText(null);
         setResult(RESULT_OK);
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
  */
 
 public class Event {
+    private long id;
     /**
      * Name of event.
      */
@@ -16,15 +17,6 @@ public class Event {
      * List of intermediate timing points.
      */
     private List<String> intermediates;
-
-    public List<Athlete> getAthletes() {
-        return athletes;
-    }
-
-    public void setAthletes(List<Athlete> athletes) {
-        this.athletes = athletes;
-    }
-
     /**
      * List of Athletes participating in this Event.
      */
@@ -47,6 +39,10 @@ public class Event {
         this.name = name;
     }
 
+    public long getId() {return id;}
+
+    public void setId(long id) {this.id = id;}
+
     public List<String> getIntermediates() {
         return intermediates;
     }
@@ -54,4 +50,13 @@ public class Event {
     public void setIntermediates(List<String> intermediates) {
         this.intermediates = intermediates;
     }
+
+    public List<Athlete> getAthletes() {
+        return athletes;
+    }
+
+    public void setAthletes(List<Athlete> athletes) {
+        this.athletes = athletes;
+    }
+
 }

@@ -16,15 +16,10 @@ import android.widget.SimpleCursorAdapter;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
-import org.asbjorjo.splittimer.data.Athlete;
-import org.asbjorjo.splittimer.data.Event;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
-import org.asbjorjo.splittimer.db.DbUtils;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by AJohansen2 on 11/24/2016.
@@ -66,39 +61,6 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void updateActiveEvent(long eventId) {
-        String[] eventIdArg = new String[]{Long.toString(eventId)};
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-
-        Cursor cursor = database.query(Contract.Event.TABLE_NAME, Contract.Event.KEYS,
-                Contract.Event._ID + " = ?", eventIdArg,
-                null, null, null);
-        cursor.moveToFirst();
-        String eventName = cursor.getString(cursor.getColumnIndex(Contract.Event.KEY_NAME));
-        Event event = new Event(eventName);
-        event.setId(eventId);
-
-        List<String> intermediates = new ArrayList<>();
-        cursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
-        while (cursor.moveToNext()) {
-            intermediates.add(cursor.getString(
-                    cursor.getColumnIndex(Contract.Intermediate.KEY_DESCRIPTION)));
-        }
-        event.setIntermediates(intermediates);
-
-        List<Athlete> athletes = new ArrayList<>();
-        cursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
-        while (cursor.moveToNext()) {
-            long athleteId = cursor.getLong(cursor.getColumnIndex(Contract.Athlete._ID));
-            String name = cursor.getString(cursor.getColumnIndex(Contract.Athlete.KEY_NAME));
-            int number = cursor.getInt(cursor.getColumnIndex(Contract.Athlete.KEY_NUMBER));
-            long startTime = cursor.getLong(cursor.getColumnIndex(Contract.EventAthlete.KEY_STARTTIME));
-            Athlete athlete = new Athlete(name, number, startTime);
-            athlete.setId(athleteId);
-            athletes.add(athlete);
-        }
-        event.setAthletes(athletes);
-
-        application.setEvent(event);
         application.setActiveEvent(eventId);
 
         setResult(RESULT_OK);

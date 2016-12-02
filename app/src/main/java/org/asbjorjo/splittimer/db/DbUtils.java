@@ -64,7 +64,9 @@ public class DbUtils {
                                              DbHelper dbHelper) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
 
-        String queryTemplate = "SELECT (" + IntermediateAthlete.KEY_TIMESTAMP + "- (SELECT " +
+        String queryTemplate = "SELECT " + IntermediateAthlete.TABLE_NAME + "." +
+                IntermediateAthlete.KEY_ATHLETE +
+                ",(" + IntermediateAthlete.KEY_TIMESTAMP + "- (SELECT " +
                 IntermediateAthlete.KEY_TIMESTAMP + " FROM " + IntermediateAthlete.TABLE_NAME +
                 " WHERE " + IntermediateAthlete.KEY_INTERMEDIATE + " = {0} AND " +
                 IntermediateAthlete.KEY_ATHLETE + " = {1})) - (" + EventAthlete.KEY_STARTTIME +
@@ -90,5 +92,49 @@ public class DbUtils {
 
         Cursor cursor = database.rawQuery(query.toString(), null);
         return cursor;
+    }
+
+    public static Cursor getStandingForAthlete(long eventId, long athleteId, long referenceAthlete,
+                                             DbHelper dbHelper) {
+        Log.d(TAG, "eventId: " + eventId + " athleteId: " + athleteId + " referenceAthlete: " +
+                referenceAthlete);
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+
+        // cur is athlete, ref is reference
+        String queryTemplate = "SELECT cur.intermediate_id, " +
+                "(cur.timestamp-ref.timestamp) - (scur.starttime-sref.starttime) AS diff" +
+                " FROM intermediate_athlete cur, intermediate_athlete ref" +
+                " JOIN timingpoint ON cur.intermediate_id = timingpoint._id" +
+                " JOIN startlist scur ON cur.athlete_id = scur.athlete_id" +
+                " JOIN startlist sref ON ref.athlete_id = sref.athlete_id" +
+                " WHERE event = {0}" +
+                " AND cur.athlete_id = {1} AND ref.athlete_id = {2}" +
+                " AND cur.intermediate_id = ref.intermediate_id" +
+                " ORDER BY timingpoint.position ASC";
+
+        String query = MessageFormat.format(queryTemplate, Long.toString(eventId),
+                Long.toString(athleteId), Long.toString(referenceAthlete));
+
+        Log.d(TAG, query);
+
+        Cursor cursor = database.rawQuery(query.toString(), null);
+        Log.d(TAG, cursor.toString());
+        return cursor;
+    }
+
+    public static int getPassingsForAthlete(long id, long activeEvent, DbHelper dbHelper) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        String query = "SELECT count(athlete_id) FROM " + IntermediateAthlete.TABLE_NAME + " JOIN " +
+                Intermediate.TABLE_NAME + " ON " + IntermediateAthlete.TABLE_NAME + "." +
+                IntermediateAthlete.KEY_INTERMEDIATE + " = " + Intermediate.TABLE_NAME + "." +
+                Intermediate._ID + " WHERE " + Intermediate.TABLE_NAME + "." +
+                Intermediate.KEY_EVENT + " = ? AND " + IntermediateAthlete.TABLE_NAME + "." +
+                IntermediateAthlete.KEY_ATHLETE + " = ?";
+        Log.d(TAG, query);
+        Cursor cursor = database.rawQuery(query, new String[]{Long.toString(activeEvent),
+                Long.toString(id)});
+        cursor.moveToFirst();
+        Log.d(TAG, String.format("Found %d passings", cursor.getInt(0)));
+        return cursor.getInt(0);
     }
 }

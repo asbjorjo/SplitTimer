@@ -58,5 +58,4 @@ public class Event {
     public void setAthletes(List<Athlete> athletes) {
         this.athletes = athletes;
     }
-
 }

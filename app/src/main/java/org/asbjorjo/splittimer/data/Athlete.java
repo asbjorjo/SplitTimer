@@ -29,6 +29,10 @@ public class Athlete {
      */
     private List<Long> intermediates;
 
+    public Athlete(String name, int number) {
+        this.name = name;
+        this.number = number;
+    }
     /**
      * Constructor for creating a sane Athlete instance.
      *

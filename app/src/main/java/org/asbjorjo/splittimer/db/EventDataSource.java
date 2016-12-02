@@ -20,7 +20,7 @@ public class EventDataSource {
     private DbHelper dbHelper;
 
     public EventDataSource(Context context) {
-        dbHelper = new DbHelper(context);
+        dbHelper = DbHelper.getInstance(context);
     }
 
     public void open() throws SQLException {
@@ -31,11 +31,11 @@ public class EventDataSource {
         dbHelper.close();
     }
 
-    public Event saveEvent(Event event) {
-        ContentValues values = eventToContentValues(event);
+    public long saveEvent(String name) {
+        ContentValues values = new ContentValues();
+        values.put(Contract.Event.KEY_NAME, name);
         long newId = database.insert(Contract.Event.TABLE_NAME, null, values);
-        event.setId(newId);
-        return event;
+        return newId;
     }
 
     public void deleteEvent(Event event) {
@@ -53,22 +53,7 @@ public class EventDataSource {
         while (!eventCursor.isAfterLast()) {
             Event event = cursorToEvent(eventCursor);
 
-            Cursor intermediateCursor = database.query(Contract.Intermediate.TABLE_NAME,
-                    null, Contract.Intermediate.KEY_EVENT + " = ?",
-                    new String[]{Long.toString(event.getId())}, null, null,
-                    Contract.Intermediate.DEFAULT_SORT_ORDER);
-
-            event.setIntermediates(new ArrayList<String>());
-
-            if (intermediateCursor.getCount() > 0) {
-                intermediateCursor.moveToFirst();
-                while (!intermediateCursor.isAfterLast()) {
-                    event.getIntermediates().add(intermediateCursor.getString(
-                            intermediateCursor.getColumnIndex(Contract.Intermediate.KEY_DESCRIPTION)
-                    ));
-                    intermediateCursor.moveToNext();
-                }
-            }
+            event.setIntermediates(findIntermediateForEvent(event.getId()));
 
             eventCursor.moveToNext();
         }
@@ -76,15 +61,43 @@ public class EventDataSource {
         return events;
     }
 
-    public Event addIntermediate(Event event, String intermediate) {
+    private List<String> findIntermediateForEvent(long eventId) {
+        List<String> intermediate = new ArrayList<String>();
+
+        Cursor intermediateCursor = database.query(Contract.Intermediate.TABLE_NAME,
+                null, Contract.Intermediate.KEY_EVENT + " = ?",
+                new String[]{Long.toString(eventId)}, null, null,
+                Contract.Intermediate.DEFAULT_SORT_ORDER);
+
+        if (intermediateCursor.getCount() > 0) {
+            intermediateCursor.moveToFirst();
+            while (!intermediateCursor.isAfterLast()) {
+                intermediate.add(intermediateCursor.getString(
+                        intermediateCursor.getColumnIndex(Contract.Intermediate.KEY_DESCRIPTION)
+                ));
+                intermediateCursor.moveToNext();
+            }
+        }
+
+        return intermediate;
+    }
+
+    private int countIntermediateForEvent(long eventId) {
+        Cursor intermediateCursor = database.query(Contract.Intermediate.TABLE_NAME,
+                null, Contract.Intermediate.KEY_EVENT + " = ?",
+                new String[]{Long.toString(eventId)}, null, null,
+                Contract.Intermediate.DEFAULT_SORT_ORDER);
+        return intermediateCursor.getCount();
+    }
+
+    public void addIntermediate(long eventId, String description) {
         ContentValues values = new ContentValues();
-        values.put(Contract.Intermediate.KEY_EVENT, event.getId());
-        values.put(Contract.Intermediate.KEY_DESCRIPTION, intermediate);
-        if (event.getIntermediates() == null) event.setIntermediates(new ArrayList<String>());
-        values.put(Contract.Intermediate.KEY_POSITION, event.getIntermediates().size());
+        values.put(Contract.Intermediate.KEY_EVENT, eventId);
+        values.put(Contract.Intermediate.KEY_DESCRIPTION, description);
+        database.beginTransaction();
+        values.put(Contract.Intermediate.KEY_POSITION, countIntermediateForEvent(eventId));
         database.insert(Contract.Intermediate.TABLE_NAME, null, values);
-        event.getIntermediates().add(intermediate);
-        return event;
+        database.endTransaction();
     }
 
     private Event cursorToEvent(Cursor cursor) {
@@ -97,5 +110,11 @@ public class EventDataSource {
         ContentValues values = new ContentValues();
         values.put(Contract.Event.KEY_NAME, event.getName());
         return values;
+    }
+
+    public Event getEvent(long eventId) {
+        Cursor cursor = database.query(Contract.Event.TABLE_NAME, Contract.Event.KEYS,
+                Contract.Event._ID +" = ?", new String[]{Long.toString(eventId)}, null, null, null);
+        return cursorToEvent(cursor);
     }
 }

@@ -12,7 +12,7 @@ public class Contract {
     public static final String AUTHORITY = "org.asbjorjo.splittimer.provider";
     public static final String SCHEME = "content://";
     public static final String SLASH = "/";
-    public static final int DATABASE_VERSION = 12;
+    public static final int DATABASE_VERSION = 13;
     public static final String DATABASE_NAME = "SplitTimer.db";
 
     /**
@@ -207,6 +207,8 @@ public class Contract {
                 + ");";
 
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+
+        public static final String DEFAULT_SORT_ORDER = KEY_STARTTIME + " ASC";
 
         public static final String[] KEYS = {
                 KEY_EVENT,

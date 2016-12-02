@@ -58,8 +58,8 @@
             android:text="Add"/>
     </LinearLayout>
 
-    <de.codecrafters.tableview.TableView
-        android:id="@+id/startlist_table"
+    <ListView
+        android:id="@+id/list_startlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

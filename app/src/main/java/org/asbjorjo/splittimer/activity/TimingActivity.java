@@ -132,11 +132,10 @@ public class TimingActivity extends AppCompatActivity {
                             Contract.Intermediate.KEY_EVENT + " = ?",
                             new String[]{Long.toString(application.getEvent().getId())},
                             null, null, Contract.Intermediate.DEFAULT_SORT_ORDER);
-                    cursor.moveToFirst();
+                    cursor.moveToPosition(v.getId() - 1337);
                     ContentValues values = new ContentValues();
                     values.put(Contract.IntermediateAthlete.KEY_ATHLETE, selected.getId());
                     values.put(Contract.IntermediateAthlete.KEY_TIMESTAMP, time);
-                    values.put(Contract.IntermediateAthlete.KEY_EVENT, application.getEvent().getId());
                     values.put(Contract.IntermediateAthlete.KEY_INTERMEDIATE, cursor.getLong(
                             cursor.getColumnIndex(Contract.Intermediate._ID)
                     ));

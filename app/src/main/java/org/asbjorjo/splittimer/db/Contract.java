@@ -12,7 +12,7 @@ public class Contract {
     public static final String AUTHORITY = "org.asbjorjo.splittimer.provider";
     public static final String SCHEME = "content://";
     public static final String SLASH = "/";
-    public static final int DATABASE_VERSION = 14;
+    public static final int DATABASE_VERSION = 15;
     public static final String DATABASE_NAME = "SplitTimer.db";
 
     /**
@@ -49,7 +49,8 @@ public class Contract {
         private Event() {}
 
         public static final String TABLE_NAME = "event";
-        public static final String KEY_NAME = "eventName";
+        public static final String KEY_NAME = "event_name";
+        public static final String KEY_DATE = "event_date";
 
         /**
          * The content style URI.
@@ -66,20 +67,21 @@ public class Contract {
         /**
          * The MIME type of {@link #CONTENT_URI} providing rows.
          */
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-                + "/vnd.org.asbjorjo.splittimer.event";
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE +
+                "/vnd.org.asbjorjo.splittimer.event";
         /**
          * The MIME type of a {@link #CONTENT_URI} single row.
          */
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-                + "/vnd.org.asbjorjo.splittimer.event";
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE +
+                "/vnd.org.asbjorjo.splittimer.event";
 
         /**
          * SQL statement to create the table.
          */
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                + _ID + " INTEGER PRIMARY KEY,"
-                + KEY_NAME + " TEXT NOT NULL"
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
+                _ID + " INTEGER PRIMARY KEY," +
+                KEY_NAME + " TEXT NOT NULL," +
+                KEY_DATE + " INTEGER"
                 +");";
         /**
          * SQL statement to drop table.
@@ -88,7 +90,8 @@ public class Contract {
 
         public static final String[] KEYS = {
                 _ID,
-                KEY_NAME
+                KEY_NAME,
+                KEY_DATE
         };
     }
     public static class Athlete implements BaseColumns {
@@ -116,19 +119,19 @@ public class Contract {
         /**
          * The MIME type of {@link #CONTENT_URI} providing rows.
          */
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-                + "/vnd.org.asbjorjo.splittimer.athlete";
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE +
+                "/vnd.org.asbjorjo.splittimer.athlete";
         /**
          * The MIME type of a {@link #CONTENT_URI} single row.
          */
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-                + "/vnd.org.asbjorjo.splittimer.athlete";
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE +
+                "/vnd.org.asbjorjo.splittimer.athlete";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                + _ID + " INTEGER PRIMARY KEY,"
-                + KEY_NAME + " TEXT NOT NULL,"
-                + KEY_NUMBER + " INTEGER NOT NULL"
-                + ");";
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
+                _ID + " INTEGER PRIMARY KEY," +
+                KEY_NAME + " TEXT NOT NULL," +
+                KEY_NUMBER + " INTEGER NOT NULL" +
+                ");";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
         public static final String[] KEYS = {
@@ -143,7 +146,7 @@ public class Contract {
          */
         private Intermediate() {}
 
-        public static final String TABLE_NAME = "intermediate";
+        public static final String TABLE_NAME = "timingpoint";
         public static final String KEY_DESCRIPTION = "description";
         public static final String KEY_POSITION = "position";
         public static final String KEY_EVENT = "event";
@@ -163,21 +166,21 @@ public class Contract {
         /**
          * The MIME type of {@link #CONTENT_URI} providing rows.
          */
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-                + "/vnd.org.asbjorjo.splittimer.intermediate";
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE +
+                "/vnd.org.asbjorjo.splittimer.intermediate";
         /**
          * The MIME type of a {@link #CONTENT_URI} single row.
          */
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-                + "/vnd.org.asbjorjo.splittimer.intermediate";
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE +
+                "/vnd.org.asbjorjo.splittimer.intermediate";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                + _ID + " INTEGER PRIMARY KEY,"
-                + KEY_DESCRIPTION + " TEXT NOT NULL,"
-                + KEY_POSITION + " INTEGER NOT NULL,"
-                + KEY_EVENT + " INTEGER REFERENCES " + Event.TABLE_NAME
-                + " ON DELETE RESTRICT"
-                + ");";
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
+                _ID + " INTEGER PRIMARY KEY," +
+                KEY_DESCRIPTION + " TEXT NOT NULL," +
+                KEY_POSITION + " INTEGER NOT NULL," +
+                KEY_EVENT + " INTEGER REFERENCES " + Event.TABLE_NAME +
+                " ON DELETE RESTRICT" +
+                ");";
 
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
@@ -194,17 +197,17 @@ public class Contract {
          */
         private EventAthlete() {}
 
-        public static final String TABLE_NAME = "event_athlete";
+        public static final String TABLE_NAME = "startlist";
         public static final String KEY_EVENT = "event_id";
         public static final String KEY_ATHLETE = "athlete_id";
         public static final String KEY_STARTTIME = "starttime";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                + KEY_EVENT + " INTEGER REFERENCES " + Event.TABLE_NAME + ","
-                + KEY_ATHLETE + " INTEGER REFERENCES " + Athlete.TABLE_NAME + ","
-                + KEY_STARTTIME + " INTEGER NOT NULL" + ","
-                + "PRIMARY KEY(" + KEY_EVENT + "," + KEY_ATHLETE + ")"
-                + ");";
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
+                KEY_EVENT + " INTEGER REFERENCES " + Event.TABLE_NAME + "," +
+                KEY_ATHLETE + " INTEGER REFERENCES " + Athlete.TABLE_NAME + "," +
+                KEY_STARTTIME + " INTEGER NOT NULL" + "," +
+                "PRIMARY KEY(" + KEY_EVENT + "," + KEY_ATHLETE + ")" +
+                ");";
 
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
@@ -225,18 +228,14 @@ public class Contract {
         public static final String TABLE_NAME = "intermediate_athlete";
         public static final String KEY_INTERMEDIATE = "intermediate_id";
         public static final String KEY_ATHLETE = "athlete_id";
-        public static final String KEY_EVENT = "event_id";
         public static final String KEY_TIMESTAMP = "timestamp";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                + KEY_INTERMEDIATE + " INTEGER REFERENCES " + Intermediate.TABLE_NAME + ","
-                + KEY_ATHLETE + " INTEGER" + ","
-                + KEY_EVENT + " INTEGER" + ","
-                + KEY_TIMESTAMP + " INTEGER NOT NULL" + ","
-                + "FOREIGN KEY(" + KEY_ATHLETE + "," + KEY_EVENT + ")"
-                +" REFERENCES " + EventAthlete.TABLE_NAME + "("
-                + EventAthlete.KEY_ATHLETE + "," + EventAthlete.KEY_EVENT + ")"
-                + ");";
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
+                KEY_INTERMEDIATE + " INTEGER REFERENCES " + Intermediate.TABLE_NAME + "," +
+                KEY_ATHLETE + " INTEGER REFERENCES " + Athlete.TABLE_NAME + "," +
+                KEY_TIMESTAMP + " INTEGER NOT NULL" + "," +
+                "PRIMARY KEY (" + KEY_ATHLETE + "," + KEY_INTERMEDIATE + ")" +
+                ");";
 
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 

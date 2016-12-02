@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -23,6 +24,7 @@ import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.data.Athlete;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
+import org.asbjorjo.splittimer.db.DbUtils;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -38,8 +40,10 @@ import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
  */
 
 public class TimingActivity extends AppCompatActivity {
-    SplitTimerApplication application;
-    DbHelper dbHelper;
+    private static final String TAG = "TimingActivity";
+    private SplitTimerApplication application;
+    private DbHelper dbHelper;
+    private long referenceAthlete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +127,7 @@ public class TimingActivity extends AppCompatActivity {
                     selected.getIntermediates().add(time);
                     updateButtonState();
                     application.setReference(selected);
+                    referenceAthlete = selected.getId();
                     SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
                     table.sort(v.getId() - 1337 + 3, true);
 
@@ -140,6 +145,15 @@ public class TimingActivity extends AppCompatActivity {
                             cursor.getColumnIndex(Contract.Intermediate._ID)
                     ));
                     database.insert(Contract.IntermediateAthlete.TABLE_NAME, null, values);
+                    Log.d(TAG, "Reference: " + referenceAthlete);
+                    if (referenceAthlete > 0) {
+                        cursor = DbUtils.getTimingpointsForEvent(application.getActiveEvent(),
+                                dbHelper);
+                        cursor.moveToPosition(v.getId()-1337);
+                        long timingId = cursor.getLong(cursor.getColumnIndex(
+                                Contract.Intermediate._ID));
+                        DbUtils.getStandingsAtPoint(timingId, referenceAthlete, dbHelper);
+                    }
                 }
             });
 
@@ -151,6 +165,13 @@ public class TimingActivity extends AppCompatActivity {
     private void sortByReference() {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         Athlete reference = application.getReference();
+        referenceAthlete = reference.getId();
+
+        Cursor cursor = DbUtils.getTimingpointsForEvent(application.getActiveEvent(), dbHelper);
+        cursor.moveToPosition(reference.getIntermediates().size()-1);
+        long timingId = cursor.getLong(cursor.getColumnIndex(Contract.Intermediate._ID));
+
+        DbUtils.getStandingsAtPoint(timingId, referenceAthlete, dbHelper);
 
         table.sort(2 + reference.getIntermediates().size(), true);
     }

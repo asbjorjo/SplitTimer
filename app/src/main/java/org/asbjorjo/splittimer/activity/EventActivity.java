@@ -3,12 +3,12 @@ package org.asbjorjo.splittimer.activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -20,8 +20,10 @@ import org.asbjorjo.splittimer.data.Athlete;
 import org.asbjorjo.splittimer.data.Event;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
+import org.asbjorjo.splittimer.db.DbUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -76,9 +78,7 @@ public class EventActivity extends AppCompatActivity {
         event.setId(eventId);
 
         List<String> intermediates = new ArrayList<>();
-        cursor = database.query(Contract.Intermediate.TABLE_NAME, Contract.Intermediate.KEYS,
-                Contract.Intermediate.KEY_EVENT + " = ?", eventIdArg, null, null,
-                Contract.Intermediate.DEFAULT_SORT_ORDER);
+        cursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
         while (cursor.moveToNext()) {
             intermediates.add(cursor.getString(
                     cursor.getColumnIndex(Contract.Intermediate.KEY_DESCRIPTION)));
@@ -86,14 +86,7 @@ public class EventActivity extends AppCompatActivity {
         event.setIntermediates(intermediates);
 
         List<Athlete> athletes = new ArrayList<>();
-        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        queryBuilder.setTables(Contract.EventAthlete.TABLE_NAME + " JOIN "
-                + Contract.Athlete.TABLE_NAME + " ON " + Contract.Athlete._ID + " = "
-                + Contract.EventAthlete.KEY_ATHLETE);
-        queryBuilder.appendWhere(Contract.EventAthlete.KEY_EVENT + " = ?");
-        String query = queryBuilder.buildQuery(null, null, null, null,
-                Contract.EventAthlete.DEFAULT_SORT_ORDER, null);
-        cursor = database.rawQuery(query, new String[]{Long.toString(eventId)});
+        cursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
         while (cursor.moveToNext()) {
             long athleteId = cursor.getLong(cursor.getColumnIndex(Contract.Athlete._ID));
             String name = cursor.getString(cursor.getColumnIndex(Contract.Athlete.KEY_NAME));
@@ -106,16 +99,23 @@ public class EventActivity extends AppCompatActivity {
         event.setAthletes(athletes);
 
         application.setEvent(event);
+        application.setActiveEvent(eventId);
 
         setResult(RESULT_OK);
     }
 
     public void addEvent(View view) {
         EditText textView = (EditText) findViewById(R.id.event_input_name);
+        DatePicker datePicker = (DatePicker) findViewById(R.id.event_input_date);
+
+        Calendar date = Calendar.getInstance();
+        date.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), 0, 0, 0);
+
         String eventName = textView.getText().toString();
 
         ContentValues values = new ContentValues();
         values.put(Contract.Event.KEY_NAME, eventName);
+        values.put(Contract.Event.KEY_DATE, date.getTimeInMillis());
 
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         long eventId = database.insert(Contract.Event.TABLE_NAME, null, values);

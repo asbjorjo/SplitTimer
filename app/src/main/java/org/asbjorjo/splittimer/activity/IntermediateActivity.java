@@ -16,8 +16,7 @@ import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
-
-import java.util.ArrayList;
+import org.asbjorjo.splittimer.db.DbUtils;
 
 /**
  * Created by AJohansen2 on 11/24/2016.
@@ -36,13 +35,7 @@ public class IntermediateActivity extends AppCompatActivity {
         application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());
 
-        if (application.getEvent() == null) {
-
-        } else if (application.getEvent().getIntermediates() == null) {
-            application.getEvent().setIntermediates(new ArrayList<String>());
-        }
-
-        buildList(application.getEvent().getId());
+        if (application.getActiveEvent() > 0) buildList(application.getActiveEvent());
     }
 
     private void buildList(long eventId) {
@@ -71,14 +64,14 @@ public class IntermediateActivity extends AppCompatActivity {
 
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Contract.Intermediate.KEY_EVENT, application.getEvent().getId());
+        values.put(Contract.Intermediate.KEY_EVENT, application.getActiveEvent());
         values.put(Contract.Intermediate.KEY_DESCRIPTION, text.getText().toString());
-        values.put(Contract.Intermediate.KEY_POSITION, application.getEvent().getIntermediates().size());
+        values.put(Contract.Intermediate.KEY_POSITION, DbUtils.getTimingpointCountForEvent(
+                application.getActiveEvent(), dbHelper
+        ));
         database.insert(Contract.Intermediate.TABLE_NAME, null, values);
 
-        application.getEvent().getIntermediates().add(text.getText().toString());
-
-        buildList(application.getEvent().getId());
+        buildList(application.getActiveEvent());
 
         text.setText(null);
         setResult(RESULT_OK);

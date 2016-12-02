@@ -1,6 +1,9 @@
 package org.asbjorjo.splittimer.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +21,8 @@ import org.asbjorjo.splittimer.AthleteTableDataAdapter;
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.data.Athlete;
+import org.asbjorjo.splittimer.db.Contract;
+import org.asbjorjo.splittimer.db.DbHelper;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -34,6 +39,7 @@ import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
 
 public class TimingActivity extends AppCompatActivity {
     SplitTimerApplication application;
+    DbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,7 @@ public class TimingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         application = (SplitTimerApplication) getApplication();
+        dbHelper = DbHelper.getInstance(getApplicationContext());
 
         if (application.getEvent().getAthletes() == null) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -118,6 +125,22 @@ public class TimingActivity extends AppCompatActivity {
                     application.setReference(selected);
                     SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
                     table.sort(v.getId() - 1337 + 3, true);
+
+                    SQLiteDatabase database = dbHelper.getWritableDatabase();
+                    Cursor cursor = database.query(Contract.Intermediate.TABLE_NAME,
+                            new String[]{Contract.Intermediate._ID},
+                            Contract.Intermediate.KEY_EVENT + " = ?",
+                            new String[]{Long.toString(application.getEvent().getId())},
+                            null, null, Contract.Intermediate.DEFAULT_SORT_ORDER);
+                    cursor.moveToFirst();
+                    ContentValues values = new ContentValues();
+                    values.put(Contract.IntermediateAthlete.KEY_ATHLETE, selected.getId());
+                    values.put(Contract.IntermediateAthlete.KEY_TIMESTAMP, time);
+                    values.put(Contract.IntermediateAthlete.KEY_EVENT, application.getEvent().getId());
+                    values.put(Contract.IntermediateAthlete.KEY_INTERMEDIATE, cursor.getLong(
+                            cursor.getColumnIndex(Contract.Intermediate._ID)
+                    ));
+                    database.insert(Contract.IntermediateAthlete.TABLE_NAME, null, values);
                 }
             });
 

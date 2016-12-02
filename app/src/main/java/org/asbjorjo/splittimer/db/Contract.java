@@ -12,7 +12,7 @@ public class Contract {
     public static final String AUTHORITY = "org.asbjorjo.splittimer.provider";
     public static final String SCHEME = "content://";
     public static final String SLASH = "/";
-    public static final int DATABASE_VERSION = 13;
+    public static final int DATABASE_VERSION = 14;
     public static final String DATABASE_NAME = "SplitTimer.db";
 
     /**

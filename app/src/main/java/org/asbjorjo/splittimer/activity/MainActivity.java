@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     findViewById(R.id.main_button_startlist).setEnabled(true);
                     findViewById(R.id.main_button_intermediate).setEnabled(true);
+                    updateTimingButtonState();
                 }
                 break;
             case SplitTimerConstants.BUILD_INTERMEDIATES:

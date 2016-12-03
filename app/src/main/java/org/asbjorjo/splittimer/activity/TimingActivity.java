@@ -279,7 +279,7 @@ public class TimingActivity extends AppCompatActivity {
 
         for (int i = 0; i < timingpoints; i++) {
             Button button = (Button) findViewById(1337 + i);
-            if (athletePassings <= i) {
+            if (athletePassings == i) {
                 button.setEnabled(true);
             } else {
                 button.setEnabled(false);

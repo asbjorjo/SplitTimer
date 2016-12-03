@@ -166,6 +166,7 @@ public class TimingActivity extends AppCompatActivity {
                     values.put(Result.KEY_TIMINGPOINT, cursor.getLong(
                             cursor.getColumnIndex(Timingpoint._ID)
                     ));
+                    cursor.close();
                     database.insert(Result.TABLE_NAME, null, values);
 
                     referenceAthlete = selectedId;
@@ -177,6 +178,8 @@ public class TimingActivity extends AppCompatActivity {
                     table.sort(v.getId() - 1337 + 3, true);
                 }
             });
+
+            timingpointCursor.close();
 
             buttonLayout.addView(button, params);
         }
@@ -215,6 +218,7 @@ public class TimingActivity extends AppCompatActivity {
                     times[standings.getPosition()+1] = standings.getLong(
                             standings.getColumnIndex("diff"));
                 }
+                standings.close();
             }
 
             athlete.setTimes(times);

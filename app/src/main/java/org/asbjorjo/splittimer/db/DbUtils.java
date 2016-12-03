@@ -90,8 +90,7 @@ public class DbUtils {
 
         Log.d(TAG, query);
 
-        Cursor cursor = database.rawQuery(query.toString(), null);
-        return cursor;
+        return database.rawQuery(query.toString(), null);
     }
 
     public static Cursor getStandingForAthlete(long eventId, long athleteId, long referenceAthlete,
@@ -148,7 +147,10 @@ public class DbUtils {
                 Long.toString(id)});
         cursor.moveToFirst();
 
-        return cursor.getInt(0);
+        int passings = cursor.getInt(0);
+        cursor.close();
+
+        return passings;
     }
 
     public static long getStartTime(long eventId, long id, DbHelper dbHelper) {
@@ -157,6 +159,9 @@ public class DbUtils {
                 Startlist.KEY_EVENT + " = ? AND " + Startlist.KEY_ATHLETE + " = ?",
                 new String[]{Long.toString(eventId), Long.toString(id)}, null, null, null);
         cursor.moveToFirst();
-        return cursor.getLong(cursor.getColumnIndex(Startlist.KEY_STARTTIME));
+        long startTime = cursor.getLong(cursor.getColumnIndex(Startlist.KEY_STARTTIME));
+        cursor.close();
+
+        return startTime;
     }
 }

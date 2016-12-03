@@ -207,7 +207,7 @@ public class TimingActivity extends AppCompatActivity {
             times[0] = DbUtils.getStartTime(eventId, athlete.getId(), dbHelper);
 
             for (int i=1;i<times.length;i++) {
-                times[i] = Long.MIN_VALUE;
+                times[i] = Long.MAX_VALUE;
             }
 
             if (referenceAthlete > 0) {

@@ -58,7 +58,7 @@ public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {
         TextView view = new TextView(getContext());
 
         if (time < athlete.getTimes().length &&
-                athlete.getTimes()[time] > Long.MIN_VALUE)
+                athlete.getTimes()[time] < Long.MAX_VALUE)
             view.setText(formatTime(athlete.getTimes()[time]));
         else
             view.setText("");

@@ -36,8 +36,8 @@ import de.codecrafters.tableview.listeners.TableDataLongClickListener;
 import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
 
 import static org.asbjorjo.splittimer.db.Contract.Athlete;
-import static org.asbjorjo.splittimer.db.Contract.Intermediate;
-import static org.asbjorjo.splittimer.db.Contract.IntermediateAthlete;
+import static org.asbjorjo.splittimer.db.Contract.Result;
+import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
 
 /**
  * Created by AJohansen2 on 11/23/2016.
@@ -138,7 +138,7 @@ public class TimingActivity extends AppCompatActivity {
         Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
 
         while (timingpointCursor.moveToNext()) {
-            String description = timingpointCursor.getString(timingpointCursor.getColumnIndex(Intermediate.KEY_DESCRIPTION));
+            String description = timingpointCursor.getString(timingpointCursor.getColumnIndex(Timingpoint.KEY_DESCRIPTION));
 
             Button button = new Button(this);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -161,12 +161,12 @@ public class TimingActivity extends AppCompatActivity {
                     Cursor cursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
                     cursor.moveToPosition(v.getId() - 1337);
                     ContentValues values = new ContentValues();
-                    values.put(IntermediateAthlete.KEY_ATHLETE, selectedId);
-                    values.put(IntermediateAthlete.KEY_TIMESTAMP, time);
-                    values.put(IntermediateAthlete.KEY_INTERMEDIATE, cursor.getLong(
-                            cursor.getColumnIndex(Intermediate._ID)
+                    values.put(Result.KEY_ATHLETE, selectedId);
+                    values.put(Result.KEY_TIMESTAMP, time);
+                    values.put(Result.KEY_TIMINGPOINT, cursor.getLong(
+                            cursor.getColumnIndex(Timingpoint._ID)
                     ));
-                    database.insert(IntermediateAthlete.TABLE_NAME, null, values);
+                    database.insert(Result.TABLE_NAME, null, values);
 
                     referenceAthlete = selectedId;
 

@@ -12,7 +12,7 @@ public class Contract {
     public static final String AUTHORITY = "org.asbjorjo.splittimer.provider";
     public static final String SCHEME = "content://";
     public static final String SLASH = "/";
-    public static final int DATABASE_VERSION = 15;
+    public static final int DATABASE_VERSION = 16;
     public static final String DATABASE_NAME = "SplitTimer.db";
 
     /**
@@ -21,18 +21,18 @@ public class Contract {
     public static final String[] SQL_CREATE_TABLES = {
             Event.CREATE_TABLE,
             Athlete.CREATE_TABLE,
-            Intermediate.CREATE_TABLE,
-            EventAthlete.CREATE_TABLE,
-            IntermediateAthlete.CREATE_TABLE
+            Timingpoint.CREATE_TABLE,
+            Startlist.CREATE_TABLE,
+            Result.CREATE_TABLE
     };
 
     /**
      * Array listing all SQL statements necessary to clear the database.
      */
     public static final String[] SQL_DELETE_TABLES = {
-            IntermediateAthlete.DELETE_TABLE,
-            EventAthlete.DELETE_TABLE,
-            Intermediate.DELETE_TABLE,
+            Result.DELETE_TABLE,
+            Startlist.DELETE_TABLE,
+            Timingpoint.DELETE_TABLE,
             Athlete.DELETE_TABLE,
             Event.DELETE_TABLE
     };
@@ -140,11 +140,11 @@ public class Contract {
                 KEY_NUMBER
         };
     }
-    public static class Intermediate implements BaseColumns {
+    public static class Timingpoint implements BaseColumns {
         /**
          * Private default constructor to avoid instantiation.
          */
-        private Intermediate() {}
+        private Timingpoint() {}
 
         public static final String TABLE_NAME = "timingpoint";
         public static final String KEY_DESCRIPTION = "description";
@@ -191,11 +191,11 @@ public class Contract {
                 KEY_EVENT
         };
     }
-    public static class EventAthlete {
+    public static class Startlist {
         /**
          * Private default constructor to avoid instantiation.
          */
-        private EventAthlete() {}
+        private Startlist() {}
 
         public static final String TABLE_NAME = "startlist";
         public static final String KEY_EVENT = "event_id";
@@ -219,28 +219,28 @@ public class Contract {
                 KEY_STARTTIME
         };
     }
-    public static class IntermediateAthlete {
+    public static class Result {
         /**
          * Private default constructor to avoid instantiation.
          */
-        private IntermediateAthlete() {}
+        private Result() {}
 
-        public static final String TABLE_NAME = "intermediate_athlete";
-        public static final String KEY_INTERMEDIATE = "intermediate_id";
+        public static final String TABLE_NAME = "result";
+        public static final String KEY_TIMINGPOINT = "timingpoint_id";
         public static final String KEY_ATHLETE = "athlete_id";
         public static final String KEY_TIMESTAMP = "timestamp";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
-                KEY_INTERMEDIATE + " INTEGER REFERENCES " + Intermediate.TABLE_NAME + "," +
+                KEY_TIMINGPOINT + " INTEGER REFERENCES " + Timingpoint.TABLE_NAME + "," +
                 KEY_ATHLETE + " INTEGER REFERENCES " + Athlete.TABLE_NAME + "," +
                 KEY_TIMESTAMP + " INTEGER NOT NULL" + "," +
-                "PRIMARY KEY (" + KEY_ATHLETE + "," + KEY_INTERMEDIATE + ")" +
+                "PRIMARY KEY (" + KEY_ATHLETE + "," + KEY_TIMINGPOINT + ")" +
                 ");";
 
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
         public static final String[] KEYS = {
-                KEY_INTERMEDIATE,
+                KEY_TIMINGPOINT,
                 KEY_ATHLETE,
                 KEY_TIMESTAMP
         };

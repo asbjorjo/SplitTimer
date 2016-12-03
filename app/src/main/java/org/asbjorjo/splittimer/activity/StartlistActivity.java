@@ -42,7 +42,7 @@ public class StartlistActivity extends AppCompatActivity {
         String[] from = new String[]{
                 Contract.Athlete.KEY_NAME,
                 Contract.Athlete.KEY_NUMBER,
-                Contract.EventAthlete.KEY_STARTTIME
+                Contract.Startlist.KEY_STARTTIME
         };
         int[] to = new int[]{
                 R.id.startlist_item_name,
@@ -73,14 +73,14 @@ public class StartlistActivity extends AppCompatActivity {
         ContentValues eventValues = new ContentValues();
         athleteValues.put(Contract.Athlete.KEY_NAME, name);
         athleteValues.put(Contract.Athlete.KEY_NUMBER, number);
-        eventValues.put(Contract.EventAthlete.KEY_EVENT, application.getActiveEvent());
-        eventValues.put(Contract.EventAthlete.KEY_STARTTIME, startTime);
+        eventValues.put(Contract.Startlist.KEY_EVENT, application.getActiveEvent());
+        eventValues.put(Contract.Startlist.KEY_STARTTIME, startTime);
 
         database.beginTransaction();
         try {
             long athleteId = database.insert(Contract.Athlete.TABLE_NAME, null, athleteValues);
-            eventValues.put(Contract.EventAthlete.KEY_ATHLETE, athleteId);
-            database.insert(Contract.EventAthlete.TABLE_NAME, null, eventValues);
+            eventValues.put(Contract.Startlist.KEY_ATHLETE, athleteId);
+            database.insert(Contract.Startlist.TABLE_NAME, null, eventValues);
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();

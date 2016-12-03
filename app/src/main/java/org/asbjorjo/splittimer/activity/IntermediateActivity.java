@@ -40,8 +40,8 @@ public class IntermediateActivity extends AppCompatActivity {
 
     private void buildList(long eventId) {
         String[] from = new String[]{
-                Contract.Intermediate.KEY_DESCRIPTION,
-                Contract.Intermediate.KEY_POSITION
+                Contract.Timingpoint.KEY_DESCRIPTION,
+                Contract.Timingpoint.KEY_POSITION
         };
         int[] to = new int[]{
                 R.id.list_timingpoint_description,
@@ -49,10 +49,10 @@ public class IntermediateActivity extends AppCompatActivity {
         };
 
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor timingpointCursor = database.query(Contract.Intermediate.TABLE_NAME,
-                Contract.Intermediate.KEYS,
-                Contract.Intermediate.KEY_EVENT + " = ?", new String[]{Long.toString(eventId)},
-                null, null, Contract.Intermediate.DEFAULT_SORT_ORDER);
+        Cursor timingpointCursor = database.query(Contract.Timingpoint.TABLE_NAME,
+                Contract.Timingpoint.KEYS,
+                Contract.Timingpoint.KEY_EVENT + " = ?", new String[]{Long.toString(eventId)},
+                null, null, Contract.Timingpoint.DEFAULT_SORT_ORDER);
         CursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.list_timingpoint_item,
                 timingpointCursor, from, to, 0);
         ListView listView = (ListView) findViewById(R.id.intermediate_list);
@@ -64,12 +64,12 @@ public class IntermediateActivity extends AppCompatActivity {
 
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Contract.Intermediate.KEY_EVENT, application.getActiveEvent());
-        values.put(Contract.Intermediate.KEY_DESCRIPTION, text.getText().toString());
-        values.put(Contract.Intermediate.KEY_POSITION, DbUtils.getTimingpointCountForEvent(
+        values.put(Contract.Timingpoint.KEY_EVENT, application.getActiveEvent());
+        values.put(Contract.Timingpoint.KEY_DESCRIPTION, text.getText().toString());
+        values.put(Contract.Timingpoint.KEY_POSITION, DbUtils.getTimingpointCountForEvent(
                 application.getActiveEvent(), dbHelper
         ));
-        database.insert(Contract.Intermediate.TABLE_NAME, null, values);
+        database.insert(Contract.Timingpoint.TABLE_NAME, null, values);
 
         buildList(application.getActiveEvent());
 

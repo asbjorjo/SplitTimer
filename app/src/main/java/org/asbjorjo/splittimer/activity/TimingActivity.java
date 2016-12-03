@@ -200,21 +200,26 @@ public class TimingActivity extends AppCompatActivity {
 
     private void updateAthleteTimes() {
         Log.d(TAG, "updateAthleteTimes");
-        if (referenceAthlete > 0) {
-            long eventId = application.getActiveEvent();
-            TableView tableView = (TableView) findViewById(R.id.main_table);
-            List<TableAthlete> tableAthletes = tableView.getDataAdapter().getData();
-            for (TableAthlete athlete:tableAthletes) {
 
-                Cursor standings = DbUtils.getStandingForAthlete(eventId, athlete.getId(), referenceAthlete,
-                        dbHelper);
-                while (standings.moveToNext()) {
-                    athlete.getTimes()[standings.getPosition()+1] = standings.getLong(
-                            standings.getColumnIndex("diff"));
-                }
+        long eventId = application.getActiveEvent();
+        int timingpoints = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
+        TableView tableView = (TableView) findViewById(R.id.main_table);
+        List<TableAthlete> tableAthletes = tableView.getDataAdapter().getData();
+
+        for (TableAthlete athlete:tableAthletes) {
+            long[] times = new long[timingpoints];
+            times[0] = DbUtils.getStartTime(eventId, athlete.getId(), dbHelper);
+
+            if (referenceAthlete > 0) {
+                    Cursor standings = DbUtils.getStandingForAthlete(eventId, athlete.getId(), referenceAthlete,
+                            dbHelper);
+                    while (standings.moveToNext()) {
+                        athlete.getTimes()[standings.getPosition()+1] = standings.getLong(
+                                standings.getColumnIndex("diff"));
+                    }
             }
-            tableView.getDataAdapter().notifyDataSetChanged();
         }
+        tableView.getDataAdapter().notifyDataSetChanged();
     }
 
     private void sortByReference() {

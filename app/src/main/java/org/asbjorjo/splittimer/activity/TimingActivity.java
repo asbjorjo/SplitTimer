@@ -36,7 +36,6 @@ import de.codecrafters.tableview.listeners.TableDataLongClickListener;
 import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
 
 import static org.asbjorjo.splittimer.db.Contract.Athlete;
-import static org.asbjorjo.splittimer.db.Contract.EventAthlete;
 import static org.asbjorjo.splittimer.db.Contract.Intermediate;
 import static org.asbjorjo.splittimer.db.Contract.IntermediateAthlete;
 
@@ -83,37 +82,10 @@ public class TimingActivity extends AppCompatActivity {
         long eventId = application.getActiveEvent();
         int timingpointCount = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
 
-        Cursor athleteCursor = DbUtils.getAthletesForEvent(application.getActiveEvent(), dbHelper);
-        List<TableAthlete> athletes = new ArrayList<>();
-
-        while (athleteCursor.moveToNext()) {
-            long id = athleteCursor.getLong(athleteCursor.getColumnIndex(Athlete._ID));
-            String name = athleteCursor.getString(athleteCursor.getColumnIndex(Athlete.KEY_NAME));
-            int number = athleteCursor.getInt(athleteCursor.getColumnIndex(Athlete.KEY_NUMBER));
-            long startTime = athleteCursor.getLong(athleteCursor.getColumnIndex(
-                    EventAthlete.KEY_STARTTIME));
-
-            long[] times = new long[timingpointCount+1];
-
-            times[0] = startTime;
-
-            if (referenceAthlete > 0) {
-                Cursor standings = DbUtils.getStandingForAthlete(eventId, id, referenceAthlete,
-                        dbHelper);
-                while (standings.moveToNext()) {
-                    times[standings.getPosition()+1] = standings.getLong(
-                            standings.getColumnIndex("diff"));
-                }
-            } else {
-                for (int i=1;i<times.length;i++) {
-                    times[i] = Long.MIN_VALUE;
-                }
-            }
-
-            athletes.add(new TableAthlete(id, name, number, times));
-        }
+        List<TableAthlete> athletes = updateAthleteList(eventId);
 
         table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
+        updateAthleteTimes();
         table.setColumnCount(3 + timingpointCount);
         table.setColumnComparator(0, new TableAthlete.TableAthleteNameComparator());
         table.setColumnComparator(1, new TableAthlete.TableAthleteNumberComparator());
@@ -127,6 +99,23 @@ public class TimingActivity extends AppCompatActivity {
         table.addDataClickListener(new AthleteClickListener());
         table.addDataLongClickListener(new AthleteLongClickListener());
         table.setDataRowBackgroundProvider(new AthleteRowColorProvider());
+    }
+
+    private List<TableAthlete> updateAthleteList(long eventId) {
+        int timingpointCount = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
+        Cursor athleteCursor = DbUtils.getAthletesForEvent(application.getActiveEvent(), dbHelper);
+        List<TableAthlete> athletes = new ArrayList<>();
+
+        while (athleteCursor.moveToNext()) {
+            long[] times = new long[timingpointCount+1];
+            long id = athleteCursor.getLong(athleteCursor.getColumnIndex(Athlete._ID));
+            String name = athleteCursor.getString(athleteCursor.getColumnIndex(Athlete.KEY_NAME));
+            int number = athleteCursor.getInt(athleteCursor.getColumnIndex(Athlete.KEY_NUMBER));
+
+            athletes.add(new TableAthlete(id, name, number, times));
+        }
+
+        return athletes;
     }
 
     /**
@@ -173,11 +162,7 @@ public class TimingActivity extends AppCompatActivity {
                     table.sort(v.getId() - 1337 + 3, true);
 
                     SQLiteDatabase database = dbHelper.getWritableDatabase();
-                    Cursor cursor = database.query(Intermediate.TABLE_NAME,
-                            new String[]{Intermediate._ID},
-                            Intermediate.KEY_EVENT + " = ?",
-                            new String[]{Long.toString(application.getActiveEvent())},
-                            null, null, Intermediate.DEFAULT_SORT_ORDER);
+                    Cursor cursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
                     cursor.moveToPosition(v.getId() - 1337);
                     ContentValues values = new ContentValues();
                     values.put(IntermediateAthlete.KEY_ATHLETE, referenceAthlete);
@@ -187,8 +172,8 @@ public class TimingActivity extends AppCompatActivity {
                     ));
                     database.insert(IntermediateAthlete.TABLE_NAME, null, values);
 
-                    updateButtonState();
                     referenceAthlete = selectedId;
+                    updateButtonState();
                     updateAthleteTimes();
                 }
             });
@@ -207,17 +192,25 @@ public class TimingActivity extends AppCompatActivity {
         List<TableAthlete> tableAthletes = tableView.getDataAdapter().getData();
 
         for (TableAthlete athlete:tableAthletes) {
-            long[] times = new long[timingpoints];
+            Log.d(TAG, "updateAthleteTimes: " + athlete.toString());
+            long[] times = new long[timingpoints+1];
             times[0] = DbUtils.getStartTime(eventId, athlete.getId(), dbHelper);
 
             if (referenceAthlete > 0) {
                     Cursor standings = DbUtils.getStandingForAthlete(eventId, athlete.getId(), referenceAthlete,
                             dbHelper);
                     while (standings.moveToNext()) {
-                        athlete.getTimes()[standings.getPosition()+1] = standings.getLong(
+                        times[standings.getPosition()+1] = standings.getLong(
                                 standings.getColumnIndex("diff"));
                     }
+            } else {
+                for (int i=1;i<times.length;i++) {
+                    times[i] = Long.MIN_VALUE;
+                }
             }
+
+            athlete.setTimes(times);
+            Log.d(TAG, "updateAthleteTimes: " + athlete.toString());
         }
         tableView.getDataAdapter().notifyDataSetChanged();
     }
@@ -267,8 +260,6 @@ public class TimingActivity extends AppCompatActivity {
         public Drawable getRowBackground(final int rowIndex, final TableAthlete athlete) {
             int rowColor = getResources().getColor(R.color.white);
 
-            Log.d(TAG, "Coloring row: " + rowIndex + " athlete: " + athlete.getId() +
-                    " reference: " + referenceAthlete);
             if (athlete.getId() == referenceAthlete) {
                 rowColor = getResources().getColor(R.color.gray);
             }

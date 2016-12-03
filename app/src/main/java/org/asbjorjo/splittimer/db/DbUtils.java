@@ -131,11 +131,13 @@ public class DbUtils {
                 Intermediate._ID + " WHERE " + Intermediate.TABLE_NAME + "." +
                 Intermediate.KEY_EVENT + " = ? AND " + IntermediateAthlete.TABLE_NAME + "." +
                 IntermediateAthlete.KEY_ATHLETE + " = ?";
-        Log.d(TAG, query);
+
         Cursor cursor = database.rawQuery(query, new String[]{Long.toString(activeEvent),
                 Long.toString(id)});
         cursor.moveToFirst();
+
         Log.d(TAG, String.format("Found %d passings", cursor.getInt(0)));
+
         return cursor.getInt(0);
     }
 

@@ -1,12 +1,10 @@
 package org.asbjorjo.splittimer;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -59,7 +57,6 @@ public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {
     private View renderTime(TableAthlete athlete, int time) {
         TextView view = new TextView(getContext());
 
-        Log.d(TAG, "time: " + time + " athlete.times: " + Arrays.toString(athlete.getTimes()));
         if (time < athlete.getTimes().length &&
                 athlete.getTimes()[time] > Long.MIN_VALUE)
             view.setText(formatTime(athlete.getTimes()[time]));

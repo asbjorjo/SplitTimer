@@ -5,8 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.asbjorjo.splittimer.data.Athlete;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -16,16 +14,17 @@ import de.codecrafters.tableview.TableDataAdapter;
  * Created by AJohansen2 on 11/20/2016.
  */
 
-public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
+public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {
+    private final static String TAG = "AthleteTableDataAdapter";
     private final static String timeFormat = "%02d:%02d";
 
-    public AthleteTableDataAdapter(Context context, List<Athlete> data) {
+    public AthleteTableDataAdapter(Context context, List<TableAthlete> data) {
         super(context, data);
     }
 
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        Athlete athlete = getRowData(rowIndex);
+        TableAthlete athlete = getRowData(rowIndex);
         View renderView = null;
 
         switch (columnIndex) {
@@ -35,46 +34,34 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
             case 1:
                 renderView = renderNumber(athlete);
                 break;
-            case 2:
-                renderView = renderStart(athlete);
-                break;
             default:
-                renderView = renderIntermediate(athlete, columnIndex-3);
+                renderView = renderTime(athlete, columnIndex-2);
                 break;
         }
 
         return renderView;
     }
 
-    private View renderName(Athlete athlete) {
+    private View renderName(TableAthlete athlete) {
         TextView view = new TextView(getContext());
         view.setText(athlete.getName());
         return view;
     }
 
-    private View renderNumber(Athlete athlete) {
+    private View renderNumber(TableAthlete athlete) {
         TextView view = new TextView(getContext());
         view.setText(Long.toString(athlete.getNumber()));
         return view;
     }
 
-    private View renderStart(Athlete athlete) {
+    private View renderTime(TableAthlete athlete, int time) {
         TextView view = new TextView(getContext());
-        view.setText(formatTime(athlete.getStartTime()));
-        return view;
-    }
-    private View renderIntermediate(Athlete athlete, int intermediate) {
-        TextView view = new TextView(getContext());
-        SplitTimerApplication application = (SplitTimerApplication) getContext().getApplicationContext();
-        Athlete reference = application.getReference();
 
-        if (reference != null && athlete.getIntermediates().size() > intermediate && athlete.getIntermediates().get(intermediate) > 0) {
-            if (reference.getIntermediates().size() > intermediate && reference.getIntermediates().get(intermediate) > 0) {
-                view.setText(formatTime(athlete.calculateRelativeTime(intermediate, reference)));
-            } else {
-                view.setText("n/a");
-            }
-        }
+        if (time < athlete.getTimes().length &&
+                athlete.getTimes()[time] > Long.MIN_VALUE)
+            view.setText(formatTime(athlete.getTimes()[time]));
+        else
+            view.setText("");
 
         return view;
     }

@@ -11,8 +11,12 @@ import android.view.View;
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.SplitTimerConstants;
+import org.asbjorjo.splittimer.db.DbHelper;
+import org.asbjorjo.splittimer.db.DbUtils;
 
 public class MainActivity extends AppCompatActivity {
+    private DbHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         SplitTimerApplication application = (SplitTimerApplication) getApplication();
-        if (application.getEvent() != null) {
+        dbHelper = DbHelper.getInstance(getApplicationContext());
+
+        if (application.getActiveEvent() > 0) {
             findViewById(R.id.main_button_startlist).setEnabled(true);
             findViewById(R.id.main_button_intermediate).setEnabled(true);
 
@@ -69,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     findViewById(R.id.main_button_startlist).setEnabled(true);
                     findViewById(R.id.main_button_intermediate).setEnabled(true);
+                    updateTimingButtonState();
                 }
                 break;
             case SplitTimerConstants.BUILD_INTERMEDIATES:
@@ -88,11 +95,9 @@ public class MainActivity extends AppCompatActivity {
         SplitTimerApplication application = (SplitTimerApplication) getApplication();
 
         findViewById(R.id.main_button_timing).setEnabled(
-                application.getEvent() != null
-                && application.getEvent().getAthletes() != null
-                && application.getEvent().getIntermediates() != null
-                && application.getEvent().getAthletes().size() > 0
-                && application.getEvent().getIntermediates().size() > 0);
+                application.getActiveEvent() > 0
+                && DbUtils.getTimingpointCountForEvent(application.getActiveEvent(), dbHelper) > 0
+                && DbUtils.getAthleteCountForEvent(application.getActiveEvent(), dbHelper) > 0);
     }
 
     public void onClick(View view) {

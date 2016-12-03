@@ -11,13 +11,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_startlist"
+    tools:showIn="@layout/activity_event"
     tools:context="org.asbjorjo.splittimer.activity.EventActivity">
-    <LinearLayout
+    <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/intermediate_input"
+        android:id="@+id/event_input"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -26,17 +26,30 @@
             android:id="@+id/event_input_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:hint="Name"/>
+
+        <DatePicker
+            android:id="@+id/event_input_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_input_name"
+            android:calendarViewShown="false"
+            android:spinnersShown="true"
+            android:datePickerMode="spinner"/>
 
         <Button
             android:id="@+id/event_input_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_below="@id/event_input_date"
             android:onClick="addEvent"
             android:text="Add"/>
-    </LinearLayout>
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/event_input"/>
 </RelativeLayout>

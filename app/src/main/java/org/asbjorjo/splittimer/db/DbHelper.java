@@ -10,8 +10,29 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public DbHelper(Context context) {
+    private static DbHelper instance;
+
+    public static synchronized DbHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DbHelper(context);
+        }
+        return instance;
+    }
+
+    private DbHelper(Context context) {
         super(context, Contract.DATABASE_NAME, null, Contract.DATABASE_VERSION);
+    }
+
+    @Override
+    public synchronized void close() {
+        instance = null;
+        super.close();
+    }
+
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        if (!db.isReadOnly()) db.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     @Override

@@ -246,15 +246,6 @@ public class TimingActivity extends AppCompatActivity {
         public void onDataClicked(int rowIndex, TableAthlete athlete) {
             Spinner spinner = (Spinner) findViewById(R.id.spinner);
 
-            /*Cursor cursor = ((CursorAdapter)spinner.getAdapter()).getCursor();
-            cursor.moveToPosition(-1);
-            while (cursor.moveToNext()) {
-                if (cursor.getLong(cursor.getColumnIndex(Athlete._ID)) == athlete.getId()) {
-                    spinner.setSelection(cursor.getPosition());
-                    break;
-                }
-            }*/
-
             int count = spinner.getCount();
             for (int i = 0; i < count; i++) {
                 if (athlete.getId() == spinner.getItemIdAtPosition(i)) {

@@ -59,8 +59,8 @@ public class TimingActivity extends AppCompatActivity {
         dbHelper = DbHelper.getInstance(getApplicationContext());
 
         if (application.getActiveEvent() > 0) {
-            initializeTable();
             initializeDropdown();
+            initializeTable();
         } else {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -138,6 +138,7 @@ public class TimingActivity extends AppCompatActivity {
 
         while (timingpointCursor.moveToNext()) {
             String description = timingpointCursor.getString(timingpointCursor.getColumnIndex(Timingpoint.KEY_DESCRIPTION));
+            RelativeLayout buttonLayout = (RelativeLayout) findViewById(R.id.timing_buttons);
 
             Button button = new Button(this);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -145,7 +146,7 @@ public class TimingActivity extends AppCompatActivity {
             button.setText(description);
 
             if (timingpointCursor.getPosition() == 0) {
-                params.addRule(RelativeLayout.RIGHT_OF, R.id.spinner);
+                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
             } else {
                 params.addRule(RelativeLayout.RIGHT_OF, button.getId()-1);
             }
@@ -177,7 +178,7 @@ public class TimingActivity extends AppCompatActivity {
                 }
             });
 
-            layout.addView(button, params);
+            buttonLayout.addView(button, params);
         }
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -3,7 +3,6 @@ package org.asbjorjo.splittimer.db;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.util.Log;
 
 import java.text.MessageFormat;
 
@@ -87,8 +86,6 @@ public class DbUtils {
 
         String query = MessageFormat.format(queryTemplate, Long.toString(timingpointId),
                 Long.toString(referenceAthlete));
-
-        Log.d(TAG, query);
 
         return database.rawQuery(query.toString(), null);
     }

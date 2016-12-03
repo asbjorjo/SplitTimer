@@ -153,18 +153,15 @@ public class TimingActivity extends AppCompatActivity {
 
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Spinner spinner = (Spinner) findViewById(R.id.spinner);
                     long time = Calendar.getInstance().getTimeInMillis();
+                    Spinner spinner = (Spinner) findViewById(R.id.spinner);
                     long selectedId =  spinner.getSelectedItemId();
-
-                    SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
-                    table.sort(v.getId() - 1337 + 3, true);
 
                     SQLiteDatabase database = dbHelper.getWritableDatabase();
                     Cursor cursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
                     cursor.moveToPosition(v.getId() - 1337);
                     ContentValues values = new ContentValues();
-                    values.put(IntermediateAthlete.KEY_ATHLETE, referenceAthlete);
+                    values.put(IntermediateAthlete.KEY_ATHLETE, selectedId);
                     values.put(IntermediateAthlete.KEY_TIMESTAMP, time);
                     values.put(IntermediateAthlete.KEY_INTERMEDIATE, cursor.getLong(
                             cursor.getColumnIndex(Intermediate._ID)
@@ -172,8 +169,12 @@ public class TimingActivity extends AppCompatActivity {
                     database.insert(IntermediateAthlete.TABLE_NAME, null, values);
 
                     referenceAthlete = selectedId;
+
                     updateButtonState();
                     updateAthleteTimes();
+
+                    SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
+                    table.sort(v.getId() - 1337 + 3, true);
                 }
             });
 

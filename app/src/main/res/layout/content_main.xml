@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick"
-        android:text="Create event"/>
+        android:text="@string/create_event"/>
     <Button
         android:id="@+id/main_button_intermediate"
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         android:onClick="onClick"
         android:layout_below="@id/main_button_event"
         android:enabled="false"
-        android:text="Create timing points"/>
+        android:text="@string/create_timing_points"/>
     <Button
         android:id="@+id/main_button_startlist"
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
         android:onClick="onClick"
         android:layout_below="@id/main_button_intermediate"
         android:enabled="false"
-        android:text="Create startlist"/>
+        android:text="@string/create_startlist"/>
     <Button
         android:id="@+id/main_button_timing"
         android:layout_width="match_parent"
@@ -43,5 +43,5 @@
         android:onClick="onClick"
         android:layout_below="@id/main_button_startlist"
         android:enabled="false"
-        android:text="Start timing"/>
+        android:text="@string/start_timing"/>
 </RelativeLayout>

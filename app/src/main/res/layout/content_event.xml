@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:maxLines="1"
-            android:hint="Name"/>
+            android:hint="@string/name"/>
 
         <DatePicker
             android:id="@+id/event_input_date"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/event_input_date"
             android:onClick="addEvent"
-            android:text="Add"/>
+            android:text="@string/add"/>
     </RelativeLayout>
     <ListView
         android:id="@+id/event_list"

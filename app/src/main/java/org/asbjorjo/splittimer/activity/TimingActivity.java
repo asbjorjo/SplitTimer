@@ -179,10 +179,9 @@ public class TimingActivity extends AppCompatActivity {
                 }
             });
 
-            timingpointCursor.close();
-
             buttonLayout.addView(button, params);
         }
+        timingpointCursor.close();
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

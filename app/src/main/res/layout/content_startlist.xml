@@ -49,19 +49,20 @@
             android:maxLines="1"
             android:hint="Start time"/>
 
-        <Button
-            android:id="@+id/startlist_input_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="addAthlete"
-            android:text="Add"/>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/startlist_input_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startlist_input"
+        android:onClick="addAthlete"
+        android:text="Add"/>
 
     <ListView
         android:id="@+id/list_startlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/startlist_input"/>
+        android:layout_below="@id/startlist_input_button"/>
 </RelativeLayout>

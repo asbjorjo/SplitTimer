@@ -195,8 +195,6 @@ public class TimingActivity extends AppCompatActivity {
 
             }
         });
-
-        updateButtonState();
     }
 
     private void updateAthleteTimes() {

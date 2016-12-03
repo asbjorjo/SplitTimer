@@ -12,8 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -154,9 +154,8 @@ public class TimingActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Spinner spinner = (Spinner) findViewById(R.id.spinner);
-                    Cursor selected = (Cursor) spinner.getSelectedItem();
                     long time = Calendar.getInstance().getTimeInMillis();
-                    long selectedId =  selected.getLong(selected.getColumnIndex(Athlete._ID));
+                    long selectedId =  spinner.getSelectedItemId();
 
                     SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
                     table.sort(v.getId() - 1337 + 3, true);
@@ -180,6 +179,23 @@ public class TimingActivity extends AppCompatActivity {
 
             layout.addView(button, params);
         }
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                StringBuilder sb = new StringBuilder("onItemSelected");
+                sb.append(" position: ").append(position);
+                sb.append(" id: ").append(id);
+                Log.d(TAG, sb.toString());
+                updateButtonState();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         updateButtonState();
     }
 
@@ -232,16 +248,22 @@ public class TimingActivity extends AppCompatActivity {
         public void onDataClicked(int rowIndex, TableAthlete athlete) {
             Spinner spinner = (Spinner) findViewById(R.id.spinner);
 
-            Cursor cursor = ((CursorAdapter)spinner.getAdapter()).getCursor();
+            /*Cursor cursor = ((CursorAdapter)spinner.getAdapter()).getCursor();
             cursor.moveToPosition(-1);
             while (cursor.moveToNext()) {
                 if (cursor.getLong(cursor.getColumnIndex(Athlete._ID)) == athlete.getId()) {
                     spinner.setSelection(cursor.getPosition());
                     break;
                 }
-            }
+            }*/
 
-            updateButtonState();
+            int count = spinner.getCount();
+            for (int i = 0; i < count; i++) {
+                if (athlete.getId() == spinner.getItemIdAtPosition(i)) {
+                    spinner.setSelection(i);
+                    break;
+                }
+            }
         }
     }
 
@@ -270,8 +292,7 @@ public class TimingActivity extends AppCompatActivity {
 
     private void updateButtonState() {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        Cursor athlete = (Cursor) spinner.getSelectedItem();
-        long athleteId = athlete.getLong(athlete.getColumnIndex(Athlete._ID));
+        long athleteId = spinner.getSelectedItemId();
         int timingpoints = DbUtils.getTimingpointCountForEvent(application.getActiveEvent(),
                 dbHelper);
         int athletePassings = DbUtils.getPassingsForAthlete(athleteId, application.getActiveEvent(),

@@ -1,6 +1,7 @@
 package org.asbjorjo.splittimer.db;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
@@ -118,7 +119,7 @@ public class DbUtils {
         Log.d(TAG, query);
 
         Cursor cursor = database.rawQuery(query.toString(), null);
-        Log.d(TAG, cursor.toString());
+        Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
         return cursor;
     }
 
@@ -136,5 +137,14 @@ public class DbUtils {
         cursor.moveToFirst();
         Log.d(TAG, String.format("Found %d passings", cursor.getInt(0)));
         return cursor.getInt(0);
+    }
+
+    public static long getStartTime(long eventId, long id, DbHelper dbHelper) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        Cursor cursor = database.query(EventAthlete.TABLE_NAME, EventAthlete.KEYS,
+                EventAthlete.KEY_EVENT + " = ? AND " + EventAthlete.KEY_ATHLETE + " = ?",
+                new String[]{Long.toString(eventId), Long.toString(id)}, null, null, null);
+        cursor.moveToFirst();
+        return cursor.getLong(cursor.getColumnIndex(EventAthlete.KEY_STARTTIME));
     }
 }

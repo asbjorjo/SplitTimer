@@ -1,6 +1,8 @@
 package org.asbjorjo.splittimer;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * Created by AJohansen2 on 12/2/2016.
@@ -49,6 +51,33 @@ public class TableAthlete {
 
     public void setTimes(long[] times) {
         this.times = times;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TableAthlete{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", number=").append(number);
+        sb.append(", times=").append(Arrays.toString(times));
+        sb.append('}');
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TableAthlete athlete = (TableAthlete) o;
+        return id == athlete.id &&
+                number == athlete.number &&
+                Objects.equals(name, athlete.name) &&
+                Arrays.equals(times, athlete.times);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, number, times);
     }
 
     public static class TableAthleteNameComparator implements Comparator<TableAthlete> {

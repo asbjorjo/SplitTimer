@@ -101,17 +101,36 @@ public class DbUtils {
                 referenceAthlete);
         SQLiteDatabase database = dbHelper.getReadableDatabase();
 
-        // cur is athlete, ref is reference
-        String queryTemplate = "SELECT cur.intermediate_id, " +
-                "(cur.timestamp-ref.timestamp) - (scur.starttime-sref.starttime) AS diff" +
-                " FROM intermediate_athlete cur, intermediate_athlete ref" +
-                " JOIN timingpoint ON cur.intermediate_id = timingpoint._id" +
-                " JOIN startlist scur ON cur.athlete_id = scur.athlete_id" +
-                " JOIN startlist sref ON ref.athlete_id = sref.athlete_id" +
-                " WHERE event = {0}" +
-                " AND cur.athlete_id = {1} AND ref.athlete_id = {2}" +
-                " AND cur.intermediate_id = ref.intermediate_id" +
-                " ORDER BY timingpoint.position ASC";
+        final String ATHLETE_PREFIX = "cur";
+        final String REFERENCE_PREFIX = "ref";
+
+        final String ATHLETE_STARTLIST = ATHLETE_PREFIX + EventAthlete.TABLE_NAME;
+        final String ATHLETE_RESULTS = ATHLETE_PREFIX + IntermediateAthlete.TABLE_NAME;
+        final String REFERENCE_STARTLIST = REFERENCE_PREFIX + EventAthlete.TABLE_NAME;
+        final String REFERENCE_RESULTS = REFERENCE_PREFIX + IntermediateAthlete.TABLE_NAME;
+
+        String queryTemplate = "SELECT " + ATHLETE_RESULTS + "." + IntermediateAthlete.KEY_INTERMEDIATE +
+                ", (" + ATHLETE_RESULTS + "." + IntermediateAthlete.KEY_TIMESTAMP + " - " +
+                REFERENCE_RESULTS + "." + IntermediateAthlete.KEY_TIMESTAMP + ") - (" +
+                ATHLETE_STARTLIST + "." + EventAthlete.KEY_STARTTIME + " - " +
+                REFERENCE_STARTLIST + "." + EventAthlete.KEY_STARTTIME + ") AS diff FROM " +
+                IntermediateAthlete.TABLE_NAME + " " + ATHLETE_RESULTS + "," +
+                IntermediateAthlete.TABLE_NAME + " " + REFERENCE_RESULTS + " JOIN " +
+                Intermediate.TABLE_NAME + " ON " +
+                ATHLETE_RESULTS + "." + IntermediateAthlete.KEY_INTERMEDIATE + " = " +
+                Intermediate.TABLE_NAME + "." + Intermediate._ID + " JOIN " +
+                EventAthlete.TABLE_NAME + " " + ATHLETE_STARTLIST + " ON " +
+                ATHLETE_RESULTS + "." + IntermediateAthlete.KEY_ATHLETE + " = " +
+                ATHLETE_STARTLIST + "." + EventAthlete.KEY_ATHLETE + " JOIN " +
+                EventAthlete.TABLE_NAME + " " + REFERENCE_STARTLIST + " ON " +
+                REFERENCE_RESULTS + "." + IntermediateAthlete.KEY_ATHLETE + " = " +
+                REFERENCE_STARTLIST + "." + EventAthlete.KEY_ATHLETE + " WHERE " +
+                Intermediate.TABLE_NAME + "." + Intermediate.KEY_EVENT + " = {0} AND " +
+                ATHLETE_RESULTS + "." + IntermediateAthlete.KEY_ATHLETE + " = {1} AND " +
+                REFERENCE_RESULTS + "." + IntermediateAthlete.KEY_ATHLETE + " = {2} AND " +
+                ATHLETE_RESULTS + "." + IntermediateAthlete.KEY_INTERMEDIATE + " = " +
+                REFERENCE_RESULTS + "." + IntermediateAthlete.KEY_INTERMEDIATE +
+                " ORDER BY " + Intermediate.TABLE_NAME + "." + Intermediate.KEY_POSITION;
 
         String query = MessageFormat.format(queryTemplate, Long.toString(eventId),
                 Long.toString(athleteId), Long.toString(referenceAthlete));

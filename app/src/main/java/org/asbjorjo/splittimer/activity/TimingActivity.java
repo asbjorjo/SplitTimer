@@ -211,16 +211,16 @@ public class TimingActivity extends AppCompatActivity {
             long[] times = new long[timingpoints+1];
             times[0] = DbUtils.getStartTime(eventId, athlete.getId(), dbHelper);
 
+            for (int i=1;i<times.length;i++) {
+                times[i] = Long.MIN_VALUE;
+            }
+
             if (referenceAthlete > 0) {
-                    Cursor standings = DbUtils.getStandingForAthlete(eventId, athlete.getId(), referenceAthlete,
-                            dbHelper);
-                    while (standings.moveToNext()) {
-                        times[standings.getPosition()+1] = standings.getLong(
-                                standings.getColumnIndex("diff"));
-                    }
-            } else {
-                for (int i=1;i<times.length;i++) {
-                    times[i] = Long.MIN_VALUE;
+                Cursor standings = DbUtils.getStandingForAthlete(eventId, athlete.getId(), referenceAthlete,
+                        dbHelper);
+                while (standings.moveToNext()) {
+                    times[standings.getPosition()+1] = standings.getLong(
+                            standings.getColumnIndex("diff"));
                 }
             }
 

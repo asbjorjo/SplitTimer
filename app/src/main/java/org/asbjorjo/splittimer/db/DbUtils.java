@@ -1,7 +1,6 @@
 package org.asbjorjo.splittimer.db;
 
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
@@ -97,8 +96,6 @@ public class DbUtils {
 
     public static Cursor getStandingForAthlete(long eventId, long athleteId, long referenceAthlete,
                                              DbHelper dbHelper) {
-        Log.d(TAG, "eventId: " + eventId + " athleteId: " + athleteId + " referenceAthlete: " +
-                referenceAthlete);
         SQLiteDatabase database = dbHelper.getReadableDatabase();
 
         final String ATHLETE_PREFIX = "cur";
@@ -135,11 +132,7 @@ public class DbUtils {
         String query = MessageFormat.format(queryTemplate, Long.toString(eventId),
                 Long.toString(athleteId), Long.toString(referenceAthlete));
 
-        Log.d(TAG, query);
-
-        Cursor cursor = database.rawQuery(query.toString(), null);
-        Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
-        return cursor;
+        return database.rawQuery(query.toString(), null);
     }
 
     public static int getPassingsForAthlete(long id, long activeEvent, DbHelper dbHelper) {
@@ -154,8 +147,6 @@ public class DbUtils {
         Cursor cursor = database.rawQuery(query, new String[]{Long.toString(activeEvent),
                 Long.toString(id)});
         cursor.moveToFirst();
-
-        Log.d(TAG, String.format("Found %d passings", cursor.getInt(0)));
 
         return cursor.getInt(0);
     }

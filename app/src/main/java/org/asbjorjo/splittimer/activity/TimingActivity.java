@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -184,10 +183,6 @@ public class TimingActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                StringBuilder sb = new StringBuilder("onItemSelected");
-                sb.append(" position: ").append(position);
-                sb.append(" id: ").append(id);
-                Log.d(TAG, sb.toString());
                 updateButtonState();
             }
 
@@ -199,15 +194,12 @@ public class TimingActivity extends AppCompatActivity {
     }
 
     private void updateAthleteTimes() {
-        Log.d(TAG, "updateAthleteTimes");
-
         long eventId = application.getActiveEvent();
         int timingpoints = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
         TableView tableView = (TableView) findViewById(R.id.main_table);
         List<TableAthlete> tableAthletes = tableView.getDataAdapter().getData();
 
         for (TableAthlete athlete:tableAthletes) {
-            Log.d(TAG, "updateAthleteTimes: " + athlete.toString());
             long[] times = new long[timingpoints+1];
             times[0] = DbUtils.getStartTime(eventId, athlete.getId(), dbHelper);
 
@@ -225,7 +217,6 @@ public class TimingActivity extends AppCompatActivity {
             }
 
             athlete.setTimes(times);
-            Log.d(TAG, "updateAthleteTimes: " + athlete.toString());
         }
         tableView.getDataAdapter().notifyDataSetChanged();
     }

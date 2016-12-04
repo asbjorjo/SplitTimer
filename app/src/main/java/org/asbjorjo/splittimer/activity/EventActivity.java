@@ -35,6 +35,7 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());

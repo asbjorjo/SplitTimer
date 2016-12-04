@@ -20,15 +20,23 @@
         </activity>
         <activity
             android:name=".activity.EventActivity"
+            android:label="@string/event_title"
+            android:parentActivityName="org.asbjorjo.splittimer.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.TimingActivity"
+            android:label="@string/timing_title"
+            android:parentActivityName="org.asbjorjo.splittimer.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.StartlistActivity"
+            android:label="@string/startlist_title"
+            android:parentActivityName="org.asbjorjo.splittimer.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.IntermediateActivity"
+            android:label="@string/timingpoint_title"
+            android:parentActivityName="org.asbjorjo.splittimer.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 </manifest>

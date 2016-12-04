@@ -9,4 +9,8 @@
     <string name="add">Add</string>
     <string name="number">Number</string>
     <string name="start_time">Start time</string>
+    <string name="event_title">Events</string>
+    <string name="timingpoint_title">Timingpoints</string>
+    <string name="startlist_title">Startlist</string>
+    <string name="timing_title">Timing</string>
 </resources>

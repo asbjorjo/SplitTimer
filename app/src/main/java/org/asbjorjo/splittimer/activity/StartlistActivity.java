@@ -31,6 +31,7 @@ public class StartlistActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startlist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbHelper = DbHelper.getInstance(getApplicationContext());
         application = (SplitTimerApplication) getApplication();

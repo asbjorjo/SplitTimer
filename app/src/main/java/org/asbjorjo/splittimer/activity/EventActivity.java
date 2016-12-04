@@ -21,6 +21,7 @@ import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
+import org.asbjorjo.splittimer.db.DbUtils;
 
 import java.util.Calendar;
 
@@ -47,9 +48,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void buildList() {
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor eventCursor = database.query(Contract.Event.TABLE_NAME, Contract.Event.KEYS,
-                null, null, null, null, Contract.Event.DEFAULT_SORT_ORDER);
+        Cursor eventCursor = DbUtils.getEvents(dbHelper);
         ListAdapter listAdapter = new SimpleCursorAdapter(this, R.layout.list_event_item, eventCursor,
                 new String[]{Contract.Event.KEY_NAME}, new int[]{R.id.list_event_name}, 0);
         ListView eventList = (ListView) findViewById(R.id.event_list);
@@ -65,12 +64,11 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void updateList() {
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor eventCursor = database.query(Contract.Event.TABLE_NAME, Contract.Event.KEYS,
-                null, null, null, null, Contract.Event.DEFAULT_SORT_ORDER);
+        Cursor eventCursor = DbUtils.getEvents(dbHelper);
         ListView eventList = (ListView) findViewById(R.id.event_list);
         CursorAdapter adapter = (CursorAdapter) eventList.getAdapter();
-        adapter.swapCursor(eventCursor);
+        Cursor oldCursor = adapter.swapCursor(eventCursor);
+        oldCursor.close();
     }
 
     private void updateActiveEvent(long eventId) {

@@ -18,6 +18,13 @@ import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
 public class DbUtils {
     private static final String TAG = "DbUtils";
 
+    public static Cursor getEvents(DbHelper dbHelper) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        Cursor eventCursor = database.query(Contract.Event.TABLE_NAME, Contract.Event.KEYS,
+                null, null, null, null, Contract.Event.DEFAULT_SORT_ORDER);
+        return eventCursor;
+    }
+
     public static int getTimingpointCountForEvent(long eventId, DbHelper dbHelper) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         Cursor cursor = database.query(Timingpoint.TABLE_NAME, Timingpoint.KEYS,

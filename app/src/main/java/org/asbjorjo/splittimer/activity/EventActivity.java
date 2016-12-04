@@ -56,8 +56,7 @@ public class EventActivity extends AppCompatActivity {
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor select = (Cursor) parent.getItemAtPosition(position);
-                long eventId = select.getLong(select.getColumnIndex(Contract.Event._ID));
+                long eventId = parent.getItemIdAtPosition(position);
                 updateActiveEvent(eventId);
             }
         });

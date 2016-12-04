@@ -19,6 +19,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName="org.asbjorjo.splittimer.activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".activity.EventActivity"
             android:label="@string/event_title"
             android:parentActivityName="org.asbjorjo.splittimer.activity.MainActivity"

@@ -24,6 +24,7 @@ import org.asbjorjo.splittimer.db.DbUtils;
 public class IntermediateActivity extends AppCompatActivity {
     private SplitTimerApplication application;
     private DbHelper dbHelper;
+    private long eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,12 @@ public class IntermediateActivity extends AppCompatActivity {
         application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());
 
-        if (application.getActiveEvent() > 0) buildList(application.getActiveEvent());
+        if (application.getActiveEvent() > 0) eventId = ((SplitTimerApplication) getApplication()).getActiveEvent();
+
+        buildList();
     }
 
-    private void buildList(long eventId) {
+    private void buildList() {
         String[] from = new String[]{
                 Contract.Timingpoint.KEY_DESCRIPTION,
                 Contract.Timingpoint.KEY_POSITION
@@ -49,11 +52,7 @@ public class IntermediateActivity extends AppCompatActivity {
                 R.id.list_timingpoint_position
         };
 
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor timingpointCursor = database.query(Contract.Timingpoint.TABLE_NAME,
-                Contract.Timingpoint.KEYS,
-                Contract.Timingpoint.KEY_EVENT + " = ?", new String[]{Long.toString(eventId)},
-                null, null, Contract.Timingpoint.DEFAULT_SORT_ORDER);
+        Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
         CursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.list_timingpoint_item,
                 timingpointCursor, from, to, 0);
         ListView listView = (ListView) findViewById(R.id.intermediate_list);
@@ -72,9 +71,16 @@ public class IntermediateActivity extends AppCompatActivity {
         ));
         database.insert(Contract.Timingpoint.TABLE_NAME, null, values);
 
-        buildList(application.getActiveEvent());
-
         text.setText(null);
+        updateList();
         setResult(RESULT_OK);
+    }
+
+    private void updateList() {
+        Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
+        ListView listView = (ListView) findViewById(R.id.intermediate_list);
+        CursorAdapter adapter = (CursorAdapter) listView.getAdapter();
+        Cursor oldCursor = adapter.swapCursor(timingpointCursor);
+        oldCursor.close();
     }
 }

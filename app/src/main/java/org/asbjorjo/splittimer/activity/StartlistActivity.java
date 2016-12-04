@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -24,6 +25,7 @@ import org.asbjorjo.splittimer.db.DbUtils;
 public class StartlistActivity extends AppCompatActivity {
     private SplitTimerApplication application;
     private DbHelper dbHelper;
+    private long eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +38,11 @@ public class StartlistActivity extends AppCompatActivity {
         dbHelper = DbHelper.getInstance(getApplicationContext());
         application = (SplitTimerApplication) getApplication();
 
-        buildList(application.getActiveEvent());
+        eventId = application.getActiveEvent();
+        buildList();
     }
 
-    private void buildList(long eventId) {
+    private void buildList() {
         String[] from = new String[]{
                 Contract.Athlete.KEY_NAME,
                 Contract.Athlete.KEY_NUMBER,
@@ -59,6 +62,13 @@ public class StartlistActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
+    private void updateList() {
+        Cursor cursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
+        ListView listView = (ListView) findViewById(R.id.list_startlist);
+        CursorAdapter adapter = (CursorAdapter) listView.getAdapter();
+        Cursor oldCursor = adapter.swapCursor(cursor);
+        oldCursor.close();
+    }
 
     public void addAthlete(View view) {
         EditText nameView = (EditText) findViewById(R.id.startlist_input_name);
@@ -92,7 +102,7 @@ public class StartlistActivity extends AppCompatActivity {
         startView.setText(null);
         nameView.requestFocus();
 
-        buildList(application.getActiveEvent());
+        updateList();
 
         setResult(RESULT_OK);
     }

@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case SplitTimerConstants.ADD_EVENT:
                 if (resultCode == RESULT_OK) {
+                    application.setActiveEvent(data.getLongExtra(SplitTimerConstants.ACTIVE_EVENT,
+                            0));
                     findViewById(R.id.main_button_startlist).setEnabled(true);
                     findViewById(R.id.main_button_intermediate).setEnabled(true);
                     updateTimingButtonState();

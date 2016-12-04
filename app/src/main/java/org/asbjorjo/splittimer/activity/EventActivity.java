@@ -1,6 +1,7 @@
 package org.asbjorjo.splittimer.activity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -16,6 +18,7 @@ import android.widget.SimpleCursorAdapter;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
+import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 
@@ -56,16 +59,25 @@ public class EventActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor select = (Cursor) parent.getItemAtPosition(position);
                 long eventId = select.getLong(select.getColumnIndex(Contract.Event._ID));
-                select.close();
                 updateActiveEvent(eventId);
             }
         });
     }
 
-    private void updateActiveEvent(long eventId) {
-        application.setActiveEvent(eventId);
+    private void updateList() {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        Cursor eventCursor = database.query(Contract.Event.TABLE_NAME, Contract.Event.KEYS,
+                null, null, null, null, Contract.Event.DEFAULT_SORT_ORDER);
+        ListView eventList = (ListView) findViewById(R.id.event_list);
+        CursorAdapter adapter = (CursorAdapter) eventList.getAdapter();
+        adapter.swapCursor(eventCursor);
+    }
 
-        setResult(RESULT_OK);
+    private void updateActiveEvent(long eventId) {
+        Intent result = new Intent();
+        result.putExtra(SplitTimerConstants.ACTIVE_EVENT, eventId);
+
+        setResult(RESULT_OK, result);
     }
 
     public void addEvent(View view) {
@@ -86,6 +98,6 @@ public class EventActivity extends AppCompatActivity {
 
         textView.setText(null);
         updateActiveEvent(eventId);
-        buildList();
+        updateList();
     }
 }

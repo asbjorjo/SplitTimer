@@ -6,9 +6,10 @@
         <item>@string/pref_centisecond</item>
         <item>@string/pref_millisecond</item>
     </string-array>
-    <string-array name="pref_timingPrecision_values" />
-    <string name="pref_second">1</string>
-    <string name="pref_decisecond">10</string>
-    <string name="pref_centisecond">100</string>
-    <string name="pref_millisecond">1000</string>
+    <string-array name="pref_timingPrecision_values">
+        <item>1</item>
+        <item>10</item>
+        <item>100</item>
+        <item>1000</item>
+    </string-array>
 </resources>

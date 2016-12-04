@@ -2,6 +2,7 @@ package org.asbjorjo.splittimer.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
@@ -9,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,6 +46,7 @@ import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
 
 public class TimingActivity extends AppCompatActivity {
     private static final String TAG = "TimingActivity";
+    private static final String REFERENCE_ATHLETE = "referenceAthlete";
     private SplitTimerApplication application;
     private DbHelper dbHelper;
     private long referenceAthlete;
@@ -59,6 +62,11 @@ public class TimingActivity extends AppCompatActivity {
         application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());
 
+        if (savedInstanceState != null) {
+            referenceAthlete = savedInstanceState.getLong(REFERENCE_ATHLETE);
+        } else {
+            loadReference();
+        }
         if (application.getActiveEvent() > 0) {
             initializeDropdown();
             initializeTable();
@@ -67,11 +75,42 @@ public class TimingActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
+
+        sortByReference();
+   }
+
+    @Override
+    public void onBackPressed() {
+        saveReference();
+        super.onBackPressed();
+    }
+
+    private void saveReference() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(REFERENCE_ATHLETE, referenceAthlete);
+        editor.commit();
+    }
+
+    private void loadReference() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        referenceAthlete = sharedPreferences.getLong(REFERENCE_ATHLETE, 0);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.d(TAG, "onRestoreInstanceState");
+        super.onRestoreInstanceState(savedInstanceState);
+
+        referenceAthlete = savedInstanceState.getLong(REFERENCE_ATHLETE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+
+        outState.putLong(REFERENCE_ATHLETE, referenceAthlete);
     }
 
     /**

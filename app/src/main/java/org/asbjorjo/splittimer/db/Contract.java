@@ -200,6 +200,9 @@ public class Contract {
         public static final String TABLE_NAME = "startlist";
         public static final String KEY_EVENT = "event_id";
         public static final String KEY_ATHLETE = "athlete_id";
+        /**
+         * TODO Remove field and use time of first Result entry
+         */
         public static final String KEY_STARTTIME = "starttime";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +

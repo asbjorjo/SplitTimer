@@ -23,7 +23,6 @@ import org.asbjorjo.splittimer.db.DbUtils;
  * Created by AJohansen2 on 11/24/2016.
  */
 public class IntermediateActivity extends AppCompatActivity {
-    private SplitTimerApplication application;
     private DbHelper dbHelper;
     private long eventId;
 
@@ -35,7 +34,7 @@ public class IntermediateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        application = (SplitTimerApplication) getApplication();
+        SplitTimerApplication application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());
         eventId = application.getActiveEvent();
 
@@ -43,11 +42,11 @@ public class IntermediateActivity extends AppCompatActivity {
     }
 
     private void buildList() {
-        String[] from = new String[]{
+        String[] from = {
                 Contract.Timingpoint.KEY_DESCRIPTION,
                 Contract.Timingpoint.KEY_POSITION
         };
-        int[] to = new int[]{
+        int[] to = {
                 R.id.list_timingpoint_description,
                 R.id.list_timingpoint_position
         };

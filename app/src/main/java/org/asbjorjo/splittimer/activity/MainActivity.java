@@ -83,12 +83,13 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case SplitTimerConstants.ADD_EVENT:
                 if (resultCode == RESULT_OK) {
-                    application.setActiveEvent(data.getLongExtra(SplitTimerConstants.ACTIVE_EVENT,
-                            0));
+                    eventId = data.getLongExtra(SplitTimerConstants.ACTIVE_EVENT, 0);
+                    application.setActiveEvent(eventId);
                     findViewById(R.id.main_button_startlist).setEnabled(true);
                     findViewById(R.id.main_button_intermediate).setEnabled(true);
                 } else {
-                    application.setActiveEvent(0);
+                    eventId = 0;
+                    application.setActiveEvent(eventId);
                     findViewById(R.id.main_button_startlist).setEnabled(false);
                     findViewById(R.id.main_button_intermediate).setEnabled(false);
                 }
@@ -108,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateTimingButtonState() {
-        SplitTimerApplication application = (SplitTimerApplication) getApplication();
-
         findViewById(R.id.main_button_timing).setEnabled(
                 eventId > 0
                 && DbUtils.getTimingpointCountForEvent(eventId, dbHelper) > 0

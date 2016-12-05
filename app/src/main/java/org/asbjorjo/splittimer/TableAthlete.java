@@ -55,13 +55,12 @@ public class TableAthlete {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TableAthlete{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", number=").append(number);
-        sb.append(", times=").append(Arrays.toString(times));
-        sb.append('}');
-        return sb.toString();
+        String sb = "TableAthlete{" + "id=" + id +
+                ", name='" + name + '\'' +
+                ", number=" + number +
+                ", times=" + Arrays.toString(times) +
+                '}';
+        return sb;
     }
 
     @Override
@@ -95,7 +94,7 @@ public class TableAthlete {
     }
 
     public static class TableAthleteTimeComparator implements Comparator<TableAthlete> {
-        private int time;
+        private final int time;
 
         public TableAthleteTimeComparator(int time) {
             this.time = time;

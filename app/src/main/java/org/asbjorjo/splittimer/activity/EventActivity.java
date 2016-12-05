@@ -18,7 +18,6 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
@@ -31,7 +30,6 @@ import java.util.Calendar;
  */
 public class EventActivity extends AppCompatActivity {
     private static final String TAG = "EventActivity";
-    private SplitTimerApplication application;
     private DbHelper dbHelper;
 
     @Override
@@ -42,7 +40,6 @@ public class EventActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());
 
         buildList();

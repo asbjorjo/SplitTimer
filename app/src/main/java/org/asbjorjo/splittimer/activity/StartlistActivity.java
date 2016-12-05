@@ -30,7 +30,6 @@ import java.util.List;
  */
 public class StartlistActivity extends AppCompatActivity {
     private static final String TAG = "StartlistActivity";
-    private SplitTimerApplication application;
     private DbHelper dbHelper;
     private long eventId;
 
@@ -43,19 +42,19 @@ public class StartlistActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbHelper = DbHelper.getInstance(getApplicationContext());
-        application = (SplitTimerApplication) getApplication();
+        SplitTimerApplication application = (SplitTimerApplication) getApplication();
 
         eventId = application.getActiveEvent();
         buildList();
     }
 
     private void buildList() {
-        String[] from = new String[]{
+        String[] from = {
                 Contract.Athlete.KEY_NAME,
                 Contract.Athlete.KEY_NUMBER,
                 Contract.Startlist.KEY_STARTTIME
         };
-        int[] to = new int[]{
+        int[] to = {
                 R.id.startlist_item_name,
                 R.id.startlist_item_number,
                 R.id.startlist_item_starttime
@@ -129,7 +128,7 @@ public class StartlistActivity extends AppCompatActivity {
                 eventValues.put(Contract.Startlist.KEY_ATHLETE, athleteId);
                 database.insert(Contract.Startlist.TABLE_NAME, null, eventValues);
                 database.setTransactionSuccessful();
-                message = String.format("Added {0}", name);
+                message = String.format("Added %s", name);
 
                 nameView.setText(null);
                 numberView.setText(null);

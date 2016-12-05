@@ -5,9 +5,9 @@ package org.asbjorjo.splittimer;
  */
 
 public class SplitTimerConstants {
-    public final static String ACTIVE_EVENT = "activeEvent";
+    public static final String ACTIVE_EVENT = "activeEvent";
 
-    public final static int ADD_EVENT = 122;
-    public final static int BUILD_STARTLIST = 123;
-    public final static int BUILD_INTERMEDIATES = 124;
+    public static final int ADD_EVENT = 122;
+    public static final int BUILD_STARTLIST = 123;
+    public static final int BUILD_INTERMEDIATES = 124;
 }

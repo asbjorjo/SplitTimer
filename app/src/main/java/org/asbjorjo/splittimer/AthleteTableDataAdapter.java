@@ -15,8 +15,8 @@ import de.codecrafters.tableview.TableDataAdapter;
  */
 
 public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {
-    private final static String TAG = "AthleteTableDataAdapter";
-    private final static String timeFormat = "%02d:%02d";
+    private static final String TAG = "AthleteTableDataAdapter";
+    private static final String timeFormat = "%02d:%02d";
 
     public AthleteTableDataAdapter(Context context, List<TableAthlete> data) {
         super(context, data);
@@ -25,7 +25,7 @@ public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         TableAthlete athlete = getRowData(rowIndex);
-        View renderView = null;
+        View renderView;
 
         switch (columnIndex) {
             case 0:

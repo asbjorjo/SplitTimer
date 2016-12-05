@@ -94,9 +94,12 @@ public class DbUtils {
         String query = MessageFormat.format(queryTemplate, Long.toString(timingpointId),
                 Long.toString(referenceAthlete));
 
-        return database.rawQuery(query.toString(), null);
+        return database.rawQuery(query, null);
     }
 
+    /**
+     *  TODO Rewrite query to use first Result.KEY_TIMESTAMP instead Startlist.KEY_STARTTIME
+     */
     public static Cursor getStandingForAthlete(long eventId, long athleteId, long referenceAthlete,
                                              DbHelper dbHelper) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
@@ -135,7 +138,7 @@ public class DbUtils {
         String query = MessageFormat.format(queryTemplate, Long.toString(eventId),
                 Long.toString(athleteId), Long.toString(referenceAthlete));
 
-        return database.rawQuery(query.toString(), null);
+        return database.rawQuery(query, null);
     }
 
     public static int getPassingsForAthlete(long id, long activeEvent, DbHelper dbHelper) {

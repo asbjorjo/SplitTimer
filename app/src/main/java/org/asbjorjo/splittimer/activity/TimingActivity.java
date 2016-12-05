@@ -47,7 +47,6 @@ import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
 public class TimingActivity extends AppCompatActivity {
     private static final String TAG = "TimingActivity";
     private static final String REFERENCE_ATHLETE = "referenceAthlete";
-    private SplitTimerApplication application;
     private DbHelper dbHelper;
     private long eventId;
     private long referenceAthlete;
@@ -60,7 +59,7 @@ public class TimingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        application = (SplitTimerApplication) getApplication();
+        SplitTimerApplication application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());
 
         if (savedInstanceState != null) {
@@ -90,7 +89,7 @@ public class TimingActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(REFERENCE_ATHLETE, referenceAthlete);
-        editor.commit();
+        editor.apply();
     }
 
     private void loadReference() {
@@ -161,8 +160,8 @@ public class TimingActivity extends AppCompatActivity {
      * Initialize the Spinner and associated Buttons for intermediate times.
      */
     private void initializeDropdown() {
-        String[] from = new String[]{Athlete.KEY_NAME};
-        int[] to = new int[]{R.id.text_dropdown};
+        String[] from = {Athlete.KEY_NAME};
+        int[] to = {R.id.text_dropdown};
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Cursor athleteCursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
@@ -170,8 +169,6 @@ public class TimingActivity extends AppCompatActivity {
                 R.layout.support_simple_spinner_dropdown_item, athleteCursor, from, to, 0);
 
         spinner.setAdapter(adapter);
-
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_timing);
 
         Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
 

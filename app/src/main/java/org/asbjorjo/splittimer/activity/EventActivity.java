@@ -70,7 +70,7 @@ public class EventActivity extends AppCompatActivity {
 
     private void updateActiveEvent(long eventId) {
         Intent result = new Intent();
-        result.putExtra(SplitTimerConstants.ACTIVE_EVENT, eventId);
+        result.putExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, eventId);
 
         setResult(RESULT_OK, result);
     }

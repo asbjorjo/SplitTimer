@@ -1,6 +1,7 @@
 package org.asbjorjo.splittimer.activity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerApplication;
+import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
@@ -34,9 +35,10 @@ public class IntermediateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SplitTimerApplication application = (SplitTimerApplication) getApplication();
+        Intent intent = getIntent();
+
         dbHelper = DbHelper.getInstance(getApplicationContext());
-        eventId = application.getActiveEvent();
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
 
         buildList();
     }

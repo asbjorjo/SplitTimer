@@ -21,7 +21,7 @@ import android.widget.Spinner;
 
 import org.asbjorjo.splittimer.AthleteTableDataAdapter;
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerApplication;
+import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.TableAthlete;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
@@ -59,8 +59,11 @@ public class TimingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SplitTimerApplication application = (SplitTimerApplication) getApplication();
+        Intent intent = getIntent();
+
         dbHelper = DbHelper.getInstance(getApplicationContext());
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
+
 
         if (savedInstanceState != null) {
             referenceAthlete = savedInstanceState.getLong(REFERENCE_ATHLETE);
@@ -71,8 +74,8 @@ public class TimingActivity extends AppCompatActivity {
             initializeDropdown();
             initializeTable();
         } else {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
 

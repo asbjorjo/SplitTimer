@@ -31,10 +31,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SplitTimerApplication application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());
-        eventId = application.getActiveEvent();
-
+        
         if (eventId > 0) {
             findViewById(R.id.main_button_startlist).setEnabled(true);
             findViewById(R.id.main_button_intermediate).setEnabled(true);
@@ -83,13 +81,11 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case SplitTimerConstants.ADD_EVENT:
                 if (resultCode == RESULT_OK) {
-                    eventId = data.getLongExtra(SplitTimerConstants.ACTIVE_EVENT, 0);
-                    application.setActiveEvent(eventId);
+                    eventId = data.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, 0);
                     findViewById(R.id.main_button_startlist).setEnabled(true);
                     findViewById(R.id.main_button_intermediate).setEnabled(true);
                 } else {
                     eventId = 0;
-                    application.setActiveEvent(eventId);
                     findViewById(R.id.main_button_startlist).setEnabled(false);
                     findViewById(R.id.main_button_intermediate).setEnabled(false);
                 }
@@ -116,29 +112,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        Intent intent = null;
+        Intent intent = new Intent();
         int request_code = -1;
+
+        intent.putExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, eventId);
 
         switch (view.getId()) {
             case R.id.main_button_event:
-                intent = new Intent(this, EventActivity.class);
+                intent.setClass(MainActivity.this, EventActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = SplitTimerConstants.ADD_EVENT;
                 break;
             case R.id.main_button_intermediate:
-                intent = new Intent(this, IntermediateActivity.class);
+                intent.setClass(MainActivity.this, IntermediateActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = SplitTimerConstants.BUILD_INTERMEDIATES;
                 break;
             case R.id.main_button_startlist:
-                intent = new Intent(this, StartlistActivity.class);
+                intent.setClass(MainActivity.this, StartlistActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = SplitTimerConstants.BUILD_STARTLIST;
                 break;
             case R.id.main_button_timing:
-                intent = new Intent(this, TimingActivity.class);
+                intent.setClass(MainActivity.this, TimingActivity.class);
                 break;
         }
+
         startActivityForResult(intent, request_code);
     }
 }

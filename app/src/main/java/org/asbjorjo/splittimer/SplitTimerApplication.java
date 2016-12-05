@@ -7,19 +7,8 @@ import android.app.Application;
  */
 
 public class SplitTimerApplication extends Application {
-    private long activeEvent;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        this.activeEvent = 0;
-    }
-
-    public long getActiveEvent() {
-        return activeEvent;
-    }
-
-    public void setActiveEvent(long activeEvent) {
-        this.activeEvent = activeEvent;
     }
 }

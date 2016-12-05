@@ -12,11 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
@@ -25,6 +25,7 @@ import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 
 /**
@@ -48,13 +49,39 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void updateList() {
+        String[] from = {
+                Contract.Event.KEY_NAME,
+                Contract.Event.KEY_DATE
+        };
+        int[] to = {
+                R.id.list_event_name,
+                R.id.list_event_date
+        };
+
         Cursor eventCursor = DbUtils.getEvents(dbHelper);
         ListView eventList = (ListView) findViewById(R.id.event_list);
-        CursorAdapter adapter = (CursorAdapter) eventList.getAdapter();
+        SimpleCursorAdapter adapter = (SimpleCursorAdapter) eventList.getAdapter();
 
         if (adapter == null) {
             adapter = new SimpleCursorAdapter(this, R.layout.list_event_item, eventCursor,
-                    new String[]{Contract.Event.KEY_NAME}, new int[]{R.id.list_event_name}, 0);
+                    from, to, 0);
+            adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+                @Override
+                public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                    if (columnIndex == cursor.getColumnIndex(Contract.Event.KEY_DATE)) {
+                        long date = cursor.getLong(columnIndex);
+                        TextView textView = (TextView) view;
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTimeInMillis(date);
+
+                        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
+                        textView.setText(df.format(cal.getTime()));
+                        return true;
+                    }
+                    return false;
+                }
+            });
             eventList.setAdapter(adapter);
             eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

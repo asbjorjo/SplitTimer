@@ -1,10 +1,13 @@
 package org.asbjorjo.splittimer.activity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -42,30 +45,29 @@ public class EventActivity extends AppCompatActivity {
 
         dbHelper = DbHelper.getInstance(getApplicationContext());
 
-        buildList();
-    }
-
-    private void buildList() {
-        Cursor eventCursor = DbUtils.getEvents(dbHelper);
-        ListAdapter listAdapter = new SimpleCursorAdapter(this, R.layout.list_event_item, eventCursor,
-                new String[]{Contract.Event.KEY_NAME}, new int[]{R.id.list_event_name}, 0);
-        ListView eventList = (ListView) findViewById(R.id.event_list);
-        eventList.setAdapter(listAdapter);
-        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                long eventId = parent.getItemIdAtPosition(position);
-                updateActiveEvent(eventId);
-            }
-        });
+        updateList();
     }
 
     private void updateList() {
         Cursor eventCursor = DbUtils.getEvents(dbHelper);
         ListView eventList = (ListView) findViewById(R.id.event_list);
         CursorAdapter adapter = (CursorAdapter) eventList.getAdapter();
-        Cursor oldCursor = adapter.swapCursor(eventCursor);
-        oldCursor.close();
+
+        if (adapter == null) {
+            ListAdapter listAdapter = new SimpleCursorAdapter(this, R.layout.list_event_item, eventCursor,
+                    new String[]{Contract.Event.KEY_NAME}, new int[]{R.id.list_event_name}, 0);
+            eventList.setAdapter(listAdapter);
+            eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    long eventId = parent.getItemIdAtPosition(position);
+                    updateActiveEvent(eventId);
+                }
+            });
+        } else {
+            Cursor oldCursor = adapter.swapCursor(eventCursor);
+            oldCursor.close();
+        }
     }
 
     private void updateActiveEvent(long eventId) {
@@ -105,5 +107,28 @@ public class EventActivity extends AppCompatActivity {
         }
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+        }
+    }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment fragment = new DatePickerFragment();
+        fragment.show(getSupportFragmentManager(), "datePicker");
     }
 }

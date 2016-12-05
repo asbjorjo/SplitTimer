@@ -50,12 +50,12 @@ public class StartlistActivity extends AppCompatActivity {
     }
 
     private void updateList() {
-        String[] from = {
+        final String[] from = {
                 Contract.Athlete.KEY_NAME,
                 Contract.Athlete.KEY_NUMBER,
                 Contract.Startlist.KEY_STARTTIME
         };
-        int[] to = {
+        final int[] to = {
                 R.id.startlist_item_name,
                 R.id.startlist_item_number,
                 R.id.startlist_item_starttime

@@ -163,8 +163,8 @@ public class TimingActivity extends AppCompatActivity {
      * Initialize the Spinner and associated Buttons for intermediate times.
      */
     private void initializeDropdown() {
-        String[] from = {Athlete.KEY_NAME};
-        int[] to = {R.id.text_dropdown};
+        final String[] from = {Athlete.KEY_NAME};
+        final int[] to = {R.id.text_dropdown};
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Cursor athleteCursor = DbUtils.getAthletesForEvent(eventId, dbHelper);

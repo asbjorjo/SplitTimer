@@ -49,11 +49,11 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void updateList() {
-        String[] from = {
+        final String[] from = {
                 Contract.Event.KEY_NAME,
                 Contract.Event.KEY_DATE
         };
-        int[] to = {
+        final int[] to = {
                 R.id.list_event_name,
                 R.id.list_event_date
         };

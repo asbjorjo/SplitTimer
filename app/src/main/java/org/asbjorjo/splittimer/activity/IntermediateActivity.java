@@ -44,11 +44,11 @@ public class IntermediateActivity extends AppCompatActivity {
     }
 
     private void updateList() {
-        String[] from = {
+        final String[] from = {
                 Contract.Timingpoint.KEY_DESCRIPTION,
                 Contract.Timingpoint.KEY_POSITION
         };
-        int[] to = {
+        final int[] to = {
                 R.id.list_timingpoint_description,
                 R.id.list_timingpoint_position
         };

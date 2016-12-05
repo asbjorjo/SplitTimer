@@ -123,7 +123,7 @@ public class TimingActivity extends AppCompatActivity {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         int timingpointCount = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
 
-        List<TableAthlete> athletes = updateAthleteList(eventId);
+        List<TableAthlete> athletes = updateAthleteList();
 
         table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
         updateAthleteTimes();
@@ -142,7 +142,7 @@ public class TimingActivity extends AppCompatActivity {
         table.setDataRowBackgroundProvider(new AthleteRowColorProvider());
     }
 
-    private List<TableAthlete> updateAthleteList(long eventId) {
+    private List<TableAthlete> updateAthleteList() {
         int timingpointCount = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
         Cursor athleteCursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
         List<TableAthlete> athletes = new ArrayList<>();

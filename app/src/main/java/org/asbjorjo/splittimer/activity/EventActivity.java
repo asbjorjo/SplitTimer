@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
@@ -86,15 +87,26 @@ public class EventActivity extends AppCompatActivity {
 
         String eventName = textView.getText().toString();
 
-        ContentValues values = new ContentValues();
-        values.put(Contract.Event.KEY_NAME, eventName);
-        values.put(Contract.Event.KEY_DATE, date.getTimeInMillis());
+        String message;
 
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        long eventId = database.insert(Contract.Event.TABLE_NAME, null, values);
+        if (eventName == null || eventName.trim().equals("")) {
+            message = "Name missing";
+            setResult(RESULT_CANCELED);
+        } else {
+            ContentValues values = new ContentValues();
+            values.put(Contract.Event.KEY_NAME, eventName);
+            values.put(Contract.Event.KEY_DATE, date.getTimeInMillis());
 
-        textView.setText(null);
-        updateActiveEvent(eventId);
-        updateList();
+            SQLiteDatabase database = dbHelper.getWritableDatabase();
+            long eventId = database.insert(Contract.Event.TABLE_NAME, null, values);
+
+            textView.setText(null);
+            updateActiveEvent(eventId);
+            updateList();
+
+            message = String.format("Added %s", eventName);
+        }
+
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -47,10 +46,10 @@ public class StartlistActivity extends AppCompatActivity {
         dbHelper = DbHelper.getInstance(getApplicationContext());
         eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
 
-        buildList();
+        updateList();
     }
 
-    private void buildList() {
+    private void updateList() {
         String[] from = {
                 Contract.Athlete.KEY_NAME,
                 Contract.Athlete.KEY_NUMBER,
@@ -63,19 +62,17 @@ public class StartlistActivity extends AppCompatActivity {
         };
 
         Cursor cursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
-
-        ListAdapter adapter = new SimpleCursorAdapter(this, R.layout.list_startlist_item,
-                cursor, from, to, 0);
-        ListView listView = (ListView) findViewById(R.id.list_startlist);
-        listView.setAdapter(adapter);
-    }
-
-    private void updateList() {
-        Cursor cursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
         ListView listView = (ListView) findViewById(R.id.list_startlist);
         CursorAdapter adapter = (CursorAdapter) listView.getAdapter();
-        Cursor oldCursor = adapter.swapCursor(cursor);
-        oldCursor.close();
+
+        if (adapter == null) {
+            adapter = new SimpleCursorAdapter(this, R.layout.list_startlist_item,
+                    cursor, from, to, 0);
+            listView.setAdapter(adapter);
+        } else {
+            Cursor oldCursor = adapter.swapCursor(cursor);
+            oldCursor.close();
+        }
     }
 
     public void addAthlete(View view) {

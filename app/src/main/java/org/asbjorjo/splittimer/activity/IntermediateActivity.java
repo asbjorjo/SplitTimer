@@ -40,10 +40,10 @@ public class IntermediateActivity extends AppCompatActivity {
         dbHelper = DbHelper.getInstance(getApplicationContext());
         eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
 
-        buildList();
+        updateList();
     }
 
-    private void buildList() {
+    private void updateList() {
         String[] from = {
                 Contract.Timingpoint.KEY_DESCRIPTION,
                 Contract.Timingpoint.KEY_POSITION
@@ -54,10 +54,17 @@ public class IntermediateActivity extends AppCompatActivity {
         };
 
         Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
-        CursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.list_timingpoint_item,
-                timingpointCursor, from, to, 0);
         ListView listView = (ListView) findViewById(R.id.intermediate_list);
-        listView.setAdapter(adapter);
+        CursorAdapter adapter = (CursorAdapter) listView.getAdapter();
+
+        if (adapter == null) {
+            adapter = new SimpleCursorAdapter(this, R.layout.list_timingpoint_item,
+                    timingpointCursor, from, to, 0);
+            listView.setAdapter(adapter);
+        } else {
+            Cursor oldCursor = adapter.swapCursor(timingpointCursor);
+            oldCursor.close();
+        }
     }
 
     public void addIntermediate(View view) {
@@ -88,13 +95,5 @@ public class IntermediateActivity extends AppCompatActivity {
         }
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateList() {
-        Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
-        ListView listView = (ListView) findViewById(R.id.intermediate_list);
-        CursorAdapter adapter = (CursorAdapter) listView.getAdapter();
-        Cursor oldCursor = adapter.swapCursor(timingpointCursor);
-        oldCursor.close();
     }
 }

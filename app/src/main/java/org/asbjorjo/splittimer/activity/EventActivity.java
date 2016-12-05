@@ -89,7 +89,7 @@ public class EventActivity extends AppCompatActivity {
 
         String message;
 
-        if (eventName == null || eventName.trim().equals("")) {
+        if (eventName.trim().equals("")) {
             message = "Name missing";
             setResult(RESULT_CANCELED);
         } else {

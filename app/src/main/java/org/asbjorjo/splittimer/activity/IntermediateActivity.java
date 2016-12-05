@@ -11,6 +11,7 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerApplication;
@@ -59,20 +60,33 @@ public class IntermediateActivity extends AppCompatActivity {
     }
 
     public void addIntermediate(View view) {
+        String message;
+
         EditText text = (EditText) findViewById(R.id.intermediate_input_description);
+        String description = text.getText().toString();
 
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(Contract.Timingpoint.KEY_EVENT, eventId);
-        values.put(Contract.Timingpoint.KEY_DESCRIPTION, text.getText().toString());
-        values.put(Contract.Timingpoint.KEY_POSITION, DbUtils.getTimingpointCountForEvent(
-                eventId, dbHelper
-        ));
-        database.insert(Contract.Timingpoint.TABLE_NAME, null, values);
+        if (description.trim().equals("")) {
+            message = "Enter description";
 
-        text.setText(null);
-        updateList();
-        setResult(RESULT_OK);
+            setResult(RESULT_CANCELED);
+        } else {
+            SQLiteDatabase database = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(Contract.Timingpoint.KEY_EVENT, eventId);
+            values.put(Contract.Timingpoint.KEY_DESCRIPTION, description);
+            values.put(Contract.Timingpoint.KEY_POSITION, DbUtils.getTimingpointCountForEvent(
+                    eventId, dbHelper
+            ));
+            database.insert(Contract.Timingpoint.TABLE_NAME, null, values);
+
+            message = String.format("Added %s", description);
+
+            text.setText(null);
+            updateList();
+            setResult(RESULT_OK);
+        }
+
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void updateList() {

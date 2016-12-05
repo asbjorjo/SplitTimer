@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerApplication;
 import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
@@ -32,13 +31,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         dbHelper = DbHelper.getInstance(getApplicationContext());
-        
+
         if (eventId > 0) {
             findViewById(R.id.main_button_startlist).setEnabled(true);
             findViewById(R.id.main_button_intermediate).setEnabled(true);
-
-            updateTimingButtonState();
         }
+
+        updateTimingButtonState();
     }
 
     @Override
@@ -77,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        SplitTimerApplication application = (SplitTimerApplication) getApplication();
         switch (requestCode) {
             case SplitTimerConstants.ADD_EVENT:
                 if (resultCode == RESULT_OK) {

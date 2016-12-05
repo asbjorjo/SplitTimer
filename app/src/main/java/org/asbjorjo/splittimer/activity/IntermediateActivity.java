@@ -36,8 +36,7 @@ public class IntermediateActivity extends AppCompatActivity {
 
         application = (SplitTimerApplication) getApplication();
         dbHelper = DbHelper.getInstance(getApplicationContext());
-
-        if (application.getActiveEvent() > 0) eventId = ((SplitTimerApplication) getApplication()).getActiveEvent();
+        eventId = application.getActiveEvent();
 
         buildList();
     }
@@ -64,10 +63,10 @@ public class IntermediateActivity extends AppCompatActivity {
 
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Contract.Timingpoint.KEY_EVENT, application.getActiveEvent());
+        values.put(Contract.Timingpoint.KEY_EVENT, eventId);
         values.put(Contract.Timingpoint.KEY_DESCRIPTION, text.getText().toString());
         values.put(Contract.Timingpoint.KEY_POSITION, DbUtils.getTimingpointCountForEvent(
-                application.getActiveEvent(), dbHelper
+                eventId, dbHelper
         ));
         database.insert(Contract.Timingpoint.TABLE_NAME, null, values);
 

@@ -84,7 +84,7 @@ public class StartlistActivity extends AppCompatActivity {
         ContentValues eventValues = new ContentValues();
         athleteValues.put(Contract.Athlete.KEY_NAME, name);
         athleteValues.put(Contract.Athlete.KEY_NUMBER, number);
-        eventValues.put(Contract.Startlist.KEY_EVENT, application.getActiveEvent());
+        eventValues.put(Contract.Startlist.KEY_EVENT, eventId);
         eventValues.put(Contract.Startlist.KEY_STARTTIME, startTime);
 
         database.beginTransaction();

@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -54,9 +53,9 @@ public class EventActivity extends AppCompatActivity {
         CursorAdapter adapter = (CursorAdapter) eventList.getAdapter();
 
         if (adapter == null) {
-            ListAdapter listAdapter = new SimpleCursorAdapter(this, R.layout.list_event_item, eventCursor,
+            adapter = new SimpleCursorAdapter(this, R.layout.list_event_item, eventCursor,
                     new String[]{Contract.Event.KEY_NAME}, new int[]{R.id.list_event_name}, 0);
-            eventList.setAdapter(listAdapter);
+            eventList.setAdapter(adapter);
             eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

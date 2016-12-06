@@ -39,7 +39,7 @@
             android:parentActivityName="org.asbjorjo.splittimer.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".activity.IntermediateActivity"
+            android:name=".activity.TimingpointActivity"
             android:label="@string/timingpoint_title"
             android:parentActivityName="org.asbjorjo.splittimer.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>

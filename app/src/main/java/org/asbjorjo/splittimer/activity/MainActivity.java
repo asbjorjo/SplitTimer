@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 request_code = SplitTimerConstants.ADD_EVENT;
                 break;
             case R.id.main_button_intermediate:
-                intent.setClass(MainActivity.this, IntermediateActivity.class);
+                intent.setClass(MainActivity.this, TimingpointActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = SplitTimerConstants.BUILD_INTERMEDIATES;
                 break;

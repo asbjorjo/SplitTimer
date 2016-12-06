@@ -22,5 +22,5 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_timing"/>
+    <include layout="@layout/timing_content"/>
 </android.support.design.widget.CoordinatorLayout>

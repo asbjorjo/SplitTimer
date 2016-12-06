@@ -36,7 +36,7 @@ public class StartlistActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_startlist);
+        setContentView(R.layout.startlist_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,7 +66,7 @@ public class StartlistActivity extends AppCompatActivity {
         CursorAdapter adapter = (CursorAdapter) listView.getAdapter();
 
         if (adapter == null) {
-            adapter = new SimpleCursorAdapter(this, R.layout.list_startlist_item,
+            adapter = new SimpleCursorAdapter(this, R.layout.startlist_item,
                     cursor, from, to, 0);
             listView.setAdapter(adapter);
         } else {

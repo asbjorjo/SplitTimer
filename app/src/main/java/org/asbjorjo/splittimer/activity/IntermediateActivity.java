@@ -30,7 +30,7 @@ public class IntermediateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_intermediate);
+        setContentView(R.layout.timingpoint_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,7 +58,7 @@ public class IntermediateActivity extends AppCompatActivity {
         CursorAdapter adapter = (CursorAdapter) listView.getAdapter();
 
         if (adapter == null) {
-            adapter = new SimpleCursorAdapter(this, R.layout.list_timingpoint_item,
+            adapter = new SimpleCursorAdapter(this, R.layout.timingpoint_list_item,
                     timingpointCursor, from, to, 0);
             listView.setAdapter(adapter);
         } else {

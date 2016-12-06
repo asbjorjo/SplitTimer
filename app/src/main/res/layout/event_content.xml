@@ -11,19 +11,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_event"
+    tools:showIn="@layout/event_activity"
     tools:context="org.asbjorjo.splittimer.activity.EventActivity">
 
     <fragment
         android:name="org.asbjorjo.splittimer.fragment.EventEditFragment"
         android:id="@+id/event_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        tools:layout="@layout/event_edit_fragment"/>
 
     <fragment
         android:name="org.asbjorjo.splittimer.fragment.EventListFragment"
         android:id="@+id/event_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/event_input"/>
+        android:layout_below="@id/event_input"
+        tools:layout="@layout/event_list_fragment" />
 </RelativeLayout>

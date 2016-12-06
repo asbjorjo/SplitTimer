@@ -43,7 +43,7 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.event_edit, container, false);
+        return inflater.inflate(R.layout.event_edit_fragment, container, false);
     }
 
     @Override

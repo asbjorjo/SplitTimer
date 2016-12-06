@@ -42,7 +42,7 @@ public class EventListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_event_list, container, false);
+        return inflater.inflate(R.layout.event_list_fragment, container, false);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class EventListFragment extends ListFragment {
         SimpleCursorAdapter adapter = (SimpleCursorAdapter) getListAdapter();
 
         if (adapter == null) {
-            adapter = new SimpleCursorAdapter(getActivity(), R.layout.list_event_item, eventCursor,
+            adapter = new SimpleCursorAdapter(getActivity(), R.layout.event_list_item, eventCursor,
                     from, to, 0);
             adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                 @Override

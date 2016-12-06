@@ -13,56 +13,18 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/startlist_activity"
     tools:context="org.asbjorjo.splittimer.activity.StartlistActivity">
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/startlist_input"
-        android:orientation="horizontal"
+
+    <fragment
+        android:name="org.asbjorjo.splittimer.fragment.StartlistEditFragment"
+        android:id="@+id/startlist_edit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"/>
 
-        <EditText
-            android:id="@+id/startlist_input_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="textPersonName"
-            android:maxLines="1"
-            android:hint="@string/name"/>
-
-        <EditText
-            android:id="@+id/startlist_input_number"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:maxLines="1"
-            android:hint="@string/number"/>
-
-        <EditText
-            android:id="@+id/startlist_input_starttime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:maxLines="1"
-            android:hint="@string/start_time"/>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/startlist_input_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/startlist_input"
-        android:onClick="addAthlete"
-        android:text="@string/add"/>
-
-    <ListView
-        android:id="@+id/list_startlist"
+    <fragment
+        android:name="org.asbjorjo.splittimer.fragment.StartlistFragment"
+        android:id="@+id/startlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/startlist_input_button"/>
+        android:layout_below="@id/startlist_edit"/>
 </RelativeLayout>

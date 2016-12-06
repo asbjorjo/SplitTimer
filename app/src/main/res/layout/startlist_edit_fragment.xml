@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="org.asbjorjo.splittimer.fragment.StartlistEditFragment">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/startlist_input"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/startlist_input_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:hint="@string/name"/>
+
+        <EditText
+            android:id="@+id/startlist_input_number"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:maxLines="1"
+            android:hint="@string/number"/>
+
+        <EditText
+            android:id="@+id/startlist_input_starttime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:maxLines="1"
+            android:hint="@string/start_time"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/startlist_input_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startlist_input"
+        android:onClick="addAthlete"
+        android:text="@string/add"/>
+</RelativeLayout>

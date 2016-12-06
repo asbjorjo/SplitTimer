@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.DatePicker;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.db.DbHelper;
-import org.asbjorjo.splittimer.fragment.EventEditFragment;
 
 import java.util.Calendar;
 
@@ -20,8 +18,6 @@ import java.util.Calendar;
  */
 public class EventActivity extends AppCompatActivity {
     private static final String TAG = "EventActivity";
-    private DbHelper dbHelper;
-    private EventEditFragment eventEditFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +26,6 @@ public class EventActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        dbHelper = DbHelper.getInstance(getApplicationContext());
-
     }
 
     public static class DatePickerFragment extends DialogFragment

@@ -36,6 +36,7 @@ import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.listeners.TableDataLongClickListener;
 import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
 
+import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
 import static org.asbjorjo.splittimer.db.Contract.Athlete;
 import static org.asbjorjo.splittimer.db.Contract.Result;
 import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
@@ -90,31 +91,16 @@ public class TimingActivity extends AppCompatActivity {
         sortByReference();
    }
 
-/*
-    @Override
-    public void onBackPressed() {
-        saveReference();
-        super.onBackPressed();
-    }
-*/
-
-    @Override
-    protected void onDestroy() {
-        saveReference();
-
-        super.onDestroy();
-    }
-
     private void saveReference() {
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(REFERENCE_ATHLETE, referenceAthlete);
         editor.apply();
     }
 
     private void loadReference() {
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        referenceAthlete = sharedPreferences.getLong(REFERENCE_ATHLETE, 0);
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        referenceAthlete = sharedPreferences.getLong(REFERENCE_ATHLETE, -1);
     }
 
     @Override
@@ -131,6 +117,7 @@ public class TimingActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         outState.putLong(REFERENCE_ATHLETE, referenceAthlete);
+        saveReference();
     }
 
     /**

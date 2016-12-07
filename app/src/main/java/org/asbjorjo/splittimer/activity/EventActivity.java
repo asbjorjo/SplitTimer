@@ -2,6 +2,7 @@ package org.asbjorjo.splittimer.activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.DatePicker;
 
 import org.asbjorjo.splittimer.R;
+import org.asbjorjo.splittimer.SplitTimerConstants;
 
 import java.util.Calendar;
 
@@ -26,6 +28,15 @@ public class EventActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        long eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
+
+        if (eventId > 0) {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, eventId);
+            setResult(RESULT_OK, resultIntent);
+        }
     }
 
     public static class DatePickerFragment extends DialogFragment

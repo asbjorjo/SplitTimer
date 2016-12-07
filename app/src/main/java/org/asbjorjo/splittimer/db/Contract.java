@@ -63,7 +63,7 @@ public class Contract {
         /**
          * The default sort order for this table.
          */
-        public static final String DEFAULT_SORT_ORDER = KEY_NAME + " ASC";
+        public static final String DEFAULT_SORT_ORDER = KEY_DATE + " DESC";
         /**
          * The MIME type of {@link #CONTENT_URI} providing rows.
          */

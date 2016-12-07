@@ -27,7 +27,7 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.event_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         long eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);

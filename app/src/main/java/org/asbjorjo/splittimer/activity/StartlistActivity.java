@@ -21,6 +21,6 @@ public class StartlistActivity extends AppCompatActivity {
         setContentView(R.layout.startlist_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

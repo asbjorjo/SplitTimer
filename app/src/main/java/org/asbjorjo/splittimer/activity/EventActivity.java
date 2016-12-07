@@ -12,16 +12,19 @@ import android.view.View;
 import android.widget.DatePicker;
 
 import org.asbjorjo.splittimer.R;
+import org.asbjorjo.splittimer.fragment.EventEditFragment;
 import org.asbjorjo.splittimer.fragment.EventListFragment;
 
 import java.util.Calendar;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
+import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
 
 /**
  * Created by AJohansen2 on 11/24/2016.
  */
-public class EventActivity extends AppCompatActivity implements EventListFragment.OnEventSelectedListener {
+public class EventActivity extends AppCompatActivity implements
+        EventListFragment.OnEventSelectedListener, EventEditFragment.OnEventAddedListener {
     private static final String TAG = "EventActivity";
 
     @Override
@@ -54,6 +57,13 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
         Intent intent = new Intent();
         intent.putExtra(KEY_ACTIVE_EVENT, eventId);
         setResult(RESULT_OK, intent);
+    }
+
+    @Override
+    public void onEventAdded(long eventId) {
+        Intent intent = new Intent();
+        intent.putExtra(KEY_ACTIVE_EVENT, eventId);
+        setResult(RESULT_ADDED, intent);
     }
 
     public static class DatePickerFragment extends DialogFragment

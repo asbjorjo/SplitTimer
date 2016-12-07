@@ -1,6 +1,8 @@
 package org.asbjorjo.splittimer.activity;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,22 +16,38 @@ import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
+import org.asbjorjo.splittimer.fragment.EventSelectFragment;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
+import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EventSelectFragment.OnEventSelectedListener {
     private static final String TAG = "MainActivity";
     private DbHelper dbHelper;
-    private long eventId;
+    private long eventId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "onCreate");
         Log.d(TAG, String.format("Intent: %s",
                 getIntent() == null ? null : getIntent().toString()));
+        Log.d(TAG, String.format("savedInstanceState: %s",
+                savedInstanceState == null ? savedInstanceState : savedInstanceState.toString()));
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
+        if (eventId < 0) {
+            SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            eventId = sharedPreferences.getLong(KEY_ACTIVE_EVENT, -1);
+        }
+
+        Log.d(TAG, String.format("EventId: %d", eventId));
+        EventSelectFragment esf = EventSelectFragment.getInstance(eventId);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.event_select, esf);
+        ft.commit();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -38,22 +56,16 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = DbHelper.getInstance(getApplicationContext());
     }
 
-/*
-    @Override
-    protected void onDestroy() {
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(KEY_ACTIVE_EVENT, eventId);
-        editor.apply();
-
-        super.onDestroy();
-    }
-*/
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Log.d(TAG, "onSaveInstanceState");
         savedInstanceState.putLong(KEY_ACTIVE_EVENT, eventId);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(KEY_ACTIVE_EVENT, eventId);
+        editor.apply();
+
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -110,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
                     eventId = data.getLongExtra(KEY_ACTIVE_EVENT, -1);
                     findViewById(R.id.main_button_startlist).setEnabled(true);
                     findViewById(R.id.main_button_intermediate).setEnabled(true);
+                    EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
+                            findFragmentById(R.id.event_select);
+                    esf.updateSelection(eventId);
                 } else {
                     eventId = -1;
                     findViewById(R.id.main_button_startlist).setEnabled(false);
@@ -147,17 +162,17 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.main_button_event:
                 intent.setClass(MainActivity.this, EventActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = SplitTimerConstants.ADD_EVENT;
                 break;
             case R.id.main_button_intermediate:
                 intent.setClass(MainActivity.this, TimingpointActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = SplitTimerConstants.BUILD_INTERMEDIATES;
                 break;
             case R.id.main_button_startlist:
                 intent.setClass(MainActivity.this, StartlistActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = SplitTimerConstants.BUILD_STARTLIST;
                 break;
             case R.id.main_button_timing:
@@ -166,5 +181,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         startActivityForResult(intent, request_code);
+    }
+
+    @Override
+    public void onEventSelected(long eventId) {
+        Log.d(TAG, String.format("onEventSelected.eventId: %d", eventId));
+        this.eventId = eventId;
+
+        updateTimingButtonState();
     }
 }

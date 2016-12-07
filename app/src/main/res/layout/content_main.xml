@@ -14,10 +14,16 @@
     tools:showIn="@layout/activity_main"
     tools:context="org.asbjorjo.splittimer.activity.MainActivity">
 
+    <FrameLayout
+        android:id="@+id/event_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/main_button_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/event_select"
         android:onClick="onClick"
         android:text="@string/event_title"/>
     <Button

@@ -2,7 +2,7 @@ package org.asbjorjo.splittimer.fragment;
 
 
 import android.app.ListFragment;
-import android.content.Intent;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +14,6 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
@@ -22,21 +21,22 @@ import org.asbjorjo.splittimer.db.DbUtils;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EventListFragment extends ListFragment {
+    private OnEventSelectedListener mListener;
     private DbHelper dbHelper;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        dbHelper = DbHelper.getInstance(getActivity());
-
-        updateList();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnEventSelectedListener) {
+            mListener = (OnEventSelectedListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnEventSelectedListener");
+        }
     }
 
     @Override
@@ -46,11 +46,29 @@ public class EventListFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent result = new Intent();
-        result.putExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, id);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        getActivity().setResult(RESULT_OK, result);
+        dbHelper = DbHelper.getInstance(getActivity());
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        updateList();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+        dbHelper = null;
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        mListener.onEventSelected(id);
     }
 
     public void updateList() {
@@ -91,5 +109,9 @@ public class EventListFragment extends ListFragment {
             Cursor oldCursor = adapter.swapCursor(eventCursor);
             oldCursor.close();
         }
+    }
+
+    public interface OnEventSelectedListener {
+        void onEventSelected(long eventId);
     }
 }

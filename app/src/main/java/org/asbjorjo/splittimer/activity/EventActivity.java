@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 
@@ -23,6 +24,11 @@ public class EventActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, String.format("Intent: %s",
+                getIntent() == null ? null : getIntent().toString()));
+        Log.d(TAG, String.format("savedInstanceState: %s",
+                savedInstanceState == null ? savedInstanceState : savedInstanceState.toString()));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

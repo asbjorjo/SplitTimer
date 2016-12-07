@@ -53,6 +53,11 @@ public class TimingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, String.format("Intent: %s",
+                getIntent() == null ? null : getIntent().toString()));
+        Log.d(TAG, String.format("savedInstanceState: %s",
+                savedInstanceState == null ? savedInstanceState : savedInstanceState.toString()));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timing_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -65,11 +70,14 @@ public class TimingActivity extends AppCompatActivity {
         eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
 
 
-        if (savedInstanceState != null) {
-            referenceAthlete = savedInstanceState.getLong(REFERENCE_ATHLETE);
-        } else {
-            loadReference();
+        if (referenceAthlete <= 0) {
+            if (savedInstanceState != null) {
+                referenceAthlete = savedInstanceState.getLong(REFERENCE_ATHLETE);
+            } else {
+                loadReference();
+            }
         }
+
         if (eventId > 0) {
             initializeDropdown();
             initializeTable();
@@ -82,10 +90,19 @@ public class TimingActivity extends AppCompatActivity {
         sortByReference();
    }
 
+/*
     @Override
     public void onBackPressed() {
         saveReference();
         super.onBackPressed();
+    }
+*/
+
+    @Override
+    protected void onDestroy() {
+        saveReference();
+
+        super.onDestroy();
     }
 
     private void saveReference() {

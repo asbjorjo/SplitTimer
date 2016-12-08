@@ -5,7 +5,8 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * Created by AJohansen2 on 12/2/2016.
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 
 public class TableAthlete {

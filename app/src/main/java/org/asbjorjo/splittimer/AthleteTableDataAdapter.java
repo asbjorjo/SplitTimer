@@ -11,7 +11,8 @@ import java.util.concurrent.TimeUnit;
 import de.codecrafters.tableview.TableDataAdapter;
 
 /**
- * Created by AJohansen2 on 11/20/2016.
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 
 public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {

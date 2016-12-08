@@ -12,7 +12,8 @@ import static org.asbjorjo.splittimer.db.Contract.Startlist;
 import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
 
 /**
- * Created by AJohansen2 on 12/2/2016.
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 
 public class DbUtils {

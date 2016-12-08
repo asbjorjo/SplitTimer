@@ -42,7 +42,8 @@ import static org.asbjorjo.splittimer.db.Contract.Result;
 import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
 
 /**
- * Created by AJohansen2 on 11/23/2016.
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 
 public class TimingActivity extends AppCompatActivity {

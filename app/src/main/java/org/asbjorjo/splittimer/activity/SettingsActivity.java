@@ -7,7 +7,8 @@ import android.util.Log;
 import org.asbjorjo.splittimer.fragment.SettingsFragment;
 
 /**
- * Created by AJohansen2 on 12/4/2016.
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 
 public class SettingsActivity extends PreferenceActivity {

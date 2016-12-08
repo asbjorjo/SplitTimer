@@ -22,6 +22,12 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
 import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
 
+/**
+ * Every app needs a main activity......
+ *
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ *        * @since 0.1
+ */
 public class MainActivity extends AppCompatActivity implements EventSelectFragment.OnEventSelectedListener {
     private static final String TAG = "MainActivity";
     private DbHelper dbHelper;

@@ -9,7 +9,8 @@ import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.db.DbHelper;
 
 /**
- * Created by AJohansen2 on 11/24/2016.
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 public class TimingpointActivity extends AppCompatActivity {
     private static final String TAG = "TimingpointActivity";

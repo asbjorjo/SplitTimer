@@ -21,7 +21,8 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
 
 /**
- * Created by AJohansen2 on 11/24/2016.
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 public class EventActivity extends AppCompatActivity implements
         EventListFragment.OnEventSelectedListener, EventEditFragment.OnEventAddedListener {

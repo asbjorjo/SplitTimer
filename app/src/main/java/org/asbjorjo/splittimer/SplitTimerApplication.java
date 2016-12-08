@@ -3,7 +3,8 @@ package org.asbjorjo.splittimer;
 import android.app.Application;
 
 /**
- * Created by AJohansen2 on 11/23/2016.
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 
 public class SplitTimerApplication extends Application {

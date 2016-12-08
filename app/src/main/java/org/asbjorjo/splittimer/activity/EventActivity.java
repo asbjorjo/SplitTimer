@@ -52,7 +52,7 @@ public class EventActivity extends AppCompatActivity implements
 
     @Override
     public void onEventSelected(long eventId) {
-        Log.d(TAG, "onEvetSelected");
+        Log.d(TAG, "onEventSelected");
 
         Intent intent = new Intent();
         intent.putExtra(KEY_ACTIVE_EVENT, eventId);
@@ -61,6 +61,8 @@ public class EventActivity extends AppCompatActivity implements
 
     @Override
     public void onEventAdded(long eventId) {
+        Log.d(TAG, "oneEventAdded");
+
         Intent intent = new Intent();
         intent.putExtra(KEY_ACTIVE_EVENT, eventId);
         setResult(RESULT_ADDED, intent);

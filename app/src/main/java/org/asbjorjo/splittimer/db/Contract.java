@@ -12,7 +12,7 @@ public class Contract {
     public static final String AUTHORITY = "org.asbjorjo.splittimer.provider";
     public static final String SCHEME = "content://";
     public static final String SLASH = "/";
-    public static final int DATABASE_VERSION = 16;
+    public static final int DATABASE_VERSION = 17;
     public static final String DATABASE_NAME = "SplitTimer.db";
 
     /**
@@ -51,6 +51,7 @@ public class Contract {
         public static final String TABLE_NAME = "event";
         public static final String KEY_NAME = "event_name";
         public static final String KEY_DATE = "event_date";
+        public static final String KEY_TYPE = "event_type";
 
         /**
          * The content style URI.
@@ -59,7 +60,8 @@ public class Contract {
         /**
          * The content URI for a single row. An ID must be appended.
          */
-        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME + SLASH);
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH +
+                TABLE_NAME + SLASH);
         /**
          * The default sort order for this table.
          */
@@ -81,7 +83,8 @@ public class Contract {
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
                 _ID + " INTEGER PRIMARY KEY," +
                 KEY_NAME + " TEXT NOT NULL," +
-                KEY_DATE + " INTEGER"
+                KEY_DATE + " INTEGER," +
+                KEY_TYPE + " TEXT"
                 +");";
         /**
          * SQL statement to drop table.
@@ -91,9 +94,11 @@ public class Contract {
         public static final String[] KEYS = {
                 _ID,
                 KEY_NAME,
-                KEY_DATE
+                KEY_DATE,
+                KEY_TYPE
         };
     }
+
     public static class Athlete implements BaseColumns {
         /**
          * Private default constructor to avoid instantiation.
@@ -111,7 +116,8 @@ public class Contract {
         /**
          * The content URI for a single row. An ID must be appended.
          */
-        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME + SLASH);
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH +
+                TABLE_NAME + SLASH);
         /**
          * The default sort order for this table.
          */
@@ -140,6 +146,7 @@ public class Contract {
                 KEY_NUMBER
         };
     }
+
     public static class Timingpoint implements BaseColumns {
         /**
          * Private default constructor to avoid instantiation.
@@ -158,7 +165,8 @@ public class Contract {
         /**
          * The content URI for a single row. An ID must be appended.
          */
-        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH + TABLE_NAME + SLASH);
+        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + SLASH +
+                TABLE_NAME + SLASH);
         /**
          * The default sort order for this table.
          */
@@ -191,6 +199,7 @@ public class Contract {
                 KEY_EVENT
         };
     }
+
     public static class Startlist {
         /**
          * Private default constructor to avoid instantiation.
@@ -222,6 +231,7 @@ public class Contract {
                 KEY_STARTTIME
         };
     }
+
     public static class Result {
         /**
          * Private default constructor to avoid instantiation.

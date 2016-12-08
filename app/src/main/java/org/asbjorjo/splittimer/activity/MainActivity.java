@@ -128,10 +128,10 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
                     esf.updateSelection(eventId);
                 } else if (resultCode == RESULT_ADDED) {
                     eventId = data.getLongExtra(KEY_ACTIVE_EVENT, -1);
-                    EventSelectFragment esf = EventSelectFragment.getInstance(eventId);
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.event_select, esf);
-                    ft.commit();
+                    EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
+                            findFragmentById(R.id.event_select);
+                    esf.refreshData();
+                    esf.updateSelection(eventId);
                 } else {
                     eventId = -1;
                     findViewById(R.id.main_button_startlist).setEnabled(false);

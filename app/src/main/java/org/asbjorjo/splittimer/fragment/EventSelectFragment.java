@@ -67,14 +67,20 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
         View v = inflater.inflate(R.layout.event_select_fragment, container, false);
 
         Spinner spinner = (Spinner) v.findViewById(R.id.event_select_spinner);
-        Cursor eventCursor = DbUtils.getEvents(dbHelper);
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getContext(),
-                R.layout.support_simple_spinner_dropdown_item, eventCursor, from, to, 0);
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+                R.layout.support_simple_spinner_dropdown_item, null, from, to, 0);
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        refreshData();
     }
 
     public void updateSelection(long eventId) {
@@ -87,6 +93,19 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
                     break;
                 }
             }
+        }
+    }
+
+    public void refreshData() {
+        if (getView() != null) {
+            Spinner spinner = (Spinner) getView().findViewById(R.id.event_select_spinner);
+            Cursor eventCursor = DbUtils.getEvents(dbHelper);
+
+            SimpleCursorAdapter adapter = (SimpleCursorAdapter) spinner.getAdapter();
+
+            Cursor oldCursor = adapter.swapCursor(eventCursor);
+
+            if (oldCursor != null) oldCursor.close();
         }
     }
 

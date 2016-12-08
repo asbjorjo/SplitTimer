@@ -20,6 +20,7 @@ import org.asbjorjo.splittimer.fragment.EventSelectFragment;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
+import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
 
 public class MainActivity extends AppCompatActivity implements EventSelectFragment.OnEventSelectedListener {
     private static final String TAG = "MainActivity";
@@ -125,6 +126,12 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
                     EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
                             findFragmentById(R.id.event_select);
                     esf.updateSelection(eventId);
+                } else if (resultCode == RESULT_ADDED) {
+                    eventId = data.getLongExtra(KEY_ACTIVE_EVENT, -1);
+                    EventSelectFragment esf = EventSelectFragment.getInstance(eventId);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.event_select, esf);
+                    ft.commit();
                 } else {
                     eventId = -1;
                     findViewById(R.id.main_button_startlist).setEnabled(false);

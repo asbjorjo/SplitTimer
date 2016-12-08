@@ -108,6 +108,8 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
                     findFragmentById(R.id.event_list);
             if (eventListFragment != null) eventListFragment.updateList();
 
+            mListener.onEventAdded(eventId);
+
             message = String.format("Added %s", eventName);
         }
 

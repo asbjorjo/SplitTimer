@@ -5,7 +5,10 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by AJohansen2 on 11/28/2016.
+ * Contract class defining data model.
+ *
+ * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
+ * @since 0.1
  */
 
 public class Contract {

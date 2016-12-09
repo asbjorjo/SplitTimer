@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 
 import org.asbjorjo.splittimer.R;
@@ -35,16 +36,12 @@ public class TimingpointListFragment extends ListFragment {
         eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
         dbHelper = DbHelper.getInstance(getActivity());
 
-        updateList();
+        refreshData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.timingpoint_list_fragment, container, false);
-    }
-
-    public void updateList() {
         final String[] from = {
                 Contract.Timingpoint.KEY_DESCRIPTION,
                 Contract.Timingpoint.KEY_POSITION
@@ -54,16 +51,20 @@ public class TimingpointListFragment extends ListFragment {
                 R.id.list_timingpoint_position
         };
 
+        View v = inflater.inflate(R.layout.timingpoint_list_fragment, container, false);
+
+        ListAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.timingpoint_list_item,
+                null, from, to, 0);
+        setListAdapter(adapter);
+
+        return v;
+    }
+
+    public void refreshData() {
         Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
         CursorAdapter adapter = (CursorAdapter) getListAdapter();
 
-        if (adapter == null) {
-            adapter = new SimpleCursorAdapter(getActivity(), R.layout.timingpoint_list_item,
-                    timingpointCursor, from, to, 0);
-            setListAdapter(adapter);
-        } else {
-            Cursor oldCursor = adapter.swapCursor(timingpointCursor);
-            oldCursor.close();
-        }
+        Cursor oldCursor = adapter.swapCursor(timingpointCursor);
+        if (oldCursor != null) oldCursor.close();
     }
 }

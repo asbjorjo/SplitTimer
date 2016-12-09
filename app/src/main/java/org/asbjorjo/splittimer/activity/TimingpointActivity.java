@@ -7,12 +7,15 @@ import android.util.Log;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.db.DbHelper;
+import org.asbjorjo.splittimer.fragment.TimingpointFragment;
+import org.asbjorjo.splittimer.fragment.TimingpointListFragment;
 
 /**
  * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
  * @since 0.1
  */
-public class TimingpointActivity extends AppCompatActivity {
+public class TimingpointActivity extends AppCompatActivity implements
+        TimingpointFragment.OnTimingpointAddedListener {
     private static final String TAG = TimingpointActivity.class.getSimpleName();
 
     private DbHelper dbHelper;
@@ -30,5 +33,12 @@ public class TimingpointActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onTimingpointAdded(long timingpointId) {
+        TimingpointListFragment tlf = (TimingpointListFragment) getFragmentManager().
+                findFragmentById(R.id.intermediate_list);
+        tlf.refreshData();
     }
 }

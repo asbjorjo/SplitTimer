@@ -36,7 +36,7 @@ public class StartlistActivity extends AppCompatActivity implements
 
     @Override
     public void onStartListEntryAdded(long eventId, long athleteId) {
-        StartlistFragment sf = (StartlistFragment) getFragmentManager().
+        StartlistFragment sf = (StartlistFragment) getSupportFragmentManager().
                 findFragmentById(R.id.startlist);
         sf.refreshData();
 

@@ -1,10 +1,10 @@
 package org.asbjorjo.splittimer.activity;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,7 +32,8 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
  * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
  * @since 0.1
  */
-public class MainActivity extends AppCompatActivity implements EventSelectFragment.OnEventSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        EventSelectFragment.OnEventSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private DbHelper dbHelper;
     private long eventId = NO_ACTIVE_EVENT;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
 
         Log.d(TAG, String.format("EventId: %d", eventId));
         EventSelectFragment esf = EventSelectFragment.newInstance(eventId);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.event_select, esf);
         ft.commit();
 
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
                 Log.d(TAG, "clearing data");
                 String message = dbHelper.clear_data() ? "Data cleared" : "Could not clear data";
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
+                EventSelectFragment esf = (EventSelectFragment) getSupportFragmentManager().
                         findFragmentById(R.id.event_select);
                 esf.refreshData();
                 updateButtonState();
@@ -137,12 +138,12 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
                     eventId = data.getLongExtra(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
                     findViewById(R.id.main_button_startlist).setEnabled(true);
                     findViewById(R.id.main_button_intermediate).setEnabled(true);
-                    EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
+                    EventSelectFragment esf = (EventSelectFragment) getSupportFragmentManager().
                             findFragmentById(R.id.event_select);
                     esf.updateSelection(eventId);
                 } else if (resultCode == RESULT_ADDED) {
                     eventId = data.getLongExtra(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-                    EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
+                    EventSelectFragment esf = (EventSelectFragment) getSupportFragmentManager().
                             findFragmentById(R.id.event_select);
                     esf.refreshData();
                     esf.updateSelection(eventId);

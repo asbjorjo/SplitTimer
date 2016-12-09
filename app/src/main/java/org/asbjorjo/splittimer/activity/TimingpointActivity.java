@@ -37,7 +37,7 @@ public class TimingpointActivity extends AppCompatActivity implements
 
     @Override
     public void onTimingpointAdded(long timingpointId) {
-        TimingpointListFragment tlf = (TimingpointListFragment) getFragmentManager().
+        TimingpointListFragment tlf = (TimingpointListFragment) getSupportFragmentManager().
                 findFragmentById(R.id.intermediate_list);
         tlf.refreshData();
     }

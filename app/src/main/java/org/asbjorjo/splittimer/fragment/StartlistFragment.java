@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 
 import org.asbjorjo.splittimer.R;
@@ -36,19 +37,12 @@ public class StartlistFragment extends ListFragment {
 
         dbHelper = DbHelper.getInstance(getActivity());
         eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-
-        updateList();
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.startlist_fragment, container, false);
-    }
-
-    private void updateList() {
         final String[] from = {
                 Contract.Athlete.KEY_NAME,
                 Contract.Athlete.KEY_NUMBER,
@@ -60,16 +54,26 @@ public class StartlistFragment extends ListFragment {
                 R.id.startlist_item_starttime
         };
 
+        View v = inflater.inflate(R.layout.startlist_fragment, container, false);
+        ListAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.startlist_item,
+                null, from, to, 0);
+        setListAdapter(adapter);
+
+        return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        refreshData();
+    }
+
+    public void refreshData() {
         Cursor cursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
         CursorAdapter adapter = (CursorAdapter) getListAdapter();
 
-        if (adapter == null) {
-            adapter = new SimpleCursorAdapter(getActivity(), R.layout.startlist_item,
-                    cursor, from, to, 0);
-            setListAdapter(adapter);
-        } else {
-            Cursor oldCursor = adapter.swapCursor(cursor);
-            oldCursor.close();
-        }
+        Cursor oldCursor = adapter.swapCursor(cursor);
+        if (oldCursor != null) oldCursor.close();
     }
 }

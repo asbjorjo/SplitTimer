@@ -7,12 +7,15 @@ import android.util.Log;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.db.DbHelper;
+import org.asbjorjo.splittimer.fragment.StartlistEditFragment;
+import org.asbjorjo.splittimer.fragment.StartlistFragment;
 
 /**
  * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
  * @since 0.1
  */
-public class StartlistActivity extends AppCompatActivity {
+public class StartlistActivity extends AppCompatActivity implements
+        StartlistEditFragment.OnStartlistEntryAddedListener {
     private static final String TAG = StartlistActivity.class.getSimpleName();
     private DbHelper dbHelper;
     private long eventId;
@@ -29,5 +32,14 @@ public class StartlistActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onStartListEntryAdded(long eventId, long athleteId) {
+        StartlistFragment sf = (StartlistFragment) getFragmentManager().
+                findFragmentById(R.id.startlist);
+        sf.refreshData();
+
+        setResult(RESULT_OK);
     }
 }

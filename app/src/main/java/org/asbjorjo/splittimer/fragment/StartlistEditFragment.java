@@ -2,12 +2,14 @@ package org.asbjorjo.splittimer.fragment;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +24,28 @@ import org.asbjorjo.splittimer.db.DbHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StartlistEditFragment extends Fragment {
+public class StartlistEditFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = StartlistEditFragment.class.getSimpleName();
+
     private DbHelper dbHelper;
     private long eventId;
+    private OnStartlistEntryAddedListener mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnStartlistEntryAddedListener) {
+            mListener = (OnStartlistEntryAddedListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnStartlistEntryAddedListener");
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -46,19 +60,35 @@ public class StartlistEditFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.startlist_edit_fragment, container, false);
+        View v = inflater.inflate(R.layout.startlist_edit_fragment, container, false);
+        v.findViewById(R.id.startlist_input_button).setOnClickListener(this);
+        return v;
     }
 
-    public void addAthlete(View view) {
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+        dbHelper = null;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.startlist_input_button) {
+            Log.d(TAG, "Adding athlete");
+            addAthlete();
+        }
+    }
+
+    public void addAthlete() {
         int number = -1;
         long startTime = -1;
         String message;
         List<String> error = new ArrayList<>();
 
-        EditText nameView = (EditText) getActivity().findViewById(R.id.startlist_input_name);
-        EditText numberView = (EditText) getActivity().findViewById(R.id.startlist_input_number);
-        EditText startView = (EditText) getActivity().findViewById(R.id.startlist_input_starttime);
+        EditText nameView = (EditText) getView().findViewById(R.id.startlist_input_name);
+        EditText numberView = (EditText) getView().findViewById(R.id.startlist_input_number);
+        EditText startView = (EditText) getView().findViewById(R.id.startlist_input_starttime);
 
         String name = nameView.getText().toString();
         if (name.trim().equals("")) {
@@ -84,8 +114,6 @@ public class StartlistEditFragment extends Fragment {
                 stringBuilder.append(s);
             }
             message = stringBuilder.toString();
-
-            getActivity().setResult(RESULT_CANCELED);
         } else {
             SQLiteDatabase database = dbHelper.getWritableDatabase();
             ContentValues athleteValues = new ContentValues();
@@ -108,18 +136,18 @@ public class StartlistEditFragment extends Fragment {
                 startView.setText(null);
                 nameView.requestFocus();
 
-                //updateList();
-
-                getActivity().setResult(RESULT_OK);
+                mListener.onStartListEntryAdded(eventId, athleteId);
             } catch (SQLException e) {
                 message = String.format("Error adding %s", name);
-
-                getActivity().setResult(RESULT_CANCELED);
             } finally {
                 database.endTransaction();
             }
         }
 
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public interface OnStartlistEntryAddedListener {
+        void onStartListEntryAdded(long eventId, long athleteId);
     }
 }

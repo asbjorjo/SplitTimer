@@ -4,6 +4,7 @@
         android:key="@string/pref_timingPrecision_key"
         android:title="@string/pref_timingPrecision"
         android:dialogTitle="@string/pref_timingPrecision"
+        android:summary="%s"
         android:defaultValue="@string/pref_timingPrecision_default"
         android:entries="@array/pref_timingPrecision_entries"
         android:entryValues="@array/pref_timingPrecision_values"/>

@@ -11,14 +11,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.Contract;
+import org.asbjorjo.splittimer.db.Contract.Event.EVENT_TYPE;
 import org.asbjorjo.splittimer.db.DbHelper;
 
 import java.util.Calendar;
@@ -54,8 +57,11 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.event_edit_fragment, container, false);
 
-        Button button = (Button) v.findViewById(R.id.event_input_button);
-        button.setOnClickListener(this);
+        v.findViewById(R.id.event_input_button).setOnClickListener(this);
+        Spinner spinner = (Spinner) v.findViewById(R.id.event_input_type);
+        SpinnerAdapter adapter = new ArrayAdapter<EVENT_TYPE>(getActivity(),
+                R.layout.support_simple_spinner_dropdown_item, EVENT_TYPE.values());
+        spinner.setAdapter(adapter);
 
         return v;
     }
@@ -79,6 +85,9 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
         Calendar date = Calendar.getInstance();
         date.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), 0, 0, 0);
 
+        Spinner eventTypeSelect = (Spinner) getView().findViewById(R.id.event_input_type);
+        EVENT_TYPE eventType = (EVENT_TYPE) eventTypeSelect.getSelectedItem();
+
         String eventName = textView.getText().toString();
 
         String message;
@@ -89,6 +98,7 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
             ContentValues values = new ContentValues();
             values.put(Contract.Event.KEY_NAME, eventName);
             values.put(Contract.Event.KEY_DATE, date.getTimeInMillis());
+            values.put(Contract.Event.KEY_TYPE, eventType.toString());
 
             SQLiteDatabase database = dbHelper.getWritableDatabase();
             long eventId = database.insert(Contract.Event.TABLE_NAME, null, values);

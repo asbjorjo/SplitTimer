@@ -74,10 +74,12 @@ public class EventListFragment extends ListFragment {
     public void updateList() {
         final String[] from = {
                 Contract.Event.KEY_NAME,
+                Contract.Event.KEY_TYPE,
                 Contract.Event.KEY_DATE
         };
         final int[] to = {
                 R.id.list_event_name,
+                R.id.list_event_type,
                 R.id.list_event_date
         };
 

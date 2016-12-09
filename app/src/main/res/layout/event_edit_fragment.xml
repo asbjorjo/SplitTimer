@@ -12,11 +12,17 @@
         android:maxLines="1"
         android:hint="@string/name"/>
 
+    <Spinner
+        android:id="@+id/event_input_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/event_input_name"/>
+
     <DatePicker
         android:id="@+id/event_input_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/event_input_name"
+        android:layout_below="@id/event_input_type"
         android:calendarViewShown="false"
         android:spinnersShown="true"
         android:datePickerMode="spinner"/>

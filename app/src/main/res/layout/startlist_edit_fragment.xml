@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:inputType="number"
             android:maxLines="1"
-            android:hint="@string/number"/>
+            android:hint="@string/startlist_number"/>
 
         <EditText
             android:id="@+id/startlist_input_starttime"

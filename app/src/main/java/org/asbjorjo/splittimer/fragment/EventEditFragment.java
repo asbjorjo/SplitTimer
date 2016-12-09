@@ -23,9 +23,6 @@ import org.asbjorjo.splittimer.db.DbHelper;
 
 import java.util.Calendar;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -88,7 +85,6 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
 
         if (eventName.trim().equals("")) {
             message = "Name missing";
-            getActivity().setResult(RESULT_CANCELED);
         } else {
             ContentValues values = new ContentValues();
             values.put(Contract.Event.KEY_NAME, eventName);
@@ -101,8 +97,6 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
 
             Intent result = new Intent();
             result.putExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, eventId);
-
-            getActivity().setResult(RESULT_OK, result);
 
             EventListFragment eventListFragment = (EventListFragment) getFragmentManager().
                     findFragmentById(R.id.event_list);

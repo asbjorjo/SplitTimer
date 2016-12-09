@@ -1,24 +1,30 @@
 <resources>
-    <string name="app_name">SplitTimer</string>
+    <string name="app_name" translatable="false">SplitTimer</string>
+    <string name="pref_timingPrecision_key" translatable="false">timingprecision</string>
+    <string name="pref_timingPrecision_default" translatable="false">1</string>
+
     <string name="action_settings">Settings</string>
+    <string name="clear_data">Clear data</string>
+
     <string name="start_timing">Start timing</string>
-    <string name="name">Name</string>
-    <string name="add">Add</string>
-    <string name="number">Number</string>
-    <string name="start_time">Start time</string>
+    <string name="timing_title">Timing</string>
+
     <string name="event_title">Events</string>
     <string name="event_empty_list">No events</string>
-    <string name="timingpoint_title">Timingpoints</string>
+    <string name="select_event">Select event</string>
+
     <string name="startlist_title">Startlist</string>
-    <string name="timing_title">Timing</string>
-    <string name="pref_timingPrecision_key">timingprecision</string>
+    <string name="start_time">Start offset</string>
+
+    <string name="timingpoint_title">Timingpoints</string>
+
     <string name="pref_timingPrecision">Timing precision</string>
-    <string name="pref_timingPrecision_default">1</string>
     <string name="pref_second">1s</string>
     <string name="pref_decisecond">1/10s</string>
     <string name="pref_centisecond">1/100s</string>
     <string name="pref_millisecond">1/1000s</string>
+
+    <string name="add">Add</string>
+    <string name="name">Name</string>
     <string name="empty_list">No entries</string>
-    <string name="select_event">Select event</string>
-    <string name="clear_data">Clear data</string>
 </resources>

@@ -34,7 +34,7 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
     private long eventId;
     private OnEventSelectedListener mListener;
 
-    public static EventSelectFragment getInstance(long eventId) {
+    public static EventSelectFragment newInstance(long eventId) {
         EventSelectFragment esf = new EventSelectFragment();
 
         Bundle args = new Bundle();

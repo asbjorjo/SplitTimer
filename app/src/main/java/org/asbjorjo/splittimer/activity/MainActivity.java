@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
         }
 
         Log.d(TAG, String.format("EventId: %d", eventId));
-        EventSelectFragment esf = EventSelectFragment.getInstance(eventId);
+        EventSelectFragment esf = EventSelectFragment.newInstance(eventId);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.event_select, esf);
         ft.commit();

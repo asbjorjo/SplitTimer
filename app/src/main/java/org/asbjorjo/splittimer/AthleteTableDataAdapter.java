@@ -16,7 +16,7 @@ import de.codecrafters.tableview.TableDataAdapter;
  */
 
 public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {
-    private static final String TAG = "AthleteTableDataAdapter";
+    private static final String TAG = AthleteTableDataAdapter.class.getSimpleName();
     private static final String timeFormat = "%02d:%02d";
 
     public AthleteTableDataAdapter(Context context, List<TableAthlete> data) {

@@ -29,7 +29,7 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
  *        * @since 0.1
  */
 public class MainActivity extends AppCompatActivity implements EventSelectFragment.OnEventSelectedListener {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private DbHelper dbHelper;
     private long eventId = -1;
 

@@ -13,7 +13,7 @@ import org.asbjorjo.splittimer.db.DbHelper;
  * @since 0.1
  */
 public class TimingpointActivity extends AppCompatActivity {
-    private static final String TAG = "TimingpointActivity";
+    private static final String TAG = TimingpointActivity.class.getSimpleName();
 
     private DbHelper dbHelper;
     private long eventId;

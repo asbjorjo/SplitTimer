@@ -12,6 +12,8 @@ import org.asbjorjo.splittimer.fragment.SettingsFragment;
  */
 
 public class SettingsActivity extends PreferenceActivity {
+    private static final String TAG = PreferenceActivity.class.getSimpleName();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d("SettingsActivity", "onCreate");

@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DbHelper extends SQLiteOpenHelper {
+    private static final String TAG = DbHelper.class.getSimpleName();
 
     private static DbHelper instance;
 

@@ -26,7 +26,7 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
  */
 public class EventActivity extends AppCompatActivity implements
         EventListFragment.OnEventSelectedListener, EventEditFragment.OnEventAddedListener {
-    private static final String TAG = "EventActivity";
+    private static final String TAG = EventActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

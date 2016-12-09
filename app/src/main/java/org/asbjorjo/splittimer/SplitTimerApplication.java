@@ -8,6 +8,8 @@ import android.app.Application;
  */
 
 public class SplitTimerApplication extends Application {
+    private static final String TAG = SplitTimerApplication.class.getSimpleName();
+
     @Override
     public void onCreate() {
         super.onCreate();

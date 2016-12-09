@@ -47,7 +47,7 @@ import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
  */
 
 public class TimingActivity extends AppCompatActivity {
-    private static final String TAG = "TimingActivity";
+    private static final String TAG = TimingActivity.class.getSimpleName();
     private static final String REFERENCE_ATHLETE = "referenceAthlete";
     private DbHelper dbHelper;
     private long eventId;

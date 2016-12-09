@@ -17,7 +17,7 @@ import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
  */
 
 public class DbUtils {
-    private static final String TAG = "DbUtils";
+    private static final String TAG = DbUtils.class.getSimpleName();
 
     public static Cursor getEvents(DbHelper dbHelper) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();

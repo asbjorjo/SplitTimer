@@ -11,13 +11,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
 import org.asbjorjo.splittimer.fragment.EventSelectFragment;
 
+import static org.asbjorjo.splittimer.SplitTimerConstants.ADD_EVENT;
+import static org.asbjorjo.splittimer.SplitTimerConstants.BUILD_INTERMEDIATES;
+import static org.asbjorjo.splittimer.SplitTimerConstants.BUILD_STARTLIST;
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
 import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
@@ -106,11 +109,16 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Log.d(TAG, "launching settings");
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+        switch (id) {
+            case R.id.action_settings:
+                Log.d(TAG, "launching settings");
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.clear_data:
+                Log.d(TAG, "clearing data");
+                String message = dbHelper.clear_data() ? "Data cleared" : "Could not clear data";
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
                 requestCode, resultCode, data == null ? data : data.toString()));
         Log.d(TAG, String.format("EventId: %d", eventId));
         switch (requestCode) {
-            case SplitTimerConstants.ADD_EVENT:
+            case ADD_EVENT:
                 if (resultCode == RESULT_OK) {
                     eventId = data.getLongExtra(KEY_ACTIVE_EVENT, -1);
                     findViewById(R.id.main_button_startlist).setEnabled(true);
@@ -145,12 +153,12 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
                 }
                 updateTimingButtonState();
                 break;
-            case SplitTimerConstants.BUILD_INTERMEDIATES:
+            case BUILD_INTERMEDIATES:
                 if (resultCode == RESULT_OK) {
                     updateTimingButtonState();
                 }
                 break;
-            case SplitTimerConstants.BUILD_STARTLIST:
+            case BUILD_STARTLIST:
                 if (resultCode == RESULT_OK) {
                     updateTimingButtonState();
                 }
@@ -176,17 +184,17 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
             case R.id.main_button_event:
                 intent.setClass(MainActivity.this, EventActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                request_code = SplitTimerConstants.ADD_EVENT;
+                request_code = ADD_EVENT;
                 break;
             case R.id.main_button_intermediate:
                 intent.setClass(MainActivity.this, TimingpointActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                request_code = SplitTimerConstants.BUILD_INTERMEDIATES;
+                request_code = BUILD_INTERMEDIATES;
                 break;
             case R.id.main_button_startlist:
                 intent.setClass(MainActivity.this, StartlistActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                request_code = SplitTimerConstants.BUILD_STARTLIST;
+                request_code = BUILD_STARTLIST;
                 break;
             case R.id.main_button_timing:
                 intent.setClass(MainActivity.this, TimingActivity.class);

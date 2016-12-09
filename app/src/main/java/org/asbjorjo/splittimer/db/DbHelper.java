@@ -56,4 +56,17 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
+
+    public boolean clear_data() {
+        if (instance != null) {
+            SQLiteDatabase db = instance.getWritableDatabase();
+            for (String SQL_DELETE_TABLE : Contract.SQL_DELETE_TABLES) {
+                db.execSQL(SQL_DELETE_TABLE);
+            }
+            this.onCreate(db);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

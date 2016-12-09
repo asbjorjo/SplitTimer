@@ -19,4 +19,5 @@
     <string name="pref_millisecond">1/1000s</string>
     <string name="empty_list">No data</string>
     <string name="select_event">Select event</string>
+    <string name="clear_data">Clear data</string>
 </resources>

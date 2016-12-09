@@ -102,19 +102,6 @@ public class TimingActivity extends AppCompatActivity {
         saveReference();
     }
 
-    private void saveReference() {
-        Log.d(TAG, String.format("saveReference - referenceAthlete: %d", referenceAthlete));
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(REFERENCE_ATHLETE, referenceAthlete);
-        editor.apply();
-    }
-
-    private void loadReference() {
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        referenceAthlete = sharedPreferences.getLong(REFERENCE_ATHLETE, -1);
-    }
-
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.d(TAG, "onRestoreInstanceState");
@@ -130,6 +117,19 @@ public class TimingActivity extends AppCompatActivity {
 
         outState.putLong(REFERENCE_ATHLETE, referenceAthlete);
         saveReference();
+    }
+
+    private void saveReference() {
+        Log.d(TAG, String.format("saveReference - referenceAthlete: %d", referenceAthlete));
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(REFERENCE_ATHLETE, referenceAthlete);
+        editor.apply();
+    }
+
+    private void loadReference() {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        referenceAthlete = sharedPreferences.getLong(REFERENCE_ATHLETE, -1);
     }
 
     /**

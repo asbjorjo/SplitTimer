@@ -28,18 +28,6 @@ public class TimingpointListFragment extends ListFragment {
     private long eventId;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        Intent intent = getActivity().getIntent();
-
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-        dbHelper = DbHelper.getInstance(getActivity());
-
-        refreshData();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final String[] from = {
@@ -58,6 +46,18 @@ public class TimingpointListFragment extends ListFragment {
         setListAdapter(adapter);
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Intent intent = getActivity().getIntent();
+
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
+        dbHelper = DbHelper.getInstance(getActivity());
+
+        refreshData();
     }
 
     public void refreshData() {

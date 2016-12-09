@@ -78,6 +78,13 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        dbHelper = DbHelper.getInstance(getActivity());
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -115,7 +122,6 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
         super.onAttach(context);
         if (context instanceof OnEventSelectedListener) {
             mListener = (OnEventSelectedListener) context;
-            dbHelper = DbHelper.getInstance(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnEventSelectedListener");
@@ -125,6 +131,7 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
     @Override
     public void onDetach() {
         super.onDetach();
+
         mListener = null;
         dbHelper = null;
     }
@@ -139,6 +146,7 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
         if (savedInstanceState != null) {
             eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT);
         }

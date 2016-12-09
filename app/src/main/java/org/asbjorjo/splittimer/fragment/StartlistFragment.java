@@ -30,16 +30,6 @@ public class StartlistFragment extends ListFragment {
     private long eventId;
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        Intent intent = getActivity().getIntent();
-
-        dbHelper = DbHelper.getInstance(getActivity());
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -60,6 +50,17 @@ public class StartlistFragment extends ListFragment {
         setListAdapter(adapter);
 
         return v;
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Intent intent = getActivity().getIntent();
+
+        dbHelper = DbHelper.getInstance(getActivity());
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
     }
 
     @Override

@@ -88,12 +88,7 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
 
         eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
 
-        if (eventId > 0) {
-            findViewById(R.id.main_button_startlist).setEnabled(true);
-            findViewById(R.id.main_button_intermediate).setEnabled(true);
-        }
-
-        updateTimingButtonState();
+        updateButtonState();
     }
 
     @Override
@@ -120,6 +115,10 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
                 Log.d(TAG, "clearing data");
                 String message = dbHelper.clear_data() ? "Data cleared" : "Could not clear data";
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
+                        findFragmentById(R.id.event_select);
+                esf.refreshData();
+                updateButtonState();
         }
 
         return super.onOptionsItemSelected(item);
@@ -152,23 +151,23 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
                     findViewById(R.id.main_button_startlist).setEnabled(false);
                     findViewById(R.id.main_button_intermediate).setEnabled(false);
                 }
-                updateTimingButtonState();
                 break;
             case BUILD_INTERMEDIATES:
                 if (resultCode == RESULT_OK) {
-                    updateTimingButtonState();
                 }
                 break;
             case BUILD_STARTLIST:
                 if (resultCode == RESULT_OK) {
-                    updateTimingButtonState();
                 }
                 break;
         }
+        updateButtonState();
         Log.d(TAG, String.format("EventId: %d", eventId));
     }
 
-    private void updateTimingButtonState() {
+    private void updateButtonState() {
+        findViewById(R.id.main_button_intermediate).setEnabled(eventId > 0);
+        findViewById(R.id.main_button_startlist).setEnabled(eventId > 0);
         findViewById(R.id.main_button_timing).setEnabled(
                 eventId > 0
                 && DbUtils.getTimingpointCountForEvent(eventId, dbHelper) > 0
@@ -210,6 +209,6 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
         Log.d(TAG, String.format("onEventSelected.eventId: %d", eventId));
         this.eventId = eventId;
 
-        updateTimingButtonState();
+        updateButtonState();
     }
 }

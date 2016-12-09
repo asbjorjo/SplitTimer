@@ -20,6 +20,7 @@ import org.asbjorjo.splittimer.db.DbUtils;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +35,7 @@ public class TimingpointFragment extends Fragment implements View.OnClickListene
 
         Intent intent = getActivity().getIntent();
 
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
         dbHelper = DbHelper.getInstance(getActivity());
 
         getActivity().findViewById(R.id.timingpoint_input_button).setOnClickListener(this);

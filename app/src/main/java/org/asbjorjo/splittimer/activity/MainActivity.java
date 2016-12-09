@@ -22,6 +22,7 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.ADD_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.BUILD_INTERMEDIATES;
 import static org.asbjorjo.splittimer.SplitTimerConstants.BUILD_STARTLIST;
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
+import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
 import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
 
@@ -34,7 +35,7 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
 public class MainActivity extends AppCompatActivity implements EventSelectFragment.OnEventSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private DbHelper dbHelper;
-    private long eventId = -1;
+    private long eventId = NO_ACTIVE_EVENT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
 
         if (eventId < 0) {
             SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-            eventId = sharedPreferences.getLong(KEY_ACTIVE_EVENT, -1);
+            eventId = sharedPreferences.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
         }
 
         Log.d(TAG, String.format("EventId: %d", eventId));
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
         Log.d(TAG, "onRestoreInstanceState");
         super.onRestoreInstanceState(savedInstanceState);
 
-        eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT, -1);
+        eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
 
         if (eventId > 0) {
             findViewById(R.id.main_button_startlist).setEnabled(true);
@@ -134,14 +135,14 @@ public class MainActivity extends AppCompatActivity implements EventSelectFragme
         switch (requestCode) {
             case ADD_EVENT:
                 if (resultCode == RESULT_OK) {
-                    eventId = data.getLongExtra(KEY_ACTIVE_EVENT, -1);
+                    eventId = data.getLongExtra(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
                     findViewById(R.id.main_button_startlist).setEnabled(true);
                     findViewById(R.id.main_button_intermediate).setEnabled(true);
                     EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
                             findFragmentById(R.id.event_select);
                     esf.updateSelection(eventId);
                 } else if (resultCode == RESULT_ADDED) {
-                    eventId = data.getLongExtra(KEY_ACTIVE_EVENT, -1);
+                    eventId = data.getLongExtra(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
                     EventSelectFragment esf = (EventSelectFragment) getFragmentManager().
                             findFragmentById(R.id.event_select);
                     esf.refreshData();

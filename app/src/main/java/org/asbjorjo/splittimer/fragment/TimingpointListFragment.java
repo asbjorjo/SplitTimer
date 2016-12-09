@@ -16,6 +16,8 @@ import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
 
+import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
+
 /**
  * Created by AJohansen2 on 12/6/2016.
  */
@@ -30,7 +32,7 @@ public class TimingpointListFragment extends ListFragment {
 
         Intent intent = getActivity().getIntent();
 
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
         dbHelper = DbHelper.getInstance(getActivity());
 
         updateList();

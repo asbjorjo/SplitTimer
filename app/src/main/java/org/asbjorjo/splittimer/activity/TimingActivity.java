@@ -36,6 +36,7 @@ import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.listeners.TableDataLongClickListener;
 import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
 
+import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
 import static org.asbjorjo.splittimer.db.Contract.Athlete;
 import static org.asbjorjo.splittimer.db.Contract.Result;
@@ -69,7 +70,7 @@ public class TimingActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         dbHelper = DbHelper.getInstance(getApplicationContext());
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
 
 
         if (referenceAthlete <= 0) {

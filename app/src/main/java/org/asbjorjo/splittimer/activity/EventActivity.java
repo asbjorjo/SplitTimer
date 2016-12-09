@@ -18,6 +18,7 @@ import org.asbjorjo.splittimer.fragment.EventListFragment;
 import java.util.Calendar;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
+import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
 
 /**
@@ -42,7 +43,7 @@ public class EventActivity extends AppCompatActivity implements
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        long eventId = intent.getLongExtra(KEY_ACTIVE_EVENT, -1);
+        long eventId = intent.getLongExtra(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
 
         if (eventId > 0) {
             Intent resultIntent = new Intent();

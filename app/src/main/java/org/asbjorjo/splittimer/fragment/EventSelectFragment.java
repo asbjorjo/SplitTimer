@@ -18,6 +18,7 @@ import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
+import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,9 +49,9 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            eventId = getArguments().getLong(KEY_ACTIVE_EVENT, -1);
+            eventId = getArguments().getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
         } else if (savedInstanceState != null) {
-            eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT, -1);
+            eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
         }
     }
 

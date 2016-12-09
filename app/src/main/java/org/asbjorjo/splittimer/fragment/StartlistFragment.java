@@ -19,6 +19,8 @@ import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
 
+import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -33,7 +35,7 @@ public class StartlistFragment extends ListFragment {
         Intent intent = getActivity().getIntent();
 
         dbHelper = DbHelper.getInstance(getActivity());
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
 
         updateList();
 

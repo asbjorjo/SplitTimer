@@ -24,6 +24,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +39,7 @@ public class StartlistEditFragment extends Fragment {
 
         Intent intent = getActivity().getIntent();
 
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, -1);
+        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
         dbHelper = DbHelper.getInstance(getActivity());
     }
 

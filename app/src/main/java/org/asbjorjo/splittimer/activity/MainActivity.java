@@ -29,7 +29,7 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
  * Every app needs a main activity......
  *
  * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
- *        * @since 0.1
+ * @since 0.1
  */
 public class MainActivity extends AppCompatActivity implements EventSelectFragment.OnEventSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();

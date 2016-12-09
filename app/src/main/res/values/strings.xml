@@ -13,7 +13,7 @@
     <string name="timing_title">Timing</string>
     <string name="pref_timingPrecision_key">timingprecision</string>
     <string name="pref_timingPrecision">Timing precision</string>
-    <string name="pref_timingPrecision_default">1000</string>
+    <string name="pref_timingPrecision_default">1</string>
     <string name="pref_second">1s</string>
     <string name="pref_decisecond">1/10s</string>
     <string name="pref_centisecond">1/100s</string>

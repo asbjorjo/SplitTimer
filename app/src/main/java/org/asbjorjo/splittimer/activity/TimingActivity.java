@@ -81,6 +81,8 @@ public class TimingActivity extends AppCompatActivity {
             }
         }
 
+        Log.d(TAG, String.format("referenceAthlete = %d", referenceAthlete));
+
         if (eventId > 0) {
             initializeDropdown();
             initializeTable();
@@ -93,7 +95,15 @@ public class TimingActivity extends AppCompatActivity {
         sortByReference();
    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        saveReference();
+    }
+
     private void saveReference() {
+        Log.d(TAG, String.format("saveReference - referenceAthlete: %d", referenceAthlete));
         SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(REFERENCE_ATHLETE, referenceAthlete);

@@ -60,7 +60,7 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
         v.findViewById(R.id.event_input_button).setOnClickListener(this);
         Spinner spinner = (Spinner) v.findViewById(R.id.event_input_type);
         SpinnerAdapter adapter = new ArrayAdapter<EVENT_TYPE>(getActivity(),
-                R.layout.support_simple_spinner_dropdown_item, EVENT_TYPE.values());
+                R.layout.simple_textview, EVENT_TYPE.values());
         spinner.setAdapter(adapter);
 
         return v;

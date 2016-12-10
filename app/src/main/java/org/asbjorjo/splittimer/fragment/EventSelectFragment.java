@@ -69,7 +69,7 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
 
         Spinner spinner = (Spinner) v.findViewById(R.id.event_select_spinner);
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
-                R.layout.support_simple_spinner_dropdown_item, null, from, to, 0);
+                R.layout.simple_textview, null, from, to, 0);
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);

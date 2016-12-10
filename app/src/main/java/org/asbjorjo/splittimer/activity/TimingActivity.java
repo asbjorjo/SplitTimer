@@ -185,7 +185,7 @@ public class TimingActivity extends AppCompatActivity {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         Cursor athleteCursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                R.layout.support_simple_spinner_dropdown_item, athleteCursor, from, to, 0);
+                R.layout.simple_textview, athleteCursor, from, to, 0);
 
         spinner.setAdapter(adapter);
 

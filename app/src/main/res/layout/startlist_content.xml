@@ -14,8 +14,7 @@
     tools:showIn="@layout/startlist_activity"
     tools:context="org.asbjorjo.splittimer.activity.StartlistActivity">
 
-    <fragment
-        android:name="org.asbjorjo.splittimer.fragment.StartlistEditFragment"
+    <FrameLayout
         android:id="@+id/startlist_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

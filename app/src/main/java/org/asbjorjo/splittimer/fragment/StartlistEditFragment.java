@@ -3,7 +3,6 @@ package org.asbjorjo.splittimer.fragment;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,14 +16,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.Contract;
+import org.asbjorjo.splittimer.db.Contract.Event.EVENT_TYPE;
 import org.asbjorjo.splittimer.db.DbHelper;
+import org.asbjorjo.splittimer.db.DbUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
+import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +34,18 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
 
     private DbHelper dbHelper;
     private long eventId;
+    private EVENT_TYPE eventType;
     private OnStartlistEntryAddedListener mListener;
+
+    public static StartlistEditFragment newInstance(long eventId) {
+        StartlistEditFragment sef = new StartlistEditFragment();
+
+        Bundle args = new Bundle();
+        args.putLong(KEY_ACTIVE_EVENT, eventId);
+        sef.setArguments(args);
+
+        return sef;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -45,16 +56,22 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
             throw new RuntimeException(context.toString()
                     + " must implement OnStartlistEntryAddedListener");
         }
+
+        dbHelper = DbHelper.getInstance(context);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            eventId = getArguments().getLong(KEY_ACTIVE_EVENT);
+        }
+        eventType = DbUtils.getEventType(eventId, dbHelper);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Intent intent = getActivity().getIntent();
-
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-        dbHelper = DbHelper.getInstance(getActivity());
     }
 
     @Override

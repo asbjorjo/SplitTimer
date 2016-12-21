@@ -1,14 +1,16 @@
 package org.asbjorjo.splittimer.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.fragment.StartlistEditFragment;
 import org.asbjorjo.splittimer.fragment.StartlistFragment;
+
+import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 
 /**
  * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
@@ -17,8 +19,6 @@ import org.asbjorjo.splittimer.fragment.StartlistFragment;
 public class StartlistActivity extends AppCompatActivity implements
         StartlistEditFragment.OnStartlistEntryAddedListener {
     private static final String TAG = StartlistActivity.class.getSimpleName();
-    private DbHelper dbHelper;
-    private long eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,13 @@ public class StartlistActivity extends AppCompatActivity implements
         setContentView(R.layout.startlist_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        long eventId = getIntent().getLongExtra(KEY_ACTIVE_EVENT, -1);
+        StartlistEditFragment sef = StartlistEditFragment.newInstance(eventId);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.startlist_edit, sef);
+        ft.commit();
+
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
+import org.asbjorjo.splittimer.db.Contract.Event;
+
 import java.text.MessageFormat;
 
 import static org.asbjorjo.splittimer.db.Contract.Athlete;
@@ -21,8 +23,8 @@ public class DbUtils {
 
     public static Cursor getEvents(DbHelper dbHelper) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor eventCursor = database.query(Contract.Event.TABLE_NAME, Contract.Event.KEYS,
-                null, null, null, null, Contract.Event.DEFAULT_SORT_ORDER);
+        Cursor eventCursor = database.query(Event.TABLE_NAME, Event.KEYS,
+                null, null, null, null, Event.DEFAULT_SORT_ORDER);
         return eventCursor;
     }
 
@@ -171,5 +173,14 @@ public class DbUtils {
         cursor.close();
 
         return startTime;
+    }
+
+    public static Event.EVENT_TYPE getEventType(long eventId, DbHelper dbHelper) {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        Cursor cursor = database.query(Event.TABLE_NAME, new String[]{Event.KEY_TYPE},
+                Event._ID + " = ?", new String[]{Long.toString(eventId)}, null, null, null);
+        cursor.moveToFirst();
+        String eventType = cursor.getString(cursor.getColumnIndex(Event.KEY_TYPE));
+        return Event.EVENT_TYPE.valueOf(eventType);
     }
 }

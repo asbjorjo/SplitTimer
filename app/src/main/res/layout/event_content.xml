@@ -14,12 +14,10 @@
     tools:showIn="@layout/event_activity"
     tools:context="org.asbjorjo.splittimer.activity.EventActivity">
 
-    <fragment
-        android:name="org.asbjorjo.splittimer.fragment.EventEditFragment"
+    <FrameLayout
         android:id="@+id/event_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout="@layout/event_edit_fragment"/>
+        android:layout_height="wrap_content"/>
 
     <fragment
         android:name="org.asbjorjo.splittimer.fragment.EventListFragment"

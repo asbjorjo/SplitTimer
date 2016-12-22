@@ -1,13 +1,11 @@
 package org.asbjorjo.splittimer.fragment;
 
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,39 +14,58 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerConstants;
-import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.Contract.Event.EVENT_TYPE;
 import org.asbjorjo.splittimer.db.DbHelper;
 
 import java.util.Calendar;
 
+import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EventEditFragment extends Fragment implements View.OnClickListener {
-    private OnEventAddedListener mListener;
+    private static final String TAG = EventEditFragment.class.getSimpleName();
+    private OnEventEditActionListener mListener;
     private DbHelper dbHelper;
+    private long eventId;
+
+    public static EventEditFragment newInstance(long eventId) {
+        EventEditFragment eef = new EventEditFragment();
+
+        Bundle args = new Bundle();
+        args.putLong(KEY_ACTIVE_EVENT, eventId);
+        eef.setArguments(args);
+
+        return eef;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            eventId = getArguments().getLong(KEY_ACTIVE_EVENT);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnEventAddedListener) {
-            mListener = (OnEventAddedListener) context;
+        if (context instanceof OnEventEditActionListener) {
+            mListener = (OnEventEditActionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnEventAddedListener");
+                    + " must implement OnEventEditActionListener");
         }
+        dbHelper = DbHelper.getInstance(context);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        dbHelper = DbHelper.getInstance(getActivity());
     }
 
     @Override
@@ -57,7 +74,8 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.event_edit_fragment, container, false);
 
-        v.findViewById(R.id.event_input_button).setOnClickListener(this);
+        v.findViewById(R.id.event_input_save).setOnClickListener(this);
+        v.findViewById(R.id.event_input_cancel).setOnClickListener(this);
         Spinner spinner = (Spinner) v.findViewById(R.id.event_input_type);
         SpinnerAdapter adapter = new ArrayAdapter<EVENT_TYPE>(getActivity(),
                 R.layout.simple_textview, EVENT_TYPE.values());
@@ -75,10 +93,18 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.event_input_button) addEvent();
+        Log.d(TAG, "onClick");
+        switch (view.getId()) {
+            case R.id.event_input_save:
+                saveEvent();
+                break;
+            case R.id.event_input_cancel:
+                mListener.onEventCancel();
+                break;
+        }
     }
 
-    private void addEvent() {
+    private void saveEvent() {
         EditText textView = (EditText) getView().findViewById(R.id.event_input_name);
         DatePicker datePicker = (DatePicker) getView().findViewById(R.id.event_input_date);
 
@@ -90,37 +116,17 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
 
         String eventName = textView.getText().toString();
 
-        String message;
+        Bundle event = new Bundle();
 
-        if (eventName.trim().equals("")) {
-            message = "Name missing";
-        } else {
-            ContentValues values = new ContentValues();
-            values.put(Contract.Event.KEY_NAME, eventName);
-            values.put(Contract.Event.KEY_DATE, date.getTimeInMillis());
-            values.put(Contract.Event.KEY_TYPE, eventType.toString());
+        event.putString("name", eventName);
+        event.putLong("date", date.getTimeInMillis());
+        event.putString("type", eventType.toString());
 
-            SQLiteDatabase database = dbHelper.getWritableDatabase();
-            long eventId = database.insert(Contract.Event.TABLE_NAME, null, values);
-
-            textView.setText(null);
-
-            Intent result = new Intent();
-            result.putExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, eventId);
-
-            EventListFragment eventListFragment = (EventListFragment) getFragmentManager().
-                    findFragmentById(R.id.event_list);
-            if (eventListFragment != null) eventListFragment.updateList();
-
-            mListener.onEventAdded(eventId);
-
-            message = String.format("Added %s", eventName);
-        }
-
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        mListener.onEventSaved(event);
     }
 
-    public interface OnEventAddedListener {
-        void onEventAdded(long eventId);
+    public interface OnEventEditActionListener {
+        void onEventSaved(Bundle event);
+        void onEventCancel();
     }
 }

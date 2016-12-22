@@ -27,10 +27,22 @@
         android:spinnersShown="true"
         android:datePickerMode="spinner"/>
 
-    <Button
-        android:id="@+id/event_input_button"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/event_input_date"
-        android:text="@string/add"/>
+        android:layout_below="@id/event_input_date">
+        <Button
+            android:id="@+id/event_input_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/save"/>
+        <Button
+            android:id="@+id/event_input_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"/>
+    </LinearLayout>
 </RelativeLayout>

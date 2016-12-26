@@ -1,4 +1,4 @@
-package org.asbjorjo.splittimer;
+package org.asbjorjo.splittimer.model;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -9,13 +9,13 @@ import java.util.Objects;
  * @since 0.1
  */
 
-public class TableAthlete {
+public class Athlete {
     private long id;
     private String name;
     private int number;
     private long[] times;
 
-    public TableAthlete(long id, String name, int number, long[] times) {
+    public Athlete(long id, String name, int number, long[] times) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -68,7 +68,7 @@ public class TableAthlete {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TableAthlete athlete = (TableAthlete) o;
+        Athlete athlete = (Athlete) o;
         return id == athlete.id &&
                 number == athlete.number &&
                 Objects.equals(name, athlete.name) &&
@@ -80,21 +80,21 @@ public class TableAthlete {
         return Objects.hash(id, name, number, times);
     }
 
-    public static class TableAthleteNameComparator implements Comparator<TableAthlete> {
+    public static class TableAthleteNameComparator implements Comparator<Athlete> {
         @Override
-        public int compare(TableAthlete o1, TableAthlete o2) {
+        public int compare(Athlete o1, Athlete o2) {
             return o1.getName().compareTo(o2.getName());
         }
     }
 
-    public static class TableAthleteNumberComparator implements Comparator<TableAthlete> {
+    public static class TableAthleteNumberComparator implements Comparator<Athlete> {
         @Override
-        public int compare(TableAthlete o1, TableAthlete o2) {
+        public int compare(Athlete o1, Athlete o2) {
             return Integer.compare(o1.getNumber(), o2.getNumber());
         }
     }
 
-    public static class TableAthleteTimeComparator implements Comparator<TableAthlete> {
+    public static class TableAthleteTimeComparator implements Comparator<Athlete> {
         private final int time;
 
         public TableAthleteTimeComparator(int time) {
@@ -102,7 +102,7 @@ public class TableAthlete {
         }
 
         @Override
-        public int compare(TableAthlete o1, TableAthlete o2) {
+        public int compare(Athlete o1, Athlete o2) {
             return Long.compare(o1.getTimes()[time], o2.getTimes()[time]);
         }
     }

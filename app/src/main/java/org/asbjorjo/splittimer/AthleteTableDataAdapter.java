@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.asbjorjo.splittimer.model.Athlete;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -15,17 +17,17 @@ import de.codecrafters.tableview.TableDataAdapter;
  * @since 0.1
  */
 
-public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {
+public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
     private static final String TAG = AthleteTableDataAdapter.class.getSimpleName();
     private static final String timeFormat = "%02d:%02d";
 
-    public AthleteTableDataAdapter(Context context, List<TableAthlete> data) {
+    public AthleteTableDataAdapter(Context context, List<Athlete> data) {
         super(context, data);
     }
 
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        TableAthlete athlete = getRowData(rowIndex);
+        Athlete athlete = getRowData(rowIndex);
         View renderView;
 
         switch (columnIndex) {
@@ -43,19 +45,19 @@ public class AthleteTableDataAdapter extends TableDataAdapter<TableAthlete> {
         return renderView;
     }
 
-    private View renderName(TableAthlete athlete) {
+    private View renderName(Athlete athlete) {
         TextView view = new TextView(getContext());
         view.setText(athlete.getName());
         return view;
     }
 
-    private View renderNumber(TableAthlete athlete) {
+    private View renderNumber(Athlete athlete) {
         TextView view = new TextView(getContext());
         view.setText(Long.toString(athlete.getNumber()));
         return view;
     }
 
-    private View renderTime(TableAthlete athlete, int time) {
+    private View renderTime(Athlete athlete, int time) {
         TextView view = new TextView(getContext());
 
         if (time < athlete.getTimes().length &&

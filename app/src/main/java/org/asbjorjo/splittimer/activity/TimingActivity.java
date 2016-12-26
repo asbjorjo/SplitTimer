@@ -21,7 +21,7 @@ import android.widget.Spinner;
 
 import org.asbjorjo.splittimer.AthleteTableDataAdapter;
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.TableAthlete;
+import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
 import org.asbjorjo.splittimer.model.Event;
@@ -38,7 +38,6 @@ import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
-import static org.asbjorjo.splittimer.db.Contract.Athlete;
 import static org.asbjorjo.splittimer.db.Contract.Result;
 import static org.asbjorjo.splittimer.db.Contract.Timingpoint;
 
@@ -139,18 +138,18 @@ public class TimingActivity extends AppCompatActivity {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
         int timingpointCount = DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper);
 
-        List<TableAthlete> athletes = updateAthleteList();
+        List<org.asbjorjo.splittimer.model.Athlete> athletes = updateAthleteList();
 
         table.setDataAdapter(new AthleteTableDataAdapter(this, athletes));
         updateAthleteTimes();
         table.setColumnCount(3 + timingpointCount);
-        table.setColumnComparator(0, new TableAthlete.TableAthleteNameComparator());
-        table.setColumnComparator(1, new TableAthlete.TableAthleteNumberComparator());
-        table.setColumnComparator(2, new TableAthlete.TableAthleteTimeComparator(0));
+        table.setColumnComparator(0, new org.asbjorjo.splittimer.model.Athlete.TableAthleteNameComparator());
+        table.setColumnComparator(1, new org.asbjorjo.splittimer.model.Athlete.TableAthleteNumberComparator());
+        table.setColumnComparator(2, new org.asbjorjo.splittimer.model.Athlete.TableAthleteTimeComparator(0));
 
         for (int i = 1; i <= timingpointCount; i++) {
             int column = 2+i;
-            table.setColumnComparator(column, new TableAthlete.TableAthleteTimeComparator(i));
+            table.setColumnComparator(column, new org.asbjorjo.splittimer.model.Athlete.TableAthleteTimeComparator(i));
         }
 
         table.addDataClickListener(new AthleteClickListener());
@@ -158,18 +157,18 @@ public class TimingActivity extends AppCompatActivity {
         table.setDataRowBackgroundProvider(new AthleteRowColorProvider());
     }
 
-    private List<TableAthlete> updateAthleteList() {
+    private List<org.asbjorjo.splittimer.model.Athlete> updateAthleteList() {
         int timingpointCount = DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper);
         Cursor athleteCursor = DbUtils.getAthletesForEvent(event.getId(), dbHelper);
-        List<TableAthlete> athletes = new ArrayList<>();
+        List<org.asbjorjo.splittimer.model.Athlete> athletes = new ArrayList<>();
 
         while (athleteCursor.moveToNext()) {
             long[] times = new long[timingpointCount+1];
-            long id = athleteCursor.getLong(athleteCursor.getColumnIndex(Athlete._ID));
-            String name = athleteCursor.getString(athleteCursor.getColumnIndex(Athlete.KEY_NAME));
-            int number = athleteCursor.getInt(athleteCursor.getColumnIndex(Athlete.KEY_NUMBER));
+            long id = athleteCursor.getLong(athleteCursor.getColumnIndex(Contract.Athlete._ID));
+            String name = athleteCursor.getString(athleteCursor.getColumnIndex(org.asbjorjo.splittimer.db.Contract.Athlete.KEY_NAME));
+            int number = athleteCursor.getInt(athleteCursor.getColumnIndex(Contract.Athlete.KEY_NUMBER));
 
-            athletes.add(new TableAthlete(id, name, number, times));
+            athletes.add(new org.asbjorjo.splittimer.model.Athlete(id, name, number, times));
         }
 
         return athletes;
@@ -179,7 +178,7 @@ public class TimingActivity extends AppCompatActivity {
      * Initialize the Spinner and associated Buttons for intermediate times.
      */
     private void initializeDropdown() {
-        final String[] from = {Athlete.KEY_NAME};
+        final String[] from = {Contract.Athlete.KEY_NAME};
         final int[] to = {R.id.text_dropdown};
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -254,9 +253,9 @@ public class TimingActivity extends AppCompatActivity {
     private void updateAthleteTimes() {
         int timingpoints = DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper);
         TableView tableView = (TableView) findViewById(R.id.main_table);
-        List<TableAthlete> tableAthletes = tableView.getDataAdapter().getData();
+        List<org.asbjorjo.splittimer.model.Athlete> tableAthletes = tableView.getDataAdapter().getData();
 
-        for (TableAthlete athlete:tableAthletes) {
+        for (org.asbjorjo.splittimer.model.Athlete athlete:tableAthletes) {
             long[] times = new long[timingpoints+1];
             times[0] = DbUtils.getStartTime(event.getId(), athlete.getId(), dbHelper);
 
@@ -290,9 +289,9 @@ public class TimingActivity extends AppCompatActivity {
     /**
      * Update view as user clicks one rows in table of Athletes.
      */
-    private class AthleteClickListener implements TableDataClickListener<TableAthlete> {
+    private class AthleteClickListener implements TableDataClickListener<org.asbjorjo.splittimer.model.Athlete> {
         @Override
-        public void onDataClicked(int rowIndex, TableAthlete athlete) {
+        public void onDataClicked(int rowIndex, org.asbjorjo.splittimer.model.Athlete athlete) {
             Spinner spinner = (Spinner) findViewById(R.id.spinner);
 
             int count = spinner.getCount();
@@ -305,9 +304,9 @@ public class TimingActivity extends AppCompatActivity {
         }
     }
 
-    private class AthleteLongClickListener implements TableDataLongClickListener<TableAthlete> {
+    private class AthleteLongClickListener implements TableDataLongClickListener<org.asbjorjo.splittimer.model.Athlete> {
         @Override
-        public boolean onDataLongClicked(int rowIndex, TableAthlete athlete) {
+        public boolean onDataLongClicked(int rowIndex, org.asbjorjo.splittimer.model.Athlete athlete) {
             referenceAthlete = athlete.getId();
             updateAthleteTimes();
             sortByReference();
@@ -315,9 +314,9 @@ public class TimingActivity extends AppCompatActivity {
         }
     }
 
-    private class AthleteRowColorProvider implements TableDataRowBackgroundProvider<TableAthlete> {
+    private class AthleteRowColorProvider implements TableDataRowBackgroundProvider<org.asbjorjo.splittimer.model.Athlete> {
         @Override
-        public Drawable getRowBackground(final int rowIndex, final TableAthlete athlete) {
+        public Drawable getRowBackground(final int rowIndex, final org.asbjorjo.splittimer.model.Athlete athlete) {
             int rowColor = getResources().getColor(R.color.white);
 
             if (athlete.getId() == referenceAthlete) {

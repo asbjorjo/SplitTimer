@@ -74,18 +74,23 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.startlist_edit_fragment, container, false);
+
+        return inflater.inflate(R.layout.startlist_edit_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         //TODO Implement properly and for all event types.
         switch (event.getType()) {
             case MASS_START:
-                EditText startTime = (EditText) v.findViewById(R.id.startlist_input_starttime);
+                EditText startTime = (EditText) view.findViewById(R.id.startlist_input_starttime);
                 startTime.setText(Integer.toString(0));
                 startTime.setVisibility(View.GONE);
         }
 
-        v.findViewById(R.id.startlist_input_button).setOnClickListener(this);
-        return v;
+        view.findViewById(R.id.startlist_input_button).setOnClickListener(this);
     }
 
     @Override

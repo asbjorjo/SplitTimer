@@ -1,5 +1,6 @@
 package org.asbjorjo.splittimer.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -74,11 +75,21 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public Event saveEvent(Event event) {
-            long id = DbUtils.saveEvent(event.getId(), event.getName(), event.getTime(),
-                    event.getType().toString(), this);
-            event.setId(id);
-            return event;
+        ContentValues values = new ContentValues();
+        values.put(Contract.Event.KEY_NAME, event.getName());
+        values.put(Contract.Event.KEY_DATE, event.getTime());
+        values.put(Contract.Event.KEY_TYPE, event.getType().toString());
+
+        SQLiteDatabase database = getWritableDatabase();
+        if (event.getId() > 0) {
+            database.update(Contract.Event.TABLE_NAME, values, Contract.Event._ID + " = ?",
+                    new String[]{Long.toString(event.getId())});
+        } else {
+            event.setId(database.insert(Contract.Event.TABLE_NAME, null, values));
         }
+
+        return event;
+    }
 
     public Event findEvent(long eventId) {
         Event event;

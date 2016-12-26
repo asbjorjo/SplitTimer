@@ -34,7 +34,6 @@ public class EventActivity extends AppCompatActivity implements
         EventListFragment.OnEventSelectedListener, EventEditFragment.OnEventEditActionListener {
     private static final String TAG = EventActivity.class.getSimpleName();
     private DbHelper dbHelper;
-    private Bundle options;
     private Event event;
     private boolean isEditing;
 

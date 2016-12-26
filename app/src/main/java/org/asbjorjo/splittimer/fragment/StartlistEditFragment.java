@@ -17,9 +17,8 @@ import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.db.Contract;
-import org.asbjorjo.splittimer.db.Contract.Event.EVENT_TYPE;
 import org.asbjorjo.splittimer.db.DbHelper;
-import org.asbjorjo.splittimer.db.DbUtils;
+import org.asbjorjo.splittimer.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +32,14 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
     private static final String TAG = StartlistEditFragment.class.getSimpleName();
 
     private DbHelper dbHelper;
-    private long eventId;
-    private EVENT_TYPE eventType;
+    private Event event;
     private OnStartlistEntryAddedListener mListener;
 
-    public static StartlistEditFragment newInstance(long eventId) {
+    public static StartlistEditFragment newInstance(Event event) {
         StartlistEditFragment sef = new StartlistEditFragment();
 
         Bundle args = new Bundle();
-        args.putLong(KEY_ACTIVE_EVENT, eventId);
+        args.putParcelable(KEY_ACTIVE_EVENT, event);
         sef.setArguments(args);
 
         return sef;
@@ -64,9 +62,8 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            eventId = getArguments().getLong(KEY_ACTIVE_EVENT);
+            event = getArguments().getParcelable(KEY_ACTIVE_EVENT);
         }
-        eventType = DbUtils.getEventType(eventId, dbHelper);
     }
 
     @Override
@@ -80,7 +77,7 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
         View v = inflater.inflate(R.layout.startlist_edit_fragment, container, false);
 
         //TODO Implement properly and for all event types.
-        switch (eventType) {
+        switch (event.getType()) {
             case MASS_START:
                 EditText startTime = (EditText) v.findViewById(R.id.startlist_input_starttime);
                 startTime.setText(Integer.toString(0));
@@ -146,7 +143,7 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
             ContentValues eventValues = new ContentValues();
             athleteValues.put(Contract.Athlete.KEY_NAME, name);
             athleteValues.put(Contract.Athlete.KEY_NUMBER, number);
-            eventValues.put(Contract.Startlist.KEY_EVENT, eventId);
+            eventValues.put(Contract.Startlist.KEY_EVENT, event.getId());
             eventValues.put(Contract.Startlist.KEY_STARTTIME, startTime);
 
             database.beginTransaction();
@@ -162,7 +159,7 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
                 startView.setText(null);
                 nameView.requestFocus();
 
-                mListener.onStartListEntryAdded(eventId, athleteId);
+                mListener.onStartListEntryAdded(event, athleteId);
             } catch (SQLException e) {
                 message = String.format("Error adding %s", name);
             } finally {
@@ -174,6 +171,6 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
     }
 
     public interface OnStartlistEntryAddedListener {
-        void onStartListEntryAdded(long eventId, long athleteId);
+        void onStartListEntryAdded(Event event, long athleteId);
     }
 }

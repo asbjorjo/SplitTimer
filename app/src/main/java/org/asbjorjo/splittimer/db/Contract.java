@@ -56,12 +56,6 @@ public class Contract {
         public static final String KEY_DATE = "event_date";
         public static final String KEY_TYPE = "event_type";
 
-        public enum EVENT_TYPE {
-            INTERVAL_START_FIXED,
-            INTERVAL_START_RELATIVE,
-            MASS_START
-        }
-
         /**
          * The content style URI.
          */

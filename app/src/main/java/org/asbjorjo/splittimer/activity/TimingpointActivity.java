@@ -1,14 +1,17 @@
 package org.asbjorjo.splittimer.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.fragment.TimingpointFragment;
 import org.asbjorjo.splittimer.fragment.TimingpointListFragment;
+import org.asbjorjo.splittimer.model.Event;
+
+import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 
 /**
  * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
@@ -17,9 +20,6 @@ import org.asbjorjo.splittimer.fragment.TimingpointListFragment;
 public class TimingpointActivity extends AppCompatActivity implements
         TimingpointFragment.OnTimingpointAddedListener {
     private static final String TAG = TimingpointActivity.class.getSimpleName();
-
-    private DbHelper dbHelper;
-    private long eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,16 @@ public class TimingpointActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Event event = getIntent().getParcelableExtra(KEY_ACTIVE_EVENT);
+
+        TimingpointFragment tf = TimingpointFragment.newInstance(event);
+        TimingpointListFragment tlf = TimingpointListFragment.newInstance(event);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.timingpoint_input, tf);
+        ft.replace(R.id.intermediate_list, tlf);
+        ft.commit();
     }
 
     @Override

@@ -17,13 +17,14 @@
     <FrameLayout
         android:id="@+id/startlist_edit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        />
 
-    <fragment
-        android:name="org.asbjorjo.splittimer.fragment.StartlistFragment"
+    <FrameLayout
         android:id="@+id/startlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/startlist_edit"/>
+        android:layout_below="@id/startlist_edit"
+        />
 </RelativeLayout>

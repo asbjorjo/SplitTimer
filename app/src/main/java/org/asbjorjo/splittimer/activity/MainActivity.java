@@ -17,6 +17,7 @@ import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
 import org.asbjorjo.splittimer.fragment.EventSelectFragment;
+import org.asbjorjo.splittimer.model.Event;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.ADD_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.BUILD_INTERMEDIATES;
@@ -35,51 +36,69 @@ import static org.asbjorjo.splittimer.SplitTimerConstants.RESULT_ADDED;
 public class MainActivity extends AppCompatActivity implements
         EventSelectFragment.OnEventSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
+
     private DbHelper dbHelper;
-    private long eventId = NO_ACTIVE_EVENT;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "onCreate");
         Log.d(TAG, String.format("Intent: %s",
                 getIntent() == null ? null : getIntent().toString()));
-        Log.d(TAG, String.format("savedInstanceState: %s",
-                savedInstanceState == null ? savedInstanceState : savedInstanceState.toString()));
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-
-        if (eventId < 0) {
-            SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-            eventId = sharedPreferences.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-        }
-
-        Log.d(TAG, String.format("EventId: %d", eventId));
-        EventSelectFragment esf = EventSelectFragment.newInstance(eventId);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.event_select, esf);
-        ft.commit();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         dbHelper = DbHelper.getInstance(getApplicationContext());
+
+        if (event == null) {
+            SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            long eventId = sharedPreferences.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
+            event = dbHelper.findEvent(eventId);
+
+            if (event == null) event = new Event();
+        }
+
+        Log.d(TAG, String.format("EventId: %s", event));
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Log.d(TAG, "onSaveInstanceState");
-        savedInstanceState.putLong(KEY_ACTIVE_EVENT, eventId);
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(KEY_ACTIVE_EVENT, eventId);
+        editor.putLong(KEY_ACTIVE_EVENT, event.getId());
         editor.apply();
 
+        savedInstanceState.putParcelable(KEY_ACTIVE_EVENT, event);
 
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume");
+
+        super.onResume();
+
+        EventSelectFragment esf = (EventSelectFragment) getSupportFragmentManager().
+                findFragmentById(R.id.event_select);
+        if (esf == null) {
+            esf = EventSelectFragment.newInstance(event.getId());
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.event_select, esf);
+            ft.commit();
+        }
+        esf.updateSelection(event.getId());
+
+        updateButtonState();
     }
 
     @Override
@@ -87,9 +106,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "onRestoreInstanceState");
         super.onRestoreInstanceState(savedInstanceState);
 
-        eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-
-        updateButtonState();
+        event = savedInstanceState.getParcelable(KEY_ACTIVE_EVENT);
     }
 
     @Override
@@ -131,24 +148,15 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.d(TAG, String.format("RequestCode: %d ResultCode: %d Intent: %s",
                 requestCode, resultCode, data == null ? data : data.toString()));
-        Log.d(TAG, String.format("EventId: %d", eventId));
+        Log.d(TAG, String.format("Event: %s", event.toString()));
         switch (requestCode) {
             case ADD_EVENT:
                 if (resultCode == RESULT_OK) {
-                    eventId = data.getLongExtra(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-                    findViewById(R.id.main_button_startlist).setEnabled(true);
-                    findViewById(R.id.main_button_intermediate).setEnabled(true);
-                    EventSelectFragment esf = (EventSelectFragment) getSupportFragmentManager().
-                            findFragmentById(R.id.event_select);
-                    esf.updateSelection(eventId);
+                    event = data.getParcelableExtra(KEY_ACTIVE_EVENT);
                 } else if (resultCode == RESULT_ADDED) {
-                    eventId = data.getLongExtra(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
-                    EventSelectFragment esf = (EventSelectFragment) getSupportFragmentManager().
-                            findFragmentById(R.id.event_select);
-                    esf.refreshData();
-                    esf.updateSelection(eventId);
+                    event = data.getParcelableExtra(KEY_ACTIVE_EVENT);
                 } else {
-                    eventId = -1;
+                    event = new Event();
                     findViewById(R.id.main_button_startlist).setEnabled(false);
                     findViewById(R.id.main_button_intermediate).setEnabled(false);
                 }
@@ -163,38 +171,34 @@ public class MainActivity extends AppCompatActivity implements
                 break;
         }
         updateButtonState();
-        Log.d(TAG, String.format("EventId: %d", eventId));
+        Log.d(TAG, String.format("Event: %s", event));
     }
 
     private void updateButtonState() {
-        findViewById(R.id.main_button_intermediate).setEnabled(eventId > 0);
-        findViewById(R.id.main_button_startlist).setEnabled(eventId > 0);
+        findViewById(R.id.main_button_intermediate).setEnabled(event.getId() > 0);
+        findViewById(R.id.main_button_startlist).setEnabled(event.getId() > 0);
         findViewById(R.id.main_button_timing).setEnabled(
-                eventId > 0
-                && DbUtils.getTimingpointCountForEvent(eventId, dbHelper) > 0
-                && DbUtils.getAthleteCountForEvent(eventId, dbHelper) > 0);
+                event.getId() > 0
+                && DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper) > 0
+                && DbUtils.getAthleteCountForEvent(event.getId(), dbHelper) > 0);
     }
 
     public void onClick(View view) {
         Intent intent = new Intent();
+        intent.putExtra(KEY_ACTIVE_EVENT, event);
         int request_code = -1;
-
-        intent.putExtra(KEY_ACTIVE_EVENT, eventId);
 
         switch (view.getId()) {
             case R.id.main_button_event:
                 intent.setClass(MainActivity.this, EventActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = ADD_EVENT;
                 break;
             case R.id.main_button_intermediate:
                 intent.setClass(MainActivity.this, TimingpointActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = BUILD_INTERMEDIATES;
                 break;
             case R.id.main_button_startlist:
                 intent.setClass(MainActivity.this, StartlistActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 request_code = BUILD_STARTLIST;
                 break;
             case R.id.main_button_timing:
@@ -208,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onEventSelected(long eventId) {
         Log.d(TAG, String.format("onEventSelected.eventId: %d", eventId));
-        this.eventId = eventId;
+        this.event = dbHelper.findEvent(eventId);
 
         updateButtonState();
     }

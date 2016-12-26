@@ -14,10 +14,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.db.Contract.Event.EVENT_TYPE;
+import org.asbjorjo.splittimer.SplitTimerConstants.EVENT_TYPE;
 import org.asbjorjo.splittimer.db.DbHelper;
+import org.asbjorjo.splittimer.model.Event;
 
 import java.util.Calendar;
 
@@ -30,13 +32,15 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
     private static final String TAG = EventEditFragment.class.getSimpleName();
     private OnEventEditActionListener mListener;
     private DbHelper dbHelper;
-    private long eventId;
+    private Event event;
 
-    public static EventEditFragment newInstance(long eventId) {
+    public static EventEditFragment newInstance(Event event) {
         EventEditFragment eef = new EventEditFragment();
 
+        if (event == null) event = new Event();
+
         Bundle args = new Bundle();
-        args.putLong(KEY_ACTIVE_EVENT, eventId);
+        args.putParcelable(KEY_ACTIVE_EVENT, event);
         eef.setArguments(args);
 
         return eef;
@@ -47,7 +51,7 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            eventId = getArguments().getLong(KEY_ACTIVE_EVENT);
+            event = getArguments().getParcelable(KEY_ACTIVE_EVENT);
         }
     }
 
@@ -74,14 +78,19 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.event_edit_fragment, container, false);
 
-        v.findViewById(R.id.event_input_save).setOnClickListener(this);
-        v.findViewById(R.id.event_input_cancel).setOnClickListener(this);
-        Spinner spinner = (Spinner) v.findViewById(R.id.event_input_type);
-        SpinnerAdapter adapter = new ArrayAdapter<EVENT_TYPE>(getActivity(),
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        view.findViewById(R.id.event_input_save).setOnClickListener(this);
+        view.findViewById(R.id.event_input_cancel).setOnClickListener(this);
+        Spinner spinner = (Spinner) view.findViewById(R.id.event_input_type);
+        SpinnerAdapter adapter = new ArrayAdapter<>(getActivity(),
                 R.layout.simple_textview, EVENT_TYPE.values());
         spinner.setAdapter(adapter);
-
-        return v;
     }
 
     @Override
@@ -105,6 +114,7 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
     }
 
     private void saveEvent() {
+        Log.d(TAG, "saveEvent");
         EditText textView = (EditText) getView().findViewById(R.id.event_input_name);
         DatePicker datePicker = (DatePicker) getView().findViewById(R.id.event_input_date);
 
@@ -114,19 +124,27 @@ public class EventEditFragment extends Fragment implements View.OnClickListener 
         Spinner eventTypeSelect = (Spinner) getView().findViewById(R.id.event_input_type);
         EVENT_TYPE eventType = (EVENT_TYPE) eventTypeSelect.getSelectedItem();
 
-        String eventName = textView.getText().toString();
+        String eventName = textView.getText().toString().trim();
 
-        Bundle event = new Bundle();
+        String message;
 
-        event.putString("name", eventName);
-        event.putLong("date", date.getTimeInMillis());
-        event.putString("type", eventType.toString());
+        if (eventName.equals("")) {
+            message = "Event name missing";
+        } else {
+            event.setName(eventName);
+            event.setTime(date.getTimeInMillis());
+            event.setType(eventType);
 
-        mListener.onEventSaved(event);
+            event = dbHelper.saveEvent(event);
+            message = String.format("%s saved", eventName);
+            mListener.onEventSaved(event);
+        }
+
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     public interface OnEventEditActionListener {
-        void onEventSaved(Bundle event);
+        void onEventSaved(Event event);
         void onEventCancel();
     }
 }

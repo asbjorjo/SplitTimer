@@ -7,14 +7,14 @@
     android:orientation="horizontal"
     tools:layout="@layout/event_edit_fragment">
     <Button
-        android:id="@+id/event_button_edit"
+        android:id="@+id/event_button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/event_add"
         android:onClick="onClick"/>
     <Button
-        android:id="@+id/event_button_add"
+        android:id="@+id/event_button_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"

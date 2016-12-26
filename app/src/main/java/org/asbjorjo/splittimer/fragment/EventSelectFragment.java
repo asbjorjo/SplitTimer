@@ -92,13 +92,15 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
     }
 
     public void updateSelection(long eventId) {
-        Spinner spinner = (Spinner) getView().findViewById(R.id.event_select_spinner);
+        if (getView() != null) {
+            Spinner spinner = (Spinner) getView().findViewById(R.id.event_select_spinner);
 
-        if (eventId > 0) {
-            for (int i = 0; i<spinner.getCount(); i++) {
-                if (spinner.getItemIdAtPosition(i) == eventId) {
-                    spinner.setSelection(i);
-                    break;
+            if (eventId > 0) {
+                for (int i = 0; i < spinner.getCount(); i++) {
+                    if (spinner.getItemIdAtPosition(i) == eventId) {
+                        spinner.setSelection(i);
+                        break;
+                    }
                 }
             }
         }

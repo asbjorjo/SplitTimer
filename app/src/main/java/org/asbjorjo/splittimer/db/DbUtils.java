@@ -1,9 +1,12 @@
 package org.asbjorjo.splittimer.db;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
 
+import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.db.Contract.Event;
 
 import java.text.MessageFormat;
@@ -175,12 +178,31 @@ public class DbUtils {
         return startTime;
     }
 
-    public static Event.EVENT_TYPE getEventType(long eventId, DbHelper dbHelper) {
+    public static SplitTimerConstants.EVENT_TYPE getEventType(long eventId, DbHelper dbHelper) {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         Cursor cursor = database.query(Event.TABLE_NAME, new String[]{Event.KEY_TYPE},
                 Event._ID + " = ?", new String[]{Long.toString(eventId)}, null, null, null);
         cursor.moveToFirst();
         String eventType = cursor.getString(cursor.getColumnIndex(Event.KEY_TYPE));
-        return Event.EVENT_TYPE.valueOf(eventType);
+        return SplitTimerConstants.EVENT_TYPE.valueOf(eventType);
+    }
+
+    public static long saveEvent(long eventId, String eventName, long timeInMillis,
+                                 String eventType, DbHelper dbHelper) {
+        Log.d(TAG, "saveEvent");
+
+        ContentValues values = new ContentValues();
+        values.put(Contract.Event.KEY_NAME, eventName);
+        values.put(Contract.Event.KEY_DATE, timeInMillis);
+        values.put(Contract.Event.KEY_TYPE, eventType);
+
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        if (eventId > 0) {
+            database.update(Event.TABLE_NAME, values, Event._ID + " = ?",
+                    new String[]{Long.toString(eventId)});
+        } else {
+            eventId = database.insert(Contract.Event.TABLE_NAME, null, values);
+        }
+        return eventId;
     }
 }

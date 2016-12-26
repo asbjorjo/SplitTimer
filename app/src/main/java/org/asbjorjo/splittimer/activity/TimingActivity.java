@@ -21,10 +21,10 @@ import android.widget.Spinner;
 
 import org.asbjorjo.splittimer.AthleteTableDataAdapter;
 import org.asbjorjo.splittimer.R;
-import org.asbjorjo.splittimer.SplitTimerConstants;
 import org.asbjorjo.splittimer.TableAthlete;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
+import org.asbjorjo.splittimer.model.Event;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +36,7 @@ import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.listeners.TableDataLongClickListener;
 import de.codecrafters.tableview.providers.TableDataRowBackgroundProvider;
 
-import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
+import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 import static org.asbjorjo.splittimer.SplitTimerConstants.PREFS_NAME;
 import static org.asbjorjo.splittimer.db.Contract.Athlete;
 import static org.asbjorjo.splittimer.db.Contract.Result;
@@ -51,7 +51,7 @@ public class TimingActivity extends AppCompatActivity {
     private static final String TAG = TimingActivity.class.getSimpleName();
     private static final String REFERENCE_ATHLETE = "referenceAthlete";
     private DbHelper dbHelper;
-    private long eventId;
+    private Event event;
     private long referenceAthlete;
 
     @Override
@@ -70,7 +70,7 @@ public class TimingActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         dbHelper = DbHelper.getInstance(getApplicationContext());
-        eventId = intent.getLongExtra(SplitTimerConstants.KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
+        event = intent.getParcelableExtra(KEY_ACTIVE_EVENT);
 
 
         if (referenceAthlete <= 0) {
@@ -83,16 +83,16 @@ public class TimingActivity extends AppCompatActivity {
 
         Log.d(TAG, String.format("referenceAthlete = %d", referenceAthlete));
 
-        if (eventId > 0) {
+        if (event.getId() > 0) {
             initializeDropdown();
             initializeTable();
+
+            sortByReference();
         } else {
             Intent mainIntent = new Intent(this, MainActivity.class);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
-
-        sortByReference();
    }
 
     @Override
@@ -137,7 +137,7 @@ public class TimingActivity extends AppCompatActivity {
      */
     private void initializeTable() {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
-        int timingpointCount = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
+        int timingpointCount = DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper);
 
         List<TableAthlete> athletes = updateAthleteList();
 
@@ -159,8 +159,8 @@ public class TimingActivity extends AppCompatActivity {
     }
 
     private List<TableAthlete> updateAthleteList() {
-        int timingpointCount = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
-        Cursor athleteCursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
+        int timingpointCount = DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper);
+        Cursor athleteCursor = DbUtils.getAthletesForEvent(event.getId(), dbHelper);
         List<TableAthlete> athletes = new ArrayList<>();
 
         while (athleteCursor.moveToNext()) {
@@ -183,13 +183,13 @@ public class TimingActivity extends AppCompatActivity {
         final int[] to = {R.id.text_dropdown};
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        Cursor athleteCursor = DbUtils.getAthletesForEvent(eventId, dbHelper);
+        Cursor athleteCursor = DbUtils.getAthletesForEvent(event.getId(), dbHelper);
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                 R.layout.simple_textview, athleteCursor, from, to, 0);
 
         spinner.setAdapter(adapter);
 
-        Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
+        Cursor timingpointCursor = DbUtils.getTimingpointsForEvent(event.getId(), dbHelper);
 
         while (timingpointCursor.moveToNext()) {
             String description = timingpointCursor.getString(timingpointCursor.getColumnIndex(Timingpoint.KEY_DESCRIPTION));
@@ -213,7 +213,7 @@ public class TimingActivity extends AppCompatActivity {
                     long selectedId =  spinner.getSelectedItemId();
 
                     SQLiteDatabase database = dbHelper.getWritableDatabase();
-                    Cursor cursor = DbUtils.getTimingpointsForEvent(eventId, dbHelper);
+                    Cursor cursor = DbUtils.getTimingpointsForEvent(event.getId(), dbHelper);
                     cursor.moveToPosition(v.getId() - 1337);
                     ContentValues values = new ContentValues();
                     values.put(Result.KEY_ATHLETE, selectedId);
@@ -252,20 +252,20 @@ public class TimingActivity extends AppCompatActivity {
     }
 
     private void updateAthleteTimes() {
-        int timingpoints = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
+        int timingpoints = DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper);
         TableView tableView = (TableView) findViewById(R.id.main_table);
         List<TableAthlete> tableAthletes = tableView.getDataAdapter().getData();
 
         for (TableAthlete athlete:tableAthletes) {
             long[] times = new long[timingpoints+1];
-            times[0] = DbUtils.getStartTime(eventId, athlete.getId(), dbHelper);
+            times[0] = DbUtils.getStartTime(event.getId(), athlete.getId(), dbHelper);
 
             for (int i=1;i<times.length;i++) {
                 times[i] = Long.MAX_VALUE;
             }
 
             if (referenceAthlete > 0) {
-                Cursor standings = DbUtils.getStandingForAthlete(eventId, athlete.getId(), referenceAthlete,
+                Cursor standings = DbUtils.getStandingForAthlete(event.getId(), athlete.getId(), referenceAthlete,
                         dbHelper);
                 while (standings.moveToNext()) {
                     times[standings.getPosition()+1] = standings.getLong(
@@ -282,7 +282,7 @@ public class TimingActivity extends AppCompatActivity {
     private void sortByReference() {
         SortableTableView table = (SortableTableView) findViewById(R.id.main_table);
 
-        int passingsByAthlete = DbUtils.getPassingsForAthlete(referenceAthlete, eventId, dbHelper);
+        int passingsByAthlete = DbUtils.getPassingsForAthlete(referenceAthlete, event.getId(), dbHelper);
 
         table.sort(2 + passingsByAthlete, true);
     }
@@ -331,8 +331,8 @@ public class TimingActivity extends AppCompatActivity {
     private void updateButtonState() {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         long athleteId = spinner.getSelectedItemId();
-        int timingpoints = DbUtils.getTimingpointCountForEvent(eventId, dbHelper);
-        int athletePassings = DbUtils.getPassingsForAthlete(athleteId, eventId, dbHelper);
+        int timingpoints = DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper);
+        int athletePassings = DbUtils.getPassingsForAthlete(athleteId, event.getId(), dbHelper);
 
         for (int i = 0; i < timingpoints; i++) {
             Button button = (Button) findViewById(1337 + i);

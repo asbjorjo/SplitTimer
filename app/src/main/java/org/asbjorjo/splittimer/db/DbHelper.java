@@ -1,8 +1,11 @@
 package org.asbjorjo.splittimer.db;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import org.asbjorjo.splittimer.model.Event;
 
 /**
  * @author Asbjoern L. Johansen <asbjorjo@gmail.com>
@@ -68,5 +71,36 @@ public class DbHelper extends SQLiteOpenHelper {
         } else {
             return false;
         }
+    }
+
+    public Event saveEvent(Event event) {
+            long id = DbUtils.saveEvent(event.getId(), event.getName(), event.getTime(),
+                    event.getType().toString(), this);
+            event.setId(id);
+            return event;
+        }
+
+    public Event findEvent(long eventId) {
+        Event event;
+
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.query(true, Contract.Event.TABLE_NAME, Contract.Event.KEYS, Contract.Event._ID + " = ?",
+                new String[]{Long.toString(eventId)}, null, null, null, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            long id = cursor.getLong(cursor.getColumnIndex(Contract.Event._ID));
+            String name = cursor.getString(cursor.getColumnIndex(Contract.Event.KEY_NAME));
+            long time = cursor.getLong(cursor.getColumnIndex(Contract.Event.KEY_DATE));
+            String type = cursor.getString(cursor.getColumnIndex(Contract.Event.KEY_TYPE));
+
+            cursor.close();
+
+            event = new Event(id, name, time, type);
+        } else {
+            event = null;
+        }
+
+        return event;
     }
 }

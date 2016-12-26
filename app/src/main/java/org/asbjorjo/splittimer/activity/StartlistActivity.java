@@ -9,6 +9,7 @@ import android.util.Log;
 import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.fragment.StartlistEditFragment;
 import org.asbjorjo.splittimer.fragment.StartlistFragment;
+import org.asbjorjo.splittimer.model.Event;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 
@@ -32,17 +33,21 @@ public class StartlistActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        long eventId = getIntent().getLongExtra(KEY_ACTIVE_EVENT, -1);
-        StartlistEditFragment sef = StartlistEditFragment.newInstance(eventId);
+        Event event = getIntent().getParcelableExtra(KEY_ACTIVE_EVENT);
+
+        StartlistFragment sf = StartlistFragment.newInstance(event);
+        StartlistEditFragment sef = StartlistEditFragment.newInstance(event);
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.startlist_edit, sef);
+        ft.replace(R.id.startlist, sf);
         ft.commit();
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
-    public void onStartListEntryAdded(long eventId, long athleteId) {
+    public void onStartListEntryAdded(Event event, long athleteId) {
         StartlistFragment sf = (StartlistFragment) getSupportFragmentManager().
                 findFragmentById(R.id.startlist);
         sf.refreshData();

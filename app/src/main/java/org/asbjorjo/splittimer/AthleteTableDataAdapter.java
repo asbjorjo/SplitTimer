@@ -2,18 +2,16 @@ package org.asbjorjo.splittimer;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.asbjorjo.splittimer.model.Athlete;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.codecrafters.tableview.TableDataAdapter;
 
@@ -24,15 +22,29 @@ import de.codecrafters.tableview.TableDataAdapter;
 
 public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
     private static final String TAG = AthleteTableDataAdapter.class.getSimpleName();
-    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("mm:ss");
-    private final int timingPrecision;
+    private final int precision;
+    private final String decimalFormat;
+    private final String resolution;
+    private final Resources res;
 
     public AthleteTableDataAdapter(Context context, List<Athlete> data) {
         super(context, data);
+
+        res = getResources();
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String precision = preferences.getString("timingprecision", Integer.toString(1));
-        timingPrecision = Integer.parseInt(precision);
-        Log.d(TAG, Integer.toString(timingPrecision));
+
+        String precision = preferences.getString(
+                res.getString(R.string.pref_precision_key),
+                res.getString(R.string.pref_precision_default));
+
+        this.precision = Integer.parseInt(precision);
+        this.decimalFormat = "%0" + (precision.length()-1) + "d";
+
+        this.resolution = preferences.getString(
+                res.getString(R.string.pref_resolution_key),
+                res.getString(R.string.pref_resolution_default));
+
     }
 
     @Override
@@ -80,22 +92,30 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
     }
 
     private String formatTime(long milliseconds) {
-        String ret;
+        String ret = "";
 
         long msUnsigned = Math.abs(milliseconds);
 
-        if (timingPrecision > 1) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(msUnsigned);
-            cal.clear(Calendar.MILLISECOND);
-
-            ret = dateFormatter.format(cal.getTime());
-
-            long ms = Math.abs(milliseconds) % 1000;
-            int decimals = Math.round(ms/(1000/timingPrecision));
-            ret = ret + "." + Integer.toString(decimals);
+        if (precision > 1) {
+            double ms = Math.abs(milliseconds) % 1000;
+            long decimals = Math.round(ms / (1000 / precision));
+            ret = ret + "." + String.format(decimalFormat, decimals);
         } else {
-            ret = dateFormatter.format(new Date(Math.round((double)msUnsigned/1000)*1000));
+            msUnsigned = Math.round((double)msUnsigned/1000)*1000;
+        }
+
+        long hours = TimeUnit.MILLISECONDS.toHours(msUnsigned);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(msUnsigned);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(msUnsigned);
+
+        if (resolution.equals(res.getString(R.string.pref_resolution_hours_value))) {
+            ret = String.format("%02d:%02d:%02d", hours, minutes - TimeUnit.HOURS.toMinutes(hours),
+                    seconds - TimeUnit.MINUTES.toSeconds(minutes)) + ret;
+        } else if (resolution.equals(res.getString(R.string.pref_resolution_minutes_value))) {
+            ret = String.format("%02d:%02d", minutes,
+                    seconds - TimeUnit.MINUTES.toSeconds(minutes)) + ret;
+        } else if (resolution.equals(res.getString(R.string.pref_resolution_seconds_value))) {
+            ret = String.format("%02d", seconds) + ret;
         }
 
         if (milliseconds < 0) ret = "-"+ret;

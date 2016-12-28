@@ -2,4 +2,7 @@
 <resources>
     <integer name="BUILD_STARTLIST">123</integer>
     <integer name="BUILD_INTERMEDIATES">124</integer>
+
+    <integer name="PREF_TIMERESOLUTION_MINUTES">1</integer>
+    <integer name="PREF_TIMERESOLUTION_HOURS">2</integer>
 </resources>

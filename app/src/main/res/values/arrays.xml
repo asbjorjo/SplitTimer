@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pref_timingPrecision_entries">
-        <item>@string/pref_second</item>
-        <item>@string/pref_decisecond</item>
-        <item>@string/pref_centisecond</item>
-        <item>@string/pref_millisecond</item>
+    <string-array name="pref_precision_entries">
+        <item>@string/pref_precision_second</item>
+        <item>@string/pref_precision_decisecond</item>
+        <item>@string/pref_precision_centisecond</item>
+        <item>@string/pref_precision_millisecond</item>
     </string-array>
-    <string-array name="pref_timingPrecision_values">
-        <item>1</item>
-        <item>10</item>
-        <item>100</item>
-        <item>1000</item>
+    <string-array name="pref_precision_values">
+        <item>@string/pref_precision_second_value</item>
+        <item>@string/pref_precision_decisecond_value</item>
+        <item>@string/pref_precision_centisecond_value</item>
+        <item>@string/pref_precision_millisecond_value</item>
+    </string-array>
+    <string-array name="pref_resolution_entries">
+        <item>@string/pref_resolution_hours</item>
+        <item>@string/pref_resolution_minutes</item>
+        <item>@string/pref_resolution_seconds</item>
+    </string-array>
+    <string-array name="pref_resolution_values">
+        <item>@string/pref_resolution_hours_value</item>
+        <item>@string/pref_resolution_minutes_value</item>
+        <item>@string/pref_resolution_seconds_value</item>
     </string-array>
 </resources>

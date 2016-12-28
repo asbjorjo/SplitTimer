@@ -1,14 +1,19 @@
 package org.asbjorjo.splittimer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.asbjorjo.splittimer.model.Athlete;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import de.codecrafters.tableview.TableDataAdapter;
 
@@ -19,10 +24,15 @@ import de.codecrafters.tableview.TableDataAdapter;
 
 public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
     private static final String TAG = AthleteTableDataAdapter.class.getSimpleName();
-    private static final String timeFormat = "%02d:%02d";
+    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("mm:ss");
+    private final int timingPrecision;
 
     public AthleteTableDataAdapter(Context context, List<Athlete> data) {
         super(context, data);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String precision = preferences.getString("timingprecision", Integer.toString(1));
+        timingPrecision = Integer.parseInt(precision);
+        Log.d(TAG, Integer.toString(timingPrecision));
     }
 
     @Override
@@ -69,10 +79,27 @@ public class AthleteTableDataAdapter extends TableDataAdapter<Athlete> {
         return view;
     }
 
-    private static String formatTime(long milliseconds) {
-        String ret = String.format(timeFormat, TimeUnit.MILLISECONDS.toMinutes(Math.abs(milliseconds)),
-                    TimeUnit.MILLISECONDS.toSeconds(Math.abs(milliseconds)) % TimeUnit.MINUTES.toSeconds(1));
+    private String formatTime(long milliseconds) {
+        String ret;
+
+        long msUnsigned = Math.abs(milliseconds);
+
+        if (timingPrecision > 1) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(msUnsigned);
+            cal.clear(Calendar.MILLISECOND);
+
+            ret = dateFormatter.format(cal.getTime());
+
+            long ms = Math.abs(milliseconds) % 1000;
+            int decimals = Math.round(ms/(1000/timingPrecision));
+            ret = ret + "." + Integer.toString(decimals);
+        } else {
+            ret = dateFormatter.format(new Date(Math.round((double)msUnsigned/1000)*1000));
+        }
+
         if (milliseconds < 0) ret = "-"+ret;
+
         return ret;
     }
 }

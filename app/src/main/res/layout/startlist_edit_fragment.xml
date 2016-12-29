@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     tools:context="org.asbjorjo.splittimer.fragment.StartlistEditFragment">
 
-    <LinearLayout
+    <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/startlist_input"
@@ -16,16 +16,15 @@
             android:id="@+id/startlist_input_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:inputType="textPersonName"
             android:maxLines="1"
-            android:hint="@string/name"/>
+            android:hint="@string/startlist_name"/>
 
         <EditText
             android:id="@+id/startlist_input_number"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_weight="1"
+            android:layout_below="@id/startlist_input_name"
             android:inputType="number"
             android:maxLines="1"
             android:hint="@string/startlist_number"/>
@@ -34,17 +33,18 @@
             android:id="@+id/startlist_input_starttime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_below="@id/startlist_input_name"
+            android:layout_toEndOf="@id/startlist_input_number"
             android:inputType="number"
             android:maxLines="1"
-            android:hint="@string/start_time"/>
+            android:hint="@string/startlist_time"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/startlist_input_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/startlist_input"
-        android:text="@string/save"/>
+        android:text="@string/startlist_add"/>
 </RelativeLayout>

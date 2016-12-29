@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:maxLines="1"
-        android:hint="@string/name"/>
+        android:hint="@string/startlist_name"/>
 
     <Spinner
         android:id="@+id/event_input_type"
@@ -38,12 +38,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/save"/>
+            android:text="@string/event_save"/>
         <Button
             android:id="@+id/event_input_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cancel"/>
+            android:text="@string/event_cancel"/>
     </LinearLayout>
 </RelativeLayout>

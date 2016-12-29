@@ -13,32 +13,46 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/startlist_input_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:maxLines="1"
-            android:hint="@string/startlist_name"/>
-
-        <EditText
             android:id="@+id/startlist_input_number"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_below="@id/startlist_input_name"
+            android:layout_width="wrap_content"
+            android:minEms="4"
+            android:maxEms="4"
             android:inputType="number"
             android:maxLines="1"
             android:hint="@string/startlist_number"/>
 
         <EditText
-            android:id="@+id/startlist_input_starttime"
+            android:id="@+id/startlist_input_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/startlist_input_number"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:hint="@string/startlist_name"/>
+
+        <LinearLayout
+            android:id="@+id/startlist_input_offset"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/startlist_input_name"
-            android:layout_toEndOf="@id/startlist_input_number"
-            android:inputType="number"
-            android:maxLines="1"
-            android:hint="@string/startlist_time"/>
+            android:orientation="horizontal">
 
+            <EditText
+                android:id="@+id/startlist_input_starttime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:maxLines="1"
+                android:hint="@string/startlist_time"/>
+
+            <Spinner
+                android:id="@+id/startlist_input_starttime_unit"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </RelativeLayout>
 
     <Button

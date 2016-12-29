@@ -23,6 +23,7 @@ import org.asbjorjo.splittimer.model.Event;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.asbjorjo.splittimer.SplitTimerConstants.EVENT_TYPE.MASS_START;
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
 
 /**
@@ -85,9 +86,8 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
         //TODO Implement properly and for all event types.
         switch (event.getType()) {
             case MASS_START:
-                EditText startTime = (EditText) view.findViewById(R.id.startlist_input_starttime);
-                startTime.setText(Integer.toString(0));
-                startTime.setVisibility(View.GONE);
+                view.findViewById(R.id.startlist_input_offset).setVisibility(View.GONE);
+                break;
         }
 
         view.findViewById(R.id.startlist_input_button).setOnClickListener(this);
@@ -127,10 +127,15 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
         } catch (NumberFormatException e) {
             error.add("number");
         }
-        try {
-            startTime = Long.parseLong(startView.getText().toString());
-        } catch (NumberFormatException e) {
-            error.add("start time");
+
+        if (event.getType().equals(MASS_START)) {
+            startTime = event.getTime();
+        } else {
+            try {
+                startTime = Long.parseLong(startView.getText().toString());
+            } catch (NumberFormatException e) {
+                error.add("start time");
+            }
         }
 
         if (error.size() > 0) {

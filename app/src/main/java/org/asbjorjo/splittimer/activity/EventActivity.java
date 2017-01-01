@@ -51,8 +51,6 @@ public class EventActivity extends AppCompatActivity implements
 
         event = getIntent().getParcelableExtra(KEY_ACTIVE_EVENT);
 
-        if (event == null) event = new Event();
-
         Fragment eventInput = getSupportFragmentManager().findFragmentById(R.id.event_input);
         if (eventInput == null) {
             if (isEditing) {

@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements
             SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
             long eventId = sharedPreferences.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
             event = dbHelper.findEvent(eventId);
-
-            if (event == null) event = new Event();
         }
 
         Log.d(TAG, String.format("EventId: %s", event));
@@ -91,12 +89,12 @@ public class MainActivity extends AppCompatActivity implements
         EventSelectFragment esf = (EventSelectFragment) getSupportFragmentManager().
                 findFragmentById(R.id.event_select);
         if (esf == null) {
-            esf = EventSelectFragment.newInstance(event.getId());
+            esf = EventSelectFragment.newInstance(event);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.event_select, esf);
             ft.commit();
         }
-        esf.updateSelection(event.getId());
+        esf.updateSelection(event);
 
         updateButtonState();
     }
@@ -175,10 +173,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void updateButtonState() {
-        findViewById(R.id.main_button_intermediate).setEnabled(event.getId() > 0);
-        findViewById(R.id.main_button_startlist).setEnabled(event.getId() > 0);
+        findViewById(R.id.main_button_intermediate).setEnabled(event != null && event.getId() > 0);
+        findViewById(R.id.main_button_startlist).setEnabled(event != null && event.getId() > 0);
         findViewById(R.id.main_button_timing).setEnabled(
-                event.getId() > 0
+                event != null && event.getId() > 0
                 && DbUtils.getTimingpointCountForEvent(event.getId(), dbHelper) > 0
                 && DbUtils.getAthleteCountForEvent(event.getId(), dbHelper) > 0);
     }

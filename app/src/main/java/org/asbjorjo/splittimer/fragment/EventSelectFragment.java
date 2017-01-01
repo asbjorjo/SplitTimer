@@ -16,9 +16,9 @@ import org.asbjorjo.splittimer.R;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.db.DbUtils;
+import org.asbjorjo.splittimer.model.Event;
 
 import static org.asbjorjo.splittimer.SplitTimerConstants.KEY_ACTIVE_EVENT;
-import static org.asbjorjo.splittimer.SplitTimerConstants.NO_ACTIVE_EVENT;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,14 +32,14 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
     private static final String TAG = "EventSelectFragment";
 
     private DbHelper dbHelper;
-    private long eventId;
+    private Event event;
     private OnEventSelectedListener mListener;
 
-    public static EventSelectFragment newInstance(long eventId) {
+    public static EventSelectFragment newInstance(Event event) {
         EventSelectFragment esf = new EventSelectFragment();
 
         Bundle args = new Bundle();
-        args.putLong(KEY_ACTIVE_EVENT, eventId);
+        args.putParcelable(KEY_ACTIVE_EVENT, event);
         esf.setArguments(args);
 
         return esf;
@@ -49,9 +49,9 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            eventId = getArguments().getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
+            event = getArguments().getParcelable(KEY_ACTIVE_EVENT);
         } else if (savedInstanceState != null) {
-            eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT, NO_ACTIVE_EVENT);
+            event = savedInstanceState.getParcelable(KEY_ACTIVE_EVENT);
         }
     }
 
@@ -91,13 +91,13 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
         refreshData();
     }
 
-    public void updateSelection(long eventId) {
+    public void updateSelection(Event event) {
         if (getView() != null) {
             Spinner spinner = (Spinner) getView().findViewById(R.id.event_select_spinner);
 
-            if (eventId > 0) {
+            if (event != null && event.getId() > 0) {
                 for (int i = 0; i < spinner.getCount(); i++) {
-                    if (spinner.getItemIdAtPosition(i) == eventId) {
+                    if (spinner.getItemIdAtPosition(i) == event.getId()) {
                         spinner.setSelection(i);
                         break;
                     }
@@ -140,7 +140,7 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putLong(KEY_ACTIVE_EVENT, eventId);
+        outState.putParcelable(KEY_ACTIVE_EVENT, event);
 
         super.onSaveInstanceState(outState);
     }
@@ -150,10 +150,10 @@ public class EventSelectFragment extends Fragment implements AdapterView.OnItemS
         super.onViewStateRestored(savedInstanceState);
 
         if (savedInstanceState != null) {
-            eventId = savedInstanceState.getLong(KEY_ACTIVE_EVENT);
+            event = savedInstanceState.getParcelable(KEY_ACTIVE_EVENT);
         }
 
-        updateSelection(eventId);
+        updateSelection(event);
     }
 
     @Override

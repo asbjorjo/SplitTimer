@@ -50,7 +50,7 @@ public class EventAddEditFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (event.getId() <= 0) {
+        if (event == null || event.getId() <= 0) {
             view.findViewById(R.id.event_button_edit).setVisibility(View.GONE);
         }
     }

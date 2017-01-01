@@ -122,7 +122,13 @@ public class EventActivity extends AppCompatActivity implements
         ft.commit();
         isEditing = false;
 
-        setResult(RESULT_CANCELED);
+        if (event != null) {
+            Intent intent = new Intent();
+            intent.putExtra(KEY_ACTIVE_EVENT, event);
+            setResult(RESULT_OK, intent);
+        } else {
+            setResult(RESULT_CANCELED);
+        }
     }
 
     public void onClick(View view) {

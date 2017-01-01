@@ -12,10 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import org.asbjorjo.splittimer.R;
+import org.asbjorjo.splittimer.SplitTimerConstants.OFFSET_UNIT;
 import org.asbjorjo.splittimer.db.Contract;
 import org.asbjorjo.splittimer.db.DbHelper;
 import org.asbjorjo.splittimer.model.Event;
@@ -83,6 +87,11 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Spinner spinner = (Spinner) view.findViewById(R.id.startlist_input_starttime_unit);
+        SpinnerAdapter adapter = new ArrayAdapter<>(getActivity(), R.layout.simple_textview,
+                OFFSET_UNIT.values());
+        spinner.setAdapter(adapter);
+
         //TODO Implement properly and for all event types.
         switch (event.getType()) {
             case MASS_START:
@@ -112,6 +121,7 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
         int number = -1;
         long startTime = -1;
         String message;
+        OFFSET_UNIT unit = null;
         List<String> error = new ArrayList<>();
 
         EditText nameView = (EditText) getView().findViewById(R.id.startlist_input_name);
@@ -131,6 +141,10 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
         if (event.getType().equals(MASS_START)) {
             startTime = event.getTime();
         } else {
+            Spinner unitSelect = (Spinner) getView().findViewById(
+                    R.id.startlist_input_starttime_unit);
+            unit = (OFFSET_UNIT) unitSelect.getSelectedItem();
+
             try {
                 startTime = Long.parseLong(startView.getText().toString());
             } catch (NumberFormatException e) {
@@ -148,6 +162,15 @@ public class StartlistEditFragment extends Fragment implements View.OnClickListe
             }
             message = stringBuilder.toString();
         } else {
+            switch (unit) {
+                case SECOND:
+                    startTime = startTime * 1000;
+                    break;
+                case MINUTE:
+                    startTime = startTime * 60 * 1000;
+                    break;
+            }
+
             SQLiteDatabase database = dbHelper.getWritableDatabase();
             ContentValues athleteValues = new ContentValues();
             ContentValues eventValues = new ContentValues();

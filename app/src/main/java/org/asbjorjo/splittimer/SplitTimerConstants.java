@@ -26,4 +26,9 @@ public class SplitTimerConstants {
         INTERVAL_START_RELATIVE,
         MASS_START
     }
+
+    public enum OFFSET_UNIT {
+        SECOND,
+        MINUTE
+    }
 }

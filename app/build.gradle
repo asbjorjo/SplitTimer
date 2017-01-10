@@ -19,7 +19,7 @@ android {
         applicationId "org.asbjorjo.splittimer"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 4
+        versionCode 5
         versionName getVersionName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(KEY_ACTIVE_EVENT, event.getId());
+        editor.putLong(KEY_ACTIVE_EVENT, event == null ? NO_ACTIVE_EVENT : event.getId());
         editor.apply();
 
         savedInstanceState.putParcelable(KEY_ACTIVE_EVENT, event);

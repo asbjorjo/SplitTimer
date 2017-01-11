@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.d(TAG, String.format("RequestCode: %d ResultCode: %d Intent: %s",
                 requestCode, resultCode, data == null ? data : data.toString()));
-        Log.d(TAG, String.format("Event: %s", event.toString()));
+        Log.d(TAG, String.format("Event: %s", event == null ? event : event.toString()));
         switch (requestCode) {
             case ADD_EVENT:
                 if (resultCode == RESULT_OK) {
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements
                 } else if (resultCode == RESULT_ADDED) {
                     event = data.getParcelableExtra(KEY_ACTIVE_EVENT);
                 } else {
-                    event = new Event();
+                    event = null;
                     findViewById(R.id.main_button_startlist).setEnabled(false);
                     findViewById(R.id.main_button_intermediate).setEnabled(false);
                 }
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
         }
         updateButtonState();
-        Log.d(TAG, String.format("Event: %s", event));
+        Log.d(TAG, String.format("Event: %s", event == null ? event : event.toString()));
     }
 
     private void updateButtonState() {

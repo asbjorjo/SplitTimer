@@ -129,7 +129,13 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.clear_data:
                 Log.d(TAG, "clearing data");
-                String message = dbHelper.clear_data() ? "Data cleared" : "Could not clear data";
+                String message;
+                if (dbHelper.clear_data()) {
+                    message = "Data cleared";
+                    event = null;
+                } else {
+                    message = "Could not clear data";
+                }
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 EventSelectFragment esf = (EventSelectFragment) getSupportFragmentManager().
                         findFragmentById(R.id.event_select);
@@ -153,10 +159,6 @@ public class MainActivity extends AppCompatActivity implements
                     event = data.getParcelableExtra(KEY_ACTIVE_EVENT);
                 } else if (resultCode == RESULT_ADDED) {
                     event = data.getParcelableExtra(KEY_ACTIVE_EVENT);
-                } else {
-                    event = null;
-                    findViewById(R.id.main_button_startlist).setEnabled(false);
-                    findViewById(R.id.main_button_intermediate).setEnabled(false);
                 }
                 break;
             case BUILD_INTERMEDIATES:
